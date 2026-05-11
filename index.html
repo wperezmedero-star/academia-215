@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Academia 2-15 Florida | William</title>
+<style>
+:root{
+  --bg:#07111f;--panel:#0f172a;--panel2:#111827;--soft:#1e293b;--line:#334155;
+  --txt:#f8fafc;--muted:#cbd5e1;--green:#22c55e;--blue:#3b82f6;--yellow:#f59e0b;--red:#ef4444;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:
+radial-gradient(circle at 20% 0%,rgba(34,197,94,.18),transparent 28%),
+radial-gradient(circle at 80% 0%,rgba(59,130,246,.2),transparent 30%),
+linear-gradient(160deg,#07111f,#0f172a 55%,#111827);color:var(--txt);}
+header{position:sticky;top:0;z-index:10;background:rgba(7,17,31,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:14px 16px}
+.header-inner{max-width:860px;margin:auto;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+h1{font-size:1.1rem;margin:0}.subtitle{color:var(--muted);font-size:.82rem;margin-top:3px}
+.nav{display:flex;gap:8px;flex-wrap:wrap}
+button{font-family:inherit}
+.btn{border:0;border-radius:12px;padding:10px 14px;cursor:pointer;font-weight:700;font-size:.9rem}
+.btn.primary{background:var(--green);color:#052e16}.btn.secondary{background:var(--soft);color:var(--txt);border:1px solid var(--line)}
+.btn.blue{background:var(--blue);color:white}.btn.red{background:var(--red);color:white}.btn.yellow{background:var(--yellow);color:#451a03}
+.wrap{max-width:860px;margin:auto;padding:16px}
+.card{background:rgba(15,23,42,.9);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 16px 40px rgba(0,0,0,.25);margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.lesson-card{background:rgba(17,24,39,.95);border:1px solid var(--line);border-radius:18px;padding:16px;cursor:pointer;transition:.15s;position:relative}
+.lesson-card:hover{transform:translateY(-2px);border-color:var(--green)}
+.lesson-card h3{margin:0 0 6px;font-size:1rem}.small{color:var(--muted);font-size:.88rem;line-height:1.45}
+.badge{display:inline-block;background:#064e3b;color:#bbf7d0;border-radius:999px;padding:4px 8px;font-size:.74rem;margin:4px 3px 0 0}
+.badge.blue{background:#1e3a8a;color:#dbeafe}.badge.yellow{background:#78350f;color:#fde68a}.badge.red{background:#7f1d1d;color:#fecaca}
+.hidden{display:none!important}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.section-title{font-size:1rem;margin:20px 0 8px;color:#93c5fd;font-weight:700;border-bottom:1px solid var(--line);padding-bottom:6px}
+.box{background:#0b1220;border:1px solid var(--line);border-radius:16px;padding:14px;margin:10px 0;line-height:1.6}
+.box h4{margin:0 0 8px;color:#bbf7d0;font-size:.95rem}
+.box p,.box li{color:#e2e8f0;font-size:.9rem}
+.example{border-left:4px solid var(--green);background:#061a0e;padding:14px;border-radius:12px;margin:10px 0}
+.example b{color:#bbf7d0;display:block;margin-bottom:4px}
+.example p{color:#d1fae5;font-size:.9rem;margin:0;line-height:1.6}
+ul{line-height:1.6;padding-left:20px}
+.memoline{font-weight:700;color:#fde68a;font-size:.92rem}
+.term{display:grid;grid-template-columns:minmax(140px,.4fr) 1fr;gap:10px;border-bottom:1px solid #1e3a5f;padding:10px 0;align-items:start}
+.term:last-child{border-bottom:0}.term b{color:#93c5fd;font-size:.88rem}.term span{color:#e2e8f0;font-size:.88rem}
+.progress{height:10px;background:#273449;border-radius:999px;overflow:hidden;margin:12px 0}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--blue));transition:width .3s}
+.qtext{font-size:1.05rem;font-weight:800;line-height:1.5;margin:14px 0;color:#f0f9ff}
+.option{display:block;width:100%;text-align:left;background:#0b1220;border:2px solid #334155;color:var(--txt);padding:13px 16px;margin:8px 0;border-radius:13px;cursor:pointer;font-size:.92rem;line-height:1.4;transition:.15s}
+.option:hover{border-color:#93c5fd;background:#0f1e35}.option.correct{background:#14532d;border-color:#22c55e;color:#bbf7d0}.option.wrong{background:#7f1d1d;border-color:#ef4444;color:#fca5a5}
+.feedback{background:#0a1628;border:1px solid #334155;border-radius:14px;padding:14px;color:#bfdbfe;line-height:1.6;margin-top:12px;font-size:.9rem}
+.flash{min-height:220px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:1.2rem;font-weight:800;line-height:1.5;background:#0b1220;border:2px dashed #475569;border-radius:18px;padding:24px;cursor:pointer;transition:.2s}
+.flash:hover{border-color:var(--green)}
+.flash small{display:block;font-size:.82rem;color:var(--muted);margin-top:12px;font-weight:400}
+.flash.back{background:#061a0e;border-color:#22c55e;border-style:solid;font-size:1rem;font-weight:600;color:#d1fae5}
+table{width:100%;border-collapse:collapse;margin-top:8px}td,th{border-bottom:1px solid #1e3a5f;padding:10px;text-align:left;font-size:.88rem}th{color:#bfdbfe}
+.footer{text-align:center;color:var(--muted);font-size:.82rem;padding:24px}
+.trap-item{background:#1a0a00;border-left:3px solid var(--yellow);border-radius:8px;padding:10px 12px;margin:6px 0;font-size:.88rem;color:#fde68a}
+.score-big{font-size:3rem;font-weight:900;text-align:center;margin:10px 0}
+.score-msg{text-align:center;color:var(--muted);font-size:1rem;margin-bottom:16px}
+@media(max-width:640px){.term{grid-template-columns:1fr}.header-inner{display:block}.nav{margin-top:10px}.btn{padding:9px 12px;font-size:.85rem}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div>
+      <h1>📚 Academia Personal 2-15 Florida</h1>
+      <div class="subtitle">Explicación fácil · Ejemplos reales · Quiz · Frases para memorizar</div>
+    </div>
+    <div class="nav">
+      <button class="btn secondary" onclick="goHome()">🏠 Inicio</button>
+      <button class="btn blue" onclick="startMixedExam()">⚡ Examen mixto</button>
+      <button class="btn secondary" onclick="openStats()">📊 Progreso</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <section id="home">
+    <div class="card">
+      <h2 style="margin:0 0 8px">Tu academia personal para el examen 2-15</h2>
+      <p class="small">Entra a cualquier lección, estudia la explicación fácil, los ejemplos y las frases clave. Luego haz el quiz. Si fallas, repasa solo lo que fallaste.</p>
+      <div class="row">
+        <button class="btn primary" onclick="startMixedExam()">⚡ Examen mixto rápido</button>
+        <button class="btn yellow" onclick="openStudyPlan()">📋 Plan de estudio</button>
+      </div>
+    </div>
+    <div class="grid" id="lessonGrid"></div>
+  </section>
+
+  <section id="studyPlan" class="hidden">
+    <div class="card">
+      <button class="btn secondary" onclick="goHome()">← Volver</button>
+      <h2>Tu plan de estudio recomendado</h2>
+      <div class="box">
+        <h4>⏱️ Rutina diaria — 45 minutos</h4>
+        <ul>
+          <li><b>10 min:</b> Lee la explicación de la lección.</li>
+          <li><b>10 min:</b> Lee los ejemplos con calma.</li>
+          <li><b>10 min:</b> Repite las frases de memoria en voz alta.</li>
+          <li><b>10 min:</b> Haz el quiz sin mirar.</li>
+          <li><b>5 min:</b> Repasa solo lo que fallaste.</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h4>🧠 Cómo funciona la memoria</h4>
+        <p>Tu cerebro retiene mejor cuando repasa varias veces con intervalo. Haz la lección hoy, repásala mañana, y de nuevo en 3 días. Las frases de memoria ayudan a anclar conceptos difíciles.</p>
+      </div>
+      <div class="box">
+        <h4>🎯 Meta para aprobar</h4>
+        <p>El examen tiene 150 preguntas y necesitas 70% (105 correctas). Si en el quiz de cada lección sacas 80% o más, vas bien. Menos de 70%: repasa antes de avanzar.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="lessonView" class="hidden">
+    <div class="card">
+      <button class="btn secondary" onclick="goHome()">← Volver</button>
+      <h2 id="lessonTitle"></h2>
+      <p class="small" id="lessonIntro"></p>
+      <div class="row">
+        <button class="btn primary" onclick="startLessonQuiz()">✏️ Quiz de esta lección</button>
+        <button class="btn blue" onclick="startFlashcards()">🃏 Tarjetas de memoria</button>
+        <button class="btn secondary" onclick="speakLesson()">🔊 Escuchar</button>
+      </div>
+
+      <div class="section-title">1. Explicación fácil</div>
+      <div id="lessonDeep"></div>
+
+      <div class="section-title">2. Ejemplos de la vida real</div>
+      <div id="lessonExamples"></div>
+
+      <div class="section-title">3. Frases para no olvidar</div>
+      <ul id="lessonMemory"></ul>
+
+      <div class="section-title">4. Vocabulario clave (inglés / español)</div>
+      <div id="lessonTerms"></div>
+
+      <div class="section-title">5. ⚠️ Trampas del examen</div>
+      <div id="lessonTraps"></div>
+    </div>
+  </section>
+
+  <section id="quizView" class="hidden">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <button class="btn secondary" onclick="endQuiz()">← Salir</button>
+        <span style="font-weight:700;color:var(--muted)" id="quizTitle"></span>
+        <span class="small" id="quizCount"></span>
+      </div>
+      <div class="progress"><div class="bar" id="progressBar"></div></div>
+      <div class="qtext" id="qtext"></div>
+      <div id="opts"></div>
+      <div class="feedback hidden" id="feedback"></div>
+      <div class="row"><button class="btn primary hidden" id="nextBtn" onclick="nextQuestion()">Siguiente →</button></div>
+    </div>
+  </section>
+
+  <section id="flashView" class="hidden">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <button class="btn secondary" onclick="openLesson(currentLesson.id)">← Volver</button>
+        <span class="small" id="flashCount"></span>
+      </div>
+      <h2 style="margin:12px 0 8px">🃏 Tarjetas de memoria</h2>
+      <div class="flash" id="flashCard" onclick="flipFlash()"></div>
+      <div class="row" style="justify-content:center;margin-top:14px">
+        <button class="btn secondary" onclick="prevFlash()">← Anterior</button>
+        <button class="btn primary" onclick="nextFlash()">Siguiente →</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="resultView" class="hidden">
+    <div class="card">
+      <h2>Resultado del quiz</h2>
+      <div class="score-big" id="scorePct"></div>
+      <div class="score-msg" id="scoreText"></div>
+      <div class="box"><p id="advice"></p></div>
+      <div class="row" style="justify-content:center">
+        <button class="btn primary" onclick="goHome()">🏠 Inicio</button>
+        <button class="btn yellow" onclick="reviewMistakes()">🔁 Repasar falladas</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="statsView" class="hidden">
+    <div class="card">
+      <button class="btn secondary" onclick="goHome()">← Volver</button>
+      <h2>📊 Tu progreso</h2>
+      <div id="statsBox"></div>
+      <div class="row">
+        <button class="btn red" onclick="resetStats()">🗑️ Borrar historial</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="footer">Academia personal de apoyo. Siempre revisa tu manual oficial para máxima exactitud.</div>
+
+<script>
+const defaultData = {
+lessons:[
+{
+id:1,
+title:"Lección 1: Fundamentos del seguro",
+intro:"El propósito del seguro, tipos de riesgo, tipos de aseguradoras y regulación en Florida.",
+deep:[
+"El seguro es una promesa escrita: tú pagas una prima y la compañía promete pagarte si ocurre algo cubierto. No elimina el riesgo — lo transfiere. Muchas personas pagan primas pequeñas para que unos pocos que sufren pérdidas reciban el dinero. Eso se llama puesta en común de riesgos (risk pooling).",
+"Riesgo puro vs. riesgo especulativo: el riesgo puro solo tiene pérdida posible (morir, enfermarse). El riesgo especulativo puede ganar o perder (inversiones). Solo el riesgo PURO es asegurable. Peligro (peril) = causa de la pérdida. Agravante (hazard) = lo que hace más probable la pérdida.",
+"Hay 4 formas de manejar el riesgo: 1) Evitar — no hacer la actividad, 2) Reducir — disminuir el riesgo, 3) Retener — asumir la pérdida tú mismo, 4) Transferir — comprar seguro. El seguro es la forma más común de transferir el riesgo.",
+"Tipos de aseguradoras: Stock (de acciones) = propiedad de accionistas. Mutualista = propiedad de los asegurados; pueden recibir dividendos. Recíproca = asegurados se aseguran entre sí. Fraternal = organizaciones sociales con cobertura para sus miembros.",
+"En Florida, los seguros los regula el ESTADO, no el gobierno federal. La NAIC coordina entre estados pero no tiene poder directo. Una compañía 'Admitted' está autorizada en Florida y protegida por el fondo de garantía estatal."
+],
+examples:[
+{t:"Ejemplo de transferencia de riesgo",p:"Pedro paga $80 al mes por un seguro de vida de $300,000. Si Pedro muere mientras la póliza está activa, la compañía paga $300,000 a su familia. Pedro transfirió el riesgo financiero a la aseguradora."},
+{t:"Ejemplo de riesgo puro vs. especulativo",p:"Enfermarse = riesgo puro (asegurable). Comprar acciones = riesgo especulativo (no asegurable). Una apuesta en el casino = riesgo especulativo. El seguro cubre riesgo puro."},
+{t:"Ejemplo de risk pooling",p:"1,000 personas pagan $100 al mes. La compañía recoge $100,000. Si 2 personas sufren pérdidas de $40,000 cada una, el dinero colectivo cubre. Sin el pool, esas 2 personas perderían todo."}
+],
+memory:[
+"Seguro = transferencia de riesgo, no eliminación.",
+"Risk pooling = pérdidas de pocos, pagadas por primas de muchos.",
+"Riesgo puro = solo pérdida → asegurable.",
+"Riesgo especulativo = ganar o perder → NO asegurable.",
+"Peril = causa de pérdida. Hazard = lo que aumenta el riesgo.",
+"4 formas de manejar riesgo: Evitar, Reducir, Retener, Transferir.",
+"Stock = accionistas. Mutual = asegurados. Recíproca = entre ellos.",
+"Florida regula seguros a nivel ESTATAL."
+],
+terms:[
+["Insurance / Seguro","Protección financiera: muchos pagan primas para cubrir pérdidas de pocos."],
+["Premium / Prima","El pago periódico por mantener la cobertura activa."],
+["Benefit / Beneficio","Lo que paga la compañía cuando ocurre el evento cubierto."],
+["Risk Pooling","Reunir primas de muchos para pagar pérdidas de pocos."],
+["Pure Risk / Riesgo Puro","Solo puede resultar en pérdida. Es asegurable."],
+["Speculative Risk","Puede ganar o perder. No es asegurable."],
+["Peril / Peligro","Causa directa e inmediata de una pérdida (ej: incendio, muerte)."],
+["Hazard / Agravante","Condición que aumenta la probabilidad de una pérdida."],
+["Adverse Selection","Tendencia de personas con más riesgo a buscar más seguro."],
+["NAIC","Organización que coordina regulaciones de seguros entre estados. No tiene autoridad directa."],
+["Admitted Insurer","Compañía autorizada a operar en Florida, sujeta a regulación estatal."]
+],
+traps:[
+"No confundas prima con beneficio. Prima = lo que pagas. Beneficio = lo que recibes.",
+"El seguro NO elimina el riesgo. Lo transfiere.",
+"Riesgo especulativo NO es asegurable (inversiones, apuestas).",
+"Los seguros se regulan a nivel ESTATAL, no federal.",
+"NAIC no regula directamente — solo coordina entre estados.",
+"Insurer = compañía aseguradora. Insured = persona cubierta. No los confundas."
+],
+questions:[
+{q:"¿Qué describe mejor el propósito del seguro?",options:["Eliminar el riesgo completamente","Transferir el riesgo a una compañía a cambio de una prima","Garantizar ganancias financieras","Evitar todos los accidentes"],answer:1,exp:"El seguro transfiere el riesgo — no lo elimina. El asegurado paga una prima y la compañía asume el riesgo de la pérdida."},
+{q:"¿Cuál de estos es un ejemplo de riesgo PURO?",options:["Comprar acciones en bolsa","Apostar en el casino","Morir de una enfermedad","Invertir en bienes raíces"],answer:2,exp:"Riesgo puro = solo puede resultar en pérdida. Morir de una enfermedad solo tiene resultado negativo, por eso es asegurable."},
+{q:"¿Qué tipo de aseguradora pertenece a sus propios asegurados?",options:["Stock Company","Compañía de acciones","Mutualista (Mutual)","Compañía Recíproca"],answer:2,exp:"La Mutualista es propiedad de sus asegurados (policyholders). Los accionistas son dueños de las Stock Companies."},
+{q:"¿Quién regula la industria de seguros en Florida?",options:["El gobierno federal","La NAIC directamente","El estado de Florida","El Departamento del Tesoro federal"],answer:2,exp:"Los seguros se regulan a nivel ESTATAL. Cada estado tiene su propio departamento. La NAIC solo coordina entre estados."},
+{q:"Un agente de seguros cobra una prima a su cliente. ¿Qué es esa prima?",options:["El beneficio que recibirá la familia","El pago periódico por mantener la cobertura","El valor en efectivo de la póliza","El deducible del plan"],answer:1,exp:"Prima = el pago que hace el asegurado a la compañía para mantener la cobertura activa."},
+{q:"¿Qué es el Risk Pooling?",options:["Un préstamo sobre la póliza","Reunir primas de muchos para pagar pérdidas de pocos","Una forma de invertir en acciones","Un tipo de póliza de salud"],answer:1,exp:"Risk pooling = muchas personas pagan primas para que cuando unos pocos sufran pérdidas, el dinero colectivo las cubra."},
+{q:"¿Cuál de las 4 formas de manejar el riesgo describe el comprar un seguro?",options:["Evitar","Reducir","Retener","Transferir"],answer:3,exp:"Comprar seguro = transferir el riesgo. La responsabilidad financiera de la pérdida pasa de ti a la compañía aseguradora."}
+]
+},
+{
+id:2,
+title:"Lección 2: La ley y los contratos de seguros",
+intro:"Qué hace válido un contrato de seguro, sus características especiales y conceptos legales clave.",
+deep:[
+"Un contrato de seguros es legalmente válido solo si tiene 4 elementos: 1) Oferta y Aceptación — el cliente propone (solicitud) y la compañía acepta (emite la póliza). 2) Consideración — el cliente paga la prima y da información veraz; la compañía promete pagar. 3) Propósito Legal — no puede ser para actividad ilegal. 4) Partes Competentes — adultos con capacidad mental.",
+"El contrato de seguro tiene características especiales. Es de Adhesión: la compañía lo redacta sola; tú solo puedes aceptar o rechazar. Si hay duda o ambigüedad en el texto, favorece al asegurado. Es Aleatorio: las cantidades son desiguales (pagas primas pequeñas, puedes recibir beneficio grande). Es Unilateral: solo la compañía promete pagar; tú puedes dejar de pagar en cualquier momento.",
+"Interés Asegurable significa que debes sufrir una pérdida real si ocurre el evento. En seguros de VIDA debe existir al solicitar la póliza, no necesariamente al momento de la muerte. No puedes comprar seguro sobre la vida de un desconocido.",
+"Tergiversación (Misrepresentation) = decir algo falso en la solicitud. Si es material (influyó en la decisión), la póliza puede anularse. Ocultamiento (Concealment) = esconder información importante a propósito. Ambos pueden anular la póliza. Garantía (Warranty) = hecho que debe ser 100% verdadero; si falla, anula la póliza.",
+"Agente = representa a la COMPAÑÍA. Broker/Corredor = representa al CLIENTE. El agente actúa con autoridad Expresa (lo que dice el contrato), Implícita (lo necesario para cumplir) y Aparente (lo que un tercero razonablemente cree que puede hacer)."
+],
+examples:[
+{t:"Ejemplo de los 4 elementos del contrato",p:"María llena la solicitud (oferta) y la envía con el primer pago. La compañía revisa y emite la póliza (aceptación). María pagó la prima (consideración). El propósito es proteger a su familia (legal). María es adulta y mentalmente capaz (partes competentes). Contrato válido."},
+{t:"Ejemplo de Interés Asegurable",p:"Luis puede comprar seguro sobre su propia vida o la de su esposa porque tiene interés asegurable. No puede comprar seguro sobre un vecino desconocido — no tiene interés asegurable en esa persona."},
+{t:"Ejemplo de Tergiversación Material",p:"Carlos dice en la solicitud que no fuma, pero sí fuma. Al morir, la compañía descubre la mentira. Si esa información cambiaría la decisión de asegurar o el precio, la tergiversación fue material y la compañía puede denegar el reclamo o anular la póliza."}
+],
+memory:[
+"4 elementos del contrato: Oferta+Aceptación, Consideración, Propósito Legal, Partes Competentes.",
+"Adhesión = compañía redacta sola → ambigüedad favorece al asegurado.",
+"Aleatorio = cantidades desiguales (prima pequeña vs. beneficio grande).",
+"Unilateral = solo la compañía promete → tú puedes dejar de pagar.",
+"Interés Asegurable en vida = debe existir al SOLICITAR, no al morir.",
+"Tergiversación material = mentira que influyó en la decisión → póliza anulable.",
+"Agente = representa a la COMPAÑÍA. Broker = representa al CLIENTE.",
+"Incontestable = después de 2 años, no pueden impugnar por tergiversación."
+],
+terms:[
+["Offer & Acceptance","Solicitud = oferta. Emisión de póliza = aceptación."],
+["Consideration","Prima + información veraz del cliente vs. promesa de pago de la compañía."],
+["Contract of Adhesion","La compañía redacta la póliza; ambigüedades van a favor del asegurado."],
+["Aleatory Contract","Las cantidades intercambiadas son desiguales: prima pequeña, beneficio potencialmente grande."],
+["Unilateral Contract","Solo la aseguradora hace una promesa legalmente exigible."],
+["Insurable Interest","Relación por la que sufrirías pérdida real si ocurre el evento. Requerida al solicitar."],
+["Misrepresentation","Declaración falsa en la solicitud. Si es material, puede anular la póliza."],
+["Concealment","Ocultar información importante a propósito. Puede anular la póliza."],
+["Warranty","Garantía que debe ser absolutamente verdadera o anula la póliza."],
+["Incontestability Clause","Después de 2 años, la compañía no puede impugnar la póliza por tergiversación."],
+["Agent","Representa a la compañía de seguros."],
+["Broker","Representa al cliente comprador."],
+["Subrogation","Derecho de la aseguradora de recobrar de un tercero culpable lo que pagó."]
+],
+traps:[
+"El contrato de seguro es de ADHESIÓN: la compañía lo escribe, no lo negocias.",
+"Ambigüedad en el contrato siempre favorece al ASEGURADO, no a la compañía.",
+"Interés Asegurable en VIDA = al solicitar. En PROPIEDAD = al momento de la pérdida.",
+"No confundas Agente (representa compañía) con Broker (representa cliente).",
+"Tergiversación 'material' = que influyó en la decisión. No toda mentira es material.",
+"Después de 2 años (incontestability), la compañía no puede impugnar por tergiversación (excepto fraude).",
+"Subrogación NO aplica en seguros de VIDA — solo en propiedad y salud."
+],
+questions:[
+{q:"¿Cuáles son los 4 elementos necesarios para que un contrato de seguro sea válido?",options:["Prima, beneficio, agente, compañía","Oferta/Aceptación, Consideración, Propósito Legal, Partes Competentes","Solicitud, póliza, rider, exclusión","Asegurado, beneficiario, agente, underwriter"],answer:1,exp:"Los 4 elementos son: Oferta y Aceptación, Consideración, Propósito Legal y Partes Competentes. Sin alguno de estos, el contrato no es legalmente válido."},
+{q:"¿Por qué se dice que la póliza de seguro es un 'contrato de adhesión'?",options:["Porque ambas partes la negocian juntas","Porque solo la compañía la redacta y el cliente la acepta o rechaza","Porque el agente la firma por ambas partes","Porque el gobierno la aprueba"], answer:1,exp:"Es de adhesión porque la aseguradora redacta todos los términos. El cliente no puede negociar. Por eso, cualquier ambigüedad se interpreta a favor del asegurado."},
+{q:"¿Cuándo debe existir el Interés Asegurable en un seguro de VIDA?",options:["Al momento de la muerte del asegurado","Al momento de cobrar el beneficio","Al momento de solicitar la póliza","En cualquier momento de la póliza"],answer:2,exp:"En vida, el interés asegurable debe existir AL SOLICITAR la póliza. No es necesario que exista al momento de la muerte."},
+{q:"Carlos mintió en su solicitud diciendo que no tenía una enfermedad que sí tenía. ¿Cómo se llama esto?",options:["Subrogación","Tergiversación (Misrepresentation)","Waiver","Estoppel"],answer:1,exp:"Tergiversación = declarar algo falso en la solicitud. Si esa información era material para la decisión de asegurar, la póliza puede ser anulada."},
+{q:"¿A quién representa un Broker (corredor) de seguros?",options:["A la compañía aseguradora","Al Departamento de Seguros de Florida","Al cliente comprador","Al beneficiario"],answer:2,exp:"El Broker representa al CLIENTE. El Agente representa a la COMPAÑÍA. Esta diferencia aparece en el examen."},
+{q:"La cláusula de incontestabilidad establece que después de 2 años:",options:["La prima no puede subir","La compañía no puede impugnar la póliza por tergiversación","El beneficiario puede cambiarse libremente","La póliza se cancela automáticamente"],answer:1,exp:"Después de 2 años de vigencia, la aseguradora no puede impugnar la póliza alegando tergiversación en la solicitud. La excepción es el fraude intencional."},
+{q:"En un contrato aleatorio de seguros, ¿qué significa 'aleatorio'?",options:["Que el beneficiario es elegido al azar","Que las cantidades intercambiadas son desiguales","Que solo una parte tiene obligaciones","Que el contrato puede cancelarse cuando quieran"],answer:1,exp:"Aleatorio = las cantidades no son iguales. El asegurado paga primas pequeñas pero puede recibir un beneficio mucho mayor. O puede pagar toda su vida y no recibir nada."}
+]
+},
+{
+id:3,
+title:"Lección 3: Pólizas de seguro de vida",
+intro:"Tipos de pólizas, provisiones estándar, opciones de no pérdida y riders. Directo del manual.",
+deep:[
+"Hay 3 categorías básicas: Ordinario (el más común — term, whole life, universal), Industrial (valor nominal pequeño, para gastos de funeral, agente cobra en casa), y de Grupo (cubre a un grupo bajo una póliza maestra; los individuos reciben un certificado).",
+"Seguro a Término (Term Life): cobertura temporal por un período fijo (1, 5, 10, 20 años). NO acumula valor en efectivo (cash value). Más barato. Si el asegurado no muere en el término, la póliza expira sin pago. Formas: Nivelado (beneficio fijo), Decreciente (beneficio baja — ideal para hipotecas), Creciente (beneficio sube — protege contra inflación).",
+"Seguro de Vida Entera (Whole Life): permanente, cubre toda la vida si se mantiene. SÍ acumula cash value. Prima fija. Más cara que Term. El valor en efectivo puede usarse como préstamo (policy loan). Si no se paga el préstamo, se descuenta del beneficio por muerte.",
+"Seguro Universal (Universal Life): permanente y FLEXIBLE. Puedes ajustar la prima y el beneficio de muerte. Cash value crece con tasas de interés. Variable Life: el cash value se invierte en el mercado — puede subir o bajar. Requiere licencia especial (securities license).",
+"Provisiones estándar: Período de Gracia (31 días extra para pagar prima sin perder cobertura). Reinstalación (reactivar póliza caducada, hasta 3 años, demostrar buena salud). Cláusula de Suicidio (dentro de 2 años = solo devuelven primas; después de 2 años = pagan beneficio completo). Incontestabilidad (después de 2 años, no pueden impugnar por tergiversación).",
+"Opciones de No Pérdida (Nonforfeiture): si dejas de pagar, tienes 3 opciones: 1) Valor en Efectivo (te dan el cash value en dinero), 2) Seguro Prorrogado (misma cobertura por menos tiempo), 3) Seguro Reducido Pagado (menos cobertura de por vida, ya no pagas más primas)."
+],
+examples:[
+{t:"Ejemplo Term vs. Whole Life",p:"Ana compra Term Life por 20 años a $50/mes. Si muere en año 15, su familia recibe $500,000. Si llega al año 21 viva, la póliza expiró sin valor. Juan compra Whole Life — más cara ($200/mes) pero lo cubre de por vida y acumula cash value que puede usar en vida."},
+{t:"Ejemplo de Policy Loan",p:"Carlos tiene Whole Life con $20,000 de cash value. Necesita dinero urgente y pide un préstamo de $10,000 sobre su póliza. No hay fecha de pago obligatoria. Pero si muere antes de pagar, la compañía descuenta los $10,000 del beneficio de muerte."},
+{t:"Ejemplo de Período de Gracia",p:"La prima de Rosa venció el 1 de marzo. Con el período de gracia de 31 días, Rosa puede pagar hasta el 1 de abril y la póliza sigue activa. Si Rosa muere el 15 de marzo sin haber pagado aún, la compañía paga el beneficio y descuenta la prima debida."},
+{t:"Ejemplo de Cláusula de Suicidio",p:"Miguel compra una póliza en enero. En noviembre (11 meses después) se suicida. La compañía solo devuelve las primas pagadas, no el beneficio completo — porque está dentro de los primeros 2 años. Si hubiera sido en el mes 25, la compañía paga el beneficio completo."}
+],
+memory:[
+"Term = temporal, sin cash value, más barato.",
+"Whole Life = permanente, con cash value, prima fija.",
+"Universal Life = permanente y FLEXIBLE.",
+"Variable Life = cash value en el mercado (riesgo de inversión).",
+"Ningún tipo de Term tiene cash value — ninguno.",
+"Policy Loan = préstamo del cash value; si no pagas, reduce el beneficio.",
+"Período de gracia = 31 días extra para pagar.",
+"Suicidio primeros 2 años = solo devuelven primas.",
+"Nonforfeiture: Efectivo / Prorrogado / Reducido Pagado.",
+"AD&D = doble indemnización si la muerte es accidental."
+],
+terms:[
+["Term Life","Seguro temporal. Sin cash value. Cubre solo el período acordado."],
+["Whole Life","Seguro permanente. Acumula cash value. Prima fija de por vida."],
+["Universal Life","Permanente y flexible: prima y beneficio ajustables."],
+["Variable Life","Permanente. Cash value en inversiones del mercado. Puede bajar."],
+["Cash Value","Dinero acumulado dentro de pólizas permanentes. Puede usarse como préstamo."],
+["Policy Loan","Préstamo usando el cash value como garantía. Reduce beneficio si no se paga."],
+["Death Benefit","Beneficio por muerte: dinero que recibe el beneficiario."],
+["Grace Period","31 días adicionales para pagar la prima sin perder la cobertura."],
+["Reinstatement","Reactivar póliza caducada: hasta 3 años, pagar atraso + intereses, demostrar salud."],
+["Suicide Clause","Primeros 2 años: solo devuelven primas. Después de 2 años: pagan beneficio completo."],
+["Nonforfeiture Options","Opciones al dejar de pagar: Valor Efectivo, Seguro Prorrogado, Seguro Reducido Pagado."],
+["AD&D Rider","Accidental Death & Dismemberment: duplica beneficio si muerte es accidental."],
+["Waiver of Premium","Si quedas totalmente discapacitado, la compañía paga las primas por ti."],
+["Revocable Beneficiary","Beneficiario que puede cambiarse en cualquier momento sin su permiso."],
+["Irrevocable Beneficiary","Beneficiario que NO puede cambiarse sin su consentimiento."],
+["Level Term","Beneficio fijo durante todo el término."],
+["Decreasing Term","Beneficio disminuye con el tiempo. Ideal para hipotecas."],
+["Increasing Term","Beneficio aumenta. Protege contra inflación."]
+],
+traps:[
+"Term Life NUNCA tiene cash value — en ninguna de sus formas (nivelado, decreciente, creciente).",
+"Policy Loan NO cancela la póliza. Pero si no se paga, reduce el beneficio por muerte.",
+"Período de gracia = 31 días. Durante esos días, si mueres, te pagan (descontando la prima).",
+"Suicidio en primeros 2 años = solo primas. Después de 2 años = beneficio completo.",
+"AD&D duplica el beneficio (doble indemnización) — NO lo triplica.",
+"Waiver of Premium no paga al beneficiario — exime AL ASEGURADO de pagar primas.",
+"Beneficiario revocable = puedes cambiarlo sin su permiso. Irrevocable = necesitas su permiso.",
+"Variable Life requiere licencia de valores (securities license) ADEMÁS de la licencia de seguros."
+],
+questions:[
+{q:"¿Cuál tipo de póliza de vida acumula valor en efectivo (cash value)?",options:["Term Life nivelado","Term Life decreciente","Whole Life","Group Term Life"],answer:2,exp:"Whole Life es permanente y acumula cash value. NINGÚN tipo de Term Life acumula cash value."},
+{q:"¿Cuál es el período de gracia típico en una póliza de vida?",options:["7 días","15 días","31 días","60 días"],answer:2,exp:"El período de gracia en seguros de vida es de 31 días. Durante ese tiempo la póliza sigue activa aunque no hayas pagado la prima."},
+{q:"María tiene una póliza Whole Life y hace un policy loan de $5,000. ¿Qué sucede si muere sin haberlo pagado?",options:["La póliza se cancela automáticamente","Los $5,000 se descuentan del beneficio por muerte","El préstamo se perdona automáticamente","El beneficiario debe pagar el préstamo primero"],answer:1,exp:"El policy loan se descuenta del beneficio por muerte si no fue pagado. La póliza no se cancela — solo se reduce el beneficio."},
+{q:"Un asegurado se suicida 18 meses después de comprar su póliza. ¿Qué hace la compañía?",options:["Paga el beneficio completo","No paga absolutamente nada","Devuelve solo las primas pagadas","Paga la mitad del beneficio"],answer:2,exp:"La cláusula de suicidio cubre los primeros 2 años. Como fueron 18 meses (menos de 2 años), la compañía devuelve solo las primas pagadas."},
+{q:"¿Qué tipo de seguro de vida a término es ideal para cubrir una hipoteca que se va pagando?",options:["Término Nivelado","Término Decreciente","Término Creciente","Universal Life"],answer:1,exp:"Término Decreciente = el beneficio disminuye con el tiempo, igual que el saldo de una hipoteca. Es perfecto para cubrir deudas que van bajando."},
+{q:"¿Cuál es la característica principal del Universal Life?",options:["Es el seguro de vida más barato","No acumula cash value","Es permanente y flexible en prima y beneficio","Solo cubre muerte accidental"],answer:2,exp:"Universal Life es permanente como Whole Life, pero tiene la ventaja de ser FLEXIBLE: puedes ajustar cuánto pagas de prima y cuánto beneficio de muerte quieres."},
+{q:"El rider de Waiver of Premium hace que:",options:["El beneficiario no pague impuestos","La compañía pague las primas si el asegurado queda totalmente discapacitado","El beneficio se duplique en caso de accidente","La póliza se convierta en anualidad"],answer:1,exp:"Waiver of Premium = si quedas totalmente discapacitado y cumples las condiciones, la compañía paga las primas por ti, manteniendo la póliza activa."},
+{q:"Para vender Variable Life en Florida, ¿qué se necesita además de la licencia 2-15?",options:["Solo la licencia 2-15 es suficiente","Una licencia de bienes raíces","Una licencia de valores (securities license)","Una licencia de salud adicional"],answer:2,exp:"Variable Life invierte el cash value en el mercado de valores. Por eso requiere licencia de securities (valores) ADEMÁS de la licencia de vida y salud."}
+]
+},
+{
+id:4,
+title:"Lección 4: Primas, productos y beneficiarios",
+intro:"Cómo se calculan las primas, tipos de beneficiarios, asignación y opciones de liquidación.",
+deep:[
+"Las primas se calculan con tablas de mortalidad que predicen cuándo morirá un grupo de personas. Los factores que afectan la prima: edad (más viejo = más caro), sexo (estadísticamente las mujeres viven más), condición de salud, si fuma o no, ocupación y pasatiempos de riesgo.",
+"El beneficiario es quien recibe el dinero cuando el asegurado muere. Primario = recibe primero. Contingente = recibe si el primario muere antes. Revocable = puede cambiarse en cualquier momento. Irrevocable = necesita su consentimiento para cambiarse. La estate (herencia) como beneficiario puede tener consecuencias de impuestos y probate.",
+"Asignación de la póliza (Assignment): Absoluta = transfiere todos los derechos de la póliza. Colateral = se usa la póliza como garantía de un préstamo (ej: banco como beneficiario colateral).",
+"Opciones de liquidación del beneficio (Settlement Options): Suma global (lump sum) = todo de una vez. Interés solamente = compañía guarda el dinero y paga intereses. Cantidad fija = pagos regulares de monto fijo hasta agotar fondos. Período fijo = pagos por un tiempo determinado. Ingreso de por vida = annuity — pagos garantizados mientras viva el beneficiario."
+],
+examples:[
+{t:"Ejemplo de beneficiario primario vs. contingente",p:"Pedro pone a su esposa como beneficiaria primaria y a sus hijos como contingentes. Si Pedro y su esposa mueren juntos en un accidente, los hijos (contingentes) reciben el dinero."},
+{t:"Ejemplo de asignación colateral",p:"Rosa pide un préstamo al banco de $50,000 y el banco le pide que asigne su póliza de vida como garantía colateral. Si Rosa muere antes de pagar, el banco cobra el préstamo del beneficio y el resto va a la familia."},
+{t:"Ejemplo de opciones de liquidación",p:"La viuda de Juan recibe un beneficio de $200,000. Puede: tomarlo todo de una vez (lump sum), o dejar el dinero con la compañía y recibir intereses cada mes, o convertirlo en pagos mensuales fijos de $2,000 hasta que se agote."}
+],
+memory:[
+"Primario = recibe primero. Contingente = recibe si el primario muere antes.",
+"Revocable = se cambia libremente. Irrevocable = necesita permiso.",
+"Assignment absoluta = transfiere todo. Colateral = garantía de préstamo.",
+"Factores de prima: edad, sexo, salud, tabaco, ocupación.",
+"Lump sum = todo de una vez. Life income = pagos de por vida."
+],
+terms:[
+["Primary Beneficiary","Recibe el beneficio primero."],
+["Contingent Beneficiary","Recibe si el primario ha fallecido antes."],
+["Revocable Beneficiary","Puede cambiarse sin su permiso."],
+["Irrevocable Beneficiary","No puede cambiarse sin su consentimiento."],
+["Absolute Assignment","Transfiere todos los derechos de la póliza a otra persona."],
+["Collateral Assignment","Usa la póliza como garantía de un préstamo. El prestamista es beneficiario parcial."],
+["Lump Sum","Pago de todo el beneficio de una sola vez."],
+["Life Income Option","Beneficio convertido en pagos garantizados de por vida (annuity)."],
+["Mortality Table","Tabla estadística que predice la probabilidad de muerte por edad, usada para calcular primas."]
+],
+traps:[
+"Si no hay beneficiario designado, el beneficio va a la estate (herencia) y pasa por probate.",
+"Irrevocable = necesita permiso del beneficiario para cambiar o pedir un policy loan.",
+"Asignación colateral NO cambia al beneficiario permanentemente — solo hasta que se pague el préstamo.",
+"No confundas Primary (recibe primero) con Contingent (recibe si el primario muere antes)."
+],
+questions:[
+{q:"¿Quién recibe el beneficio si el beneficiario primario muere antes que el asegurado?",options:["La compañía de seguros","El agente de seguros","El beneficiario contingente","El estado"],answer:2,exp:"El beneficiario contingente recibe el dinero si el primario ha fallecido antes que el asegurado."},
+{q:"¿Qué tipo de beneficiario requiere su propio consentimiento para ser cambiado?",options:["Revocable","Contingente","Primario","Irrevocable"],answer:3,exp:"El beneficiario irrevocable no puede cambiarse sin su consentimiento. El revocable sí puede cambiarse libremente."},
+{q:"Juan usa su póliza de vida como garantía para un préstamo del banco. Esto se llama:",options:["Asignación Absoluta","Asignación Colateral","Nonforfeiture Option","Policy Loan"],answer:1,exp:"Asignación Colateral = usar la póliza como garantía de un préstamo. El banco es beneficiario colateral por el monto del préstamo."},
+{q:"¿Qué opción de liquidación paga el beneficio completo de una sola vez?",options:["Interest Only","Life Income","Fixed Period","Lump Sum"],answer:3,exp:"Lump Sum = todo el beneficio de una sola vez. Es la opción más común y más simple."}
+]
+},
+{
+id:5,
+title:"Lección 5: Suscripción y emisión de la póliza",
+intro:"Cómo la compañía evalúa el riesgo y decide si asegurarte y a qué precio.",
+deep:[
+"Suscripción (Underwriting) es el proceso de evaluar, clasificar y decidir si se asegura a alguien y a qué precio. El suscriptor (underwriter) protege a la compañía de aceptar demasiado riesgo.",
+"Clases de riesgo: Estándar = riesgo normal, prima regular. Preferido = menos riesgo que promedio, prima más baja. Subestándar o Rated = más riesgo, prima más alta o condiciones especiales. Rechazado = no se asegura.",
+"El suscriptor revisa: la solicitud, el examen médico (si se requiere), el reporte del Medical Information Bureau (MIB), el reporte de conducción (DMV) y reportes de inspección. La solicitud es parte del contrato — las respuestas deben ser honestas.",
+"Al emitir la póliza: período de 'free look' = el comprador tiene 10 días (o más, según el estado) para revisar la póliza y devolverla si no está satisfecho, con reembolso completo. En Florida, las pólizas de vida tienen un período de free look de 10 días."
+],
+examples:[
+{t:"Ejemplo de clasificación de riesgo",p:"Luis, 35 años, no fuma, sin enfermedades: Preferido — prima baja. Roberto, 35 años, fuma, tiene presión alta: Subestándar — prima más alta. Manuel, 60 años, con cáncer activo: posiblemente rechazado."},
+{t:"Ejemplo de Free Look",p:"Ana compra una póliza y al revisarla en casa ve que no le convence. Tiene 10 días para devolver la póliza y recibir reembolso completo de lo que pagó, sin penalidad."}
+],
+memory:[
+"Underwriting = evaluar y clasificar el riesgo.",
+"Preferido = menos riesgo, prima más baja.",
+"Subestándar (Rated) = más riesgo, prima más alta.",
+"MIB = reporte médico que comparten las aseguradoras.",
+"Free Look = 10 días para devolver la póliza con reembolso total.",
+"La solicitud firmada ES parte del contrato."
+],
+terms:[
+["Underwriting","Proceso de evaluar el riesgo para decidir si asegurar y a qué precio."],
+["Underwriter","Persona que evalúa los riesgos para la compañía."],
+["Standard Risk","Riesgo promedio. Prima estándar."],
+["Preferred Risk","Menos riesgo que el promedio. Prima más baja."],
+["Substandard / Rated","Más riesgo. Prima más alta o exclusiones especiales."],
+["MIB (Medical Info Bureau)","Base de datos compartida entre aseguradoras con historial médico de solicitantes."],
+["Free Look Period","Período (10 días en Florida) para devolver la póliza y obtener reembolso total."],
+["Conditional Receipt","Recibo condicional: cobertura temporal desde la solicitud si el solicitante califica."]
+],
+traps:[
+"Free Look = 10 días en Florida. En anualidades puede ser más (30 días en algunos casos).",
+"MIB es información médica solo — no incluye antecedentes penales.",
+"La solicitud firmada se convierte en parte del contrato de seguro.",
+"Rechazar un riesgo (declinar) no es ilegal — la compañía puede negarse a asegurar."
+],
+questions:[
+{q:"¿Cuál es el propósito principal del underwriting?",options:["Vender más pólizas","Evaluar el riesgo y proteger a la compañía de pérdidas excesivas","Pagar reclamos más rápido","Calcular comisiones del agente"],answer:1,exp:"El underwriting protege a la compañía evaluando si el riesgo es aceptable y a qué precio asegurarlo."},
+{q:"Un solicitante en perfecta salud, no fuma y hace ejercicio regular. ¿En qué categoría de riesgo califica?",options:["Subestándar","Estándar","Preferido","Declinado"],answer:2,exp:"Riesgo Preferido = mejor que el promedio. Recibe la prima más baja porque representa menos riesgo para la compañía."},
+{q:"¿Cuántos días tiene el comprador para devolver una póliza de vida nueva en Florida?",options:["5 días","10 días","20 días","30 días"],answer:1,exp:"El período de Free Look en Florida es de 10 días. El comprador puede devolver la póliza y recibir reembolso completo sin penalidad."},
+{q:"¿Qué es el MIB?",options:["Un tipo de póliza de salud","Una base de datos médica compartida entre aseguradoras","El departamento de seguros de Florida","Un tipo de beneficiario especial"],answer:1,exp:"MIB (Medical Information Bureau) es una base de datos donde las aseguradoras comparten información médica de solicitantes, para detectar tergiversaciones."}
+]
+}
+]
+};
+
+// Add placeholder lessons 6-20
+const topics6to20=[
+"Seguro de Vida de Grupo","Anualidades Fijas y Variables","Seguro Social","Planes de Retiro",
+"Usos de los Seguros de Vida","Seguros de Salud y Accidentes","Proveedores de Seguros de Salud",
+"Seguro de Gastos Médicos","Seguro de Ingresos por Discapacidad","Muerte Accidental y Desmembramiento",
+"Planes para Mayores (Medicare)","Medicare Advantage y Suplementarios","Provisiones en Póliza de Salud",
+"Suscripción en Seguros de Salud","Leyes de Florida"
+];
+for(let i=6;i<=20;i++){
+ defaultData.lessons.push({
+  id:i,title:`Lección ${i}: ${topics6to20[i-6]}`,
+  intro:"Próximamente. Dile a William que la agregue.",
+  deep:["Esta lección se agregará con explicación completa del manual muy pronto."],
+  examples:[{t:"Próximamente",p:"Se agregarán ejemplos prácticos basados en el manual oficial."}],
+  memory:["Próximamente..."],
+  terms:[["—","Se agregará pronto."]],
+  traps:["Próximamente..."],
+  questions:[{q:`Pregunta de ejemplo lección ${i}`,options:["Opción A","Opción B","Opción C","Opción D"],answer:0,exp:"Esta pregunta se reemplazará con contenido real del manual."}]
+ });
+}
+
+let data=JSON.parse(localStorage.getItem("acad215v3")||JSON.stringify(defaultData));
+let currentLesson=null,quiz=[],qi=0,score=0,mistakes=[],answered=false;
+let flash=[],fi=0,flipped=false;
+
+function hideAll(){["home","studyPlan","lessonView","quizView","flashView","resultView","statsView"].forEach(id=>document.getElementById(id).classList.add("hidden"))}
+function goHome(){hideAll();document.getElementById("home").classList.remove("hidden");renderLessons()}
+function renderLessons(){
+ const g=document.getElementById("lessonGrid");g.innerHTML="";
+ data.lessons.forEach(l=>{
+  const ready=!l.intro.includes("Próximamente");
+  const d=document.createElement("div");d.className="lesson-card";
+  if(ready)d.onclick=()=>openLesson(l.id);
+  else d.style.opacity="0.5";
+  d.innerHTML=`<h3>${l.title}</h3><div class="small">${l.intro}</div>
+  <span class="badge">${l.questions.length} preguntas</span>
+  <span class="badge blue">${l.terms.length} términos</span>
+  <span class="badge yellow">${l.memory.length} frases</span>
+  ${!ready?'<span class="badge red">Próximamente</span>':''}`;
+  g.appendChild(d);
+ });
+}
+function openStudyPlan(){hideAll();document.getElementById("studyPlan").classList.remove("hidden")}
+function openLesson(id){
+ currentLesson=data.lessons.find(x=>x.id===id);
+ if(!currentLesson)return;
+ hideAll();document.getElementById("lessonView").classList.remove("hidden");
+ document.getElementById("lessonTitle").textContent=currentLesson.title;
+ document.getElementById("lessonIntro").textContent=currentLesson.intro;
+ const deep=document.getElementById("lessonDeep");deep.innerHTML="";
+ currentLesson.deep.forEach((p,i)=>{let div=document.createElement("div");div.className="box";div.innerHTML=`<h4>Punto ${i+1}</h4><p>${p}</p>`;deep.appendChild(div)});
+ const ex=document.getElementById("lessonExamples");ex.innerHTML="";
+ (currentLesson.examples||[]).forEach(e=>{
+  let div=document.createElement("div");div.className="example";
+  div.innerHTML=`<b>${e.t||"Ejemplo"}:</b><p>${e.p||e}</p>`;ex.appendChild(div)
+ });
+ const mem=document.getElementById("lessonMemory");mem.innerHTML="";
+ currentLesson.memory.forEach(m=>{let li=document.createElement("li");li.innerHTML=`<span class="memoline">${m}</span>`;mem.appendChild(li)});
+ const terms=document.getElementById("lessonTerms");terms.innerHTML="";
+ currentLesson.terms.forEach(t=>{let div=document.createElement("div");div.className="term";div.innerHTML=`<b>${t[0]}</b><span>${t[1]}</span>`;terms.appendChild(div)});
+ const traps=document.getElementById("lessonTraps");traps.innerHTML="";
+ currentLesson.traps.forEach(t=>{let div=document.createElement("div");div.className="trap-item";div.textContent="⚠️ "+t;traps.appendChild(div)});
+}
+function startLessonQuiz(){startQuiz([...currentLesson.questions],currentLesson.title)}
+function startMixedExam(){
+ let all=[];
+ data.lessons.filter(l=>!l.intro.includes("Próximamente")).forEach(l=>l.questions.forEach(q=>all.push({...q,lesson:l.title})));
+ startQuiz(shuffle(all).slice(0,Math.min(30,all.length)),"Examen mixto")
+}
+function startQuiz(items,title){
+ quiz=shuffle(items);qi=0;score=0;mistakes=[];answered=false;
+ hideAll();document.getElementById("quizView").classList.remove("hidden");
+ document.getElementById("quizTitle").textContent=title;showQuestion()
+}
+function showQuestion(){
+ answered=false;const q=quiz[qi];
+ document.getElementById("qtext").textContent=q.q;
+ document.getElementById("feedback").classList.add("hidden");
+ document.getElementById("nextBtn").classList.add("hidden");
+ document.getElementById("quizCount").textContent=`Pregunta ${qi+1} de ${quiz.length}`;
+ document.getElementById("progressBar").style.width=`${(qi/quiz.length)*100}%`;
+ const opts=document.getElementById("opts");opts.innerHTML="";
+ q.options.forEach((o,i)=>{let b=document.createElement("button");b.className="option";b.textContent=String.fromCharCode(65+i)+") "+o;b.onclick=()=>selectOption(i,b);opts.appendChild(b)})
+}
+function selectOption(i,btn){
+ if(answered)return;answered=true;const q=quiz[qi];
+ const bs=[...document.querySelectorAll(".option")];
+ bs[q.answer].classList.add("correct");
+ if(i!==q.answer){btn.classList.add("wrong");mistakes.push(q)}else score++;
+ const fb=document.getElementById("feedback");
+ fb.innerHTML=(i===q.answer?"✅ <b>Correcto.</b> ":"❌ <b>Incorrecto.</b> ")+q.exp;
+ fb.classList.remove("hidden");document.getElementById("nextBtn").classList.remove("hidden")
+}
+function nextQuestion(){qi++;if(qi>=quiz.length)finishQuiz();else showQuestion()}
+function finishQuiz(){
+ document.getElementById("progressBar").style.width="100%";
+ hideAll();document.getElementById("resultView").classList.remove("hidden");
+ const pct=Math.round((score/quiz.length)*100);
+ const emoji=pct>=85?"🎉":pct>=70?"💪":"📚";
+ document.getElementById("scorePct").textContent=emoji+" "+pct+"%";
+ document.getElementById("scoreText").textContent=score+" de "+quiz.length+" correctas";
+ document.getElementById("advice").textContent=pct>=85?"Excelente. Vas muy bien. Sigue practicando para mantener la memoria.":pct>=70?"Buen avance. Estás en zona de aprobación. Repasa las que fallaste.":"Todavía falta. No te desanimes — repite la explicación, los ejemplos y el quiz.";
+ saveStats(pct,quiz.length)
+}
+function endQuiz(){goHome()}
+function reviewMistakes(){if(!mistakes.length){alert("No tuviste fallos. ¡Excelente!");return}startQuiz(mistakes,"Repaso de falladas")}
+function startFlashcards(){
+ flash=[];
+ currentLesson.memory.forEach(m=>flash.push({front:"Completa o recuerda esta frase:",back:m}));
+ currentLesson.terms.forEach(t=>flash.push({front:t[0],back:t[1]}));
+ fi=0;flipped=false;
+ hideAll();document.getElementById("flashView").classList.remove("hidden");showFlash()
+}
+function showFlash(){
+ const c=document.getElementById("flashCard");
+ document.getElementById("flashCount").textContent=`Tarjeta ${fi+1} de ${flash.length}`;
+ c.className="flash"+(flipped?" back":"");
+ c.innerHTML=(flipped?flash[fi].back:flash[fi].front)+`<small>${flipped?"Toca para siguiente concepto":"Toca para ver la respuesta"}</small>`;
+}
+function flipFlash(){flipped=!flipped;showFlash()}
+function nextFlash(){fi=(fi+1)%flash.length;flipped=false;showFlash()}
+function prevFlash(){fi=(fi-1+flash.length)%flash.length;flipped=false;showFlash()}
+function speakLesson(){
+ if(!currentLesson)return;
+ const text=currentLesson.title+". "+currentLesson.deep.join(". ")+". Frases para memorizar: "+currentLesson.memory.join(". ");
+ const u=new SpeechSynthesisUtterance(text);u.lang="es-US";u.rate=0.9;
+ speechSynthesis.cancel();speechSynthesis.speak(u)
+}
+function saveStats(pct,total){
+ const s=JSON.parse(localStorage.getItem("acad215stats")||"[]");
+ s.push({date:new Date().toLocaleString("es"),score:pct,total});
+ localStorage.setItem("acad215stats",JSON.stringify(s.slice(-60)))
+}
+function openStats(){
+ hideAll();document.getElementById("statsView").classList.remove("hidden");
+ const s=JSON.parse(localStorage.getItem("acad215stats")||"[]");
+ let html="";
+ if(!s.length){html="<p style='color:var(--muted)'>Aún no hay progreso guardado. Haz un quiz primero.</p>";}
+ else{
+  const avg=Math.round(s.reduce((a,b)=>a+b.score,0)/s.length);
+  html=`<div class="box"><h4>Promedio general: ${avg}%</h4></div><table><tr><th>Fecha</th><th>Resultado</th><th>Preguntas</th></tr>`;
+  s.slice().reverse().forEach(r=>html+=`<tr><td>${r.date}</td><td style="color:${r.score>=70?'var(--green)':'var(--red)'}">${r.score}%</td><td>${r.total}</td></tr>`);
+  html+="</table>";
+ }
+ document.getElementById("statsBox").innerHTML=html;
+}
+function resetStats(){if(confirm("¿Borrar todo el historial?"))localStorage.removeItem("acad215stats");openStats()}
+function shuffle(arr){return arr.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(x=>x[1])}
+renderLessons();
+</script>
+</body>
+</html>
