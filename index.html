@@ -11,6 +11,60 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Academia 2-15 Florida | William</title>
 <style>
+
+
+  #splash{
+position:fixed;
+inset:0;
+z-index:99999;
+background:linear-gradient(160deg,#020617,#07111f,#0f172a);
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.splash-card{
+text-align:center;
+padding:30px;
+border-radius:25px;
+background:rgba(15,23,42,.9);
+border:1px solid #334155;
+box-shadow:0 0 30px rgba(59,130,246,.4);
+}
+
+.splash-icon{
+font-size:60px;
+animation:pulse 1.5s infinite;
+}
+
+.splash-title{
+font-size:28px;
+font-weight:700;
+margin-top:10px;
+}
+
+.splash-subtitle{
+color:#93c5fd;
+margin-top:8px;
+}
+
+.splash-loader{
+margin-top:20px;
+height:4px;
+width:120px;
+background:#3b82f6;
+animation:loader 1.5s infinite;
+}
+
+@keyframes pulse{
+50%{transform:scale(1.1);}
+}
+
+@keyframes loader{
+0%{width:20px;}
+50%{width:120px;}
+100%{width:20px;}
+}
 :root{--bg:#07111f;--soft:#1e293b;--line:#334155;--txt:#f8fafc;--muted:#94a3b8;--green:#22c55e;--blue:#3b82f6;--yellow:#f59e0b;--red:#ef4444;}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;background:radial-gradient(circle at 20% 0%,rgba(34,197,94,.15),transparent 30%),radial-gradient(circle at 80% 0%,rgba(59,130,246,.18),transparent 30%),linear-gradient(160deg,#07111f,#0f172a 55%,#111827);color:var(--txt);min-height:100vh;}
@@ -76,6 +130,14 @@ th{color:#bfdbfe;}
 </style>
 </head>
 <body>
+  <div id="splash">
+  <div class="splash-card">
+    <div class="splash-icon">🛡️</div>
+    <div class="splash-title">Estudio 2-15</div>
+    <div class="splash-subtitle">Florida Life • Health • Annuities</div>
+    <div class="splash-loader"></div>
+  </div>
+</div>
 <header>
   <div class="hi">
     <div><h1>📚 Academia Personal 2-15 Florida</h1><div class="sub">10 lecciones activas · Explicación fácil · Ejemplos reales · Quiz · Frases para memorizar</div></div>
@@ -751,6 +813,23 @@ function goHome(){
   renderGrid();
 }
 
+</script>
+
+  <script>
+window.addEventListener("load", function(){
+  setTimeout(function(){
+    const splash = document.getElementById("splash");
+
+    if(splash){
+      splash.style.transition = "opacity 0.5s ease";
+      splash.style.opacity = "0";
+
+      setTimeout(function(){
+        splash.remove();
+      }, 500);
+    }
+  }, 1500);
+});
 </script>
 </body>
 </html>
