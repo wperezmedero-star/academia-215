@@ -81,6 +81,7 @@ th{color:#bfdbfe;}
       <button class="btn sec" onclick="goHome()">🏠 Inicio</button>
       <button class="btn blu" onclick="startMixed()">⚡ Examen mixto</button>
       <button class="btn sec" onclick="showStats()">📊 Progreso</button>
+      <button class="btn" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;" onclick="startSimulacro()">🎯 Simulacro</button>
     </div>
   </div>
 </header>
@@ -170,6 +171,102 @@ th{color:#bfdbfe;}
     </div>
   </section>
 </div>
+
+  <!-- SIMULACRO SECTION -->
+  <section id="simulacro-menu" class="hidden">
+    <div class="card">
+      <button class="btn sec" onclick="goHome()">← Volver</button>
+      <h2 style="margin:14px 0 8px;font-size:1.3rem">🎯 Simulacro Oficial 2-15 Florida</h2>
+      <p style="color:var(--muted);font-size:.88rem;margin-bottom:14px">Replica el formato del examen real del estado. 150 preguntas, 3 horas y 30 minutos. Necesitas el 70% (105 correctas) para aprobar.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;">
+        <div class="box" style="text-align:center"><div style="font-size:2rem;font-weight:900;color:#a78bfa">150</div><div style="color:var(--muted);font-size:.8rem">Preguntas</div></div>
+        <div class="box" style="text-align:center"><div style="font-size:2rem;font-weight:900;color:#a78bfa">3:30</div><div style="color:var(--muted);font-size:.8rem">Horas límite</div></div>
+        <div class="box" style="text-align:center"><div style="font-size:2rem;font-weight:900;color:#22c55e">70%</div><div style="color:var(--muted);font-size:.8rem">Para aprobar</div></div>
+        <div class="box" style="text-align:center"><div style="font-size:2rem;font-weight:900;color:#f59e0b">20</div><div style="color:var(--muted);font-size:.8rem">Lecciones cubiertas</div></div>
+      </div>
+      <div class="box" style="margin:10px 0">
+        <h4>📋 Instrucciones del simulacro</h4>
+        <ul style="color:#e2e8f0;font-size:.85rem;padding-left:16px;line-height:1.8">
+          <li>Las 150 preguntas se seleccionan aleatoriamente de todas las lecciones.</li>
+          <li>El cronómetro corre desde que inicias — igual que el examen real.</li>
+          <li>NO se muestra si la respuesta es correcta o incorrecta durante el examen.</li>
+          <li>Al terminar ves tu resultado, porcentaje y análisis por lección.</li>
+          <li>Puedes navegar entre preguntas y cambiar respuestas antes de terminar.</li>
+          <li>Si el tiempo se agota, el simulacro termina automáticamente.</li>
+        </ul>
+      </div>
+      <div class="box" style="background:#0a1628;border-color:#4f46e5">
+        <h4 style="color:#a78bfa">⚠️ Antes de empezar</h4>
+        <p style="color:#c4b5fd;font-size:.85rem">Busca un lugar tranquilo, sin distracciones. El simulacro replica las condiciones del examen real. Tienes 1.4 minutos por pregunta en promedio.</p>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;font-weight:800;font-size:1rem;padding:14px 24px;" onclick="launchSimulacro()">🚀 Iniciar Simulacro</button>
+        <button class="btn sec" onclick="showSimulacroHistory()">📊 Historial de simulacros</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIMULACRO EXAM SECTION -->
+  <section id="simulacro-exam" class="hidden">
+    <div class="card" style="padding:14px">
+      <!-- Top bar -->
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-weight:800;color:#a78bfa;font-size:.9rem">🎯 Simulacro Oficial</span>
+          <span id="sim-q-count" style="font-size:.8rem;color:var(--muted)"></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div id="sim-timer" style="background:#1a0a2e;border:2px solid #7c3aed;border-radius:10px;padding:6px 12px;font-weight:900;font-size:1rem;color:#a78bfa;font-variant-numeric:tabular-nums;min-width:80px;text-align:center">3:30:00</div>
+          <button class="btn red" onclick="confirmEndSimulacro()" style="font-size:.8rem;padding:7px 10px">Terminar</button>
+        </div>
+      </div>
+      <!-- Progress bar -->
+      <div class="prog"><div class="bar" id="sim-pbar" style="background:linear-gradient(90deg,#7c3aed,#4f46e5)"></div></div>
+      <!-- Question navigator -->
+      <div id="sim-nav" style="display:flex;flex-wrap:wrap;gap:4px;margin:8px 0;max-height:80px;overflow-y:auto;padding:4px"></div>
+      <!-- Question -->
+      <div style="margin:12px 0">
+        <span id="sim-qnum" style="font-size:.72rem;color:var(--muted);font-weight:600;display:block;margin-bottom:4px"></span>
+        <div id="sim-qtext" style="font-size:1rem;font-weight:800;line-height:1.5;color:#f0f9ff;margin-bottom:12px"></div>
+        <div id="sim-opts"></div>
+      </div>
+      <!-- Navigation buttons -->
+      <div class="row" style="justify-content:space-between;margin-top:10px">
+        <button class="btn sec" id="sim-prev" onclick="simPrev()" style="font-size:.85rem">← Anterior</button>
+        <span id="sim-answered" style="font-size:.78rem;color:var(--muted);align-self:center"></span>
+        <button class="btn" id="sim-next" onclick="simNext()" style="background:#4f46e5;color:#fff;font-size:.85rem">Siguiente →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIMULACRO RESULT SECTION -->
+  <section id="simulacro-result" class="hidden">
+    <div class="card">
+      <h2 style="margin-bottom:6px;text-align:center">🎯 Resultado del Simulacro</h2>
+      <div id="sim-score-big" style="font-size:3.5rem;font-weight:900;text-align:center;margin:10px 0"></div>
+      <div id="sim-verdict" style="text-align:center;font-size:1.1rem;font-weight:800;margin-bottom:8px"></div>
+      <div id="sim-stats-grid" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 0"></div>
+      <div id="sim-breakdown" style="margin:14px 0"></div>
+      <div id="sim-weak-areas" style="margin:10px 0"></div>
+      <div class="row" style="justify-content:center;margin-top:14px;flex-wrap:wrap">
+        <button class="btn pri" onclick="goHome()">🏠 Inicio</button>
+        <button class="btn" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;" onclick="startSimulacro()">🔁 Nuevo Simulacro</button>
+        <button class="btn sec" onclick="showSimulacroHistory()">📊 Historial</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIMULACRO HISTORY SECTION -->
+  <section id="simulacro-history" class="hidden">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <button class="btn sec" onclick="startSimulacro()">← Volver</button>
+        <h2>📊 Historial de Simulacros</h2>
+        <button class="btn red" onclick="clearSimHistory()" style="font-size:.78rem;padding:7px 10px">Borrar</button>
+      </div>
+      <div id="sim-history-content" style="margin-top:14px"></div>
+    </div>
+  </section>
 <div class="footer">Academia personal de apoyo. Siempre revisa tu manual oficial para máxima exactitud.</div>
 <script>
 const L=[
@@ -394,6 +491,264 @@ function showStats(){
 function clearStats(){if(confirm("¿Borrar todo el historial?"))try{localStorage.removeItem("a215v2");}catch(e){}showStats();}
 function shuffle(a){return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);}
 renderGrid();
+
+
+// ============================================================
+// SIMULACRO OFICIAL — 150 preguntas, 3h 30min
+// ============================================================
+let simQs=[], simAnswers=[], simCurrent=0, simTimer=null, simTimeLeft=210*60, simRunning=false;
+
+function hide(){["home","plan","lesson","quiz","flash","result","stats",
+  "simulacro-menu","simulacro-exam","simulacro-result","simulacro-history"
+  ].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add("hidden")});}
+
+function startSimulacro(){hide();document.getElementById("simulacro-menu").classList.remove("hidden");}
+
+function launchSimulacro(){
+  // Gather all questions from all lessons (non-próximamente)
+  let pool=[];
+  L.filter(l=>!l.intro.includes("Próximamente")).forEach(l=>{
+    l.questions.forEach(q=>pool.push({...q, lessonId:l.id, lessonTitle:l.title}));
+  });
+  // Shuffle and take 150
+  pool=shuffle(pool);
+  simQs=pool.slice(0,Math.min(150,pool.length));
+  simAnswers=new Array(simQs.length).fill(null);
+  simCurrent=0;
+  simTimeLeft=210*60; // 3h 30min in seconds
+  simRunning=true;
+  hide();
+  document.getElementById("simulacro-exam").classList.remove("hidden");
+  renderSimQ();
+  renderSimNav();
+  startSimTimer();
+}
+
+function startSimTimer(){
+  if(simTimer)clearInterval(simTimer);
+  simTimer=setInterval(()=>{
+    if(!simRunning)return;
+    simTimeLeft--;
+    updateTimerDisplay();
+    if(simTimeLeft<=0){
+      clearInterval(simTimer);
+      simRunning=false;
+      finishSimulacro(true);
+    }
+    // Warning colors
+    const el=document.getElementById("sim-timer");
+    if(el){
+      if(simTimeLeft<300)el.style.color="#ef4444"; // Red under 5min
+      else if(simTimeLeft<1800)el.style.color="#f59e0b"; // Yellow under 30min
+    }
+  },1000);
+}
+
+function updateTimerDisplay(){
+  const h=Math.floor(simTimeLeft/3600);
+  const m=Math.floor((simTimeLeft%3600)/60);
+  const s=simTimeLeft%60;
+  const el=document.getElementById("sim-timer");
+  if(el)el.textContent=(h>0?h+":":"")+(m<10&&h>0?"0":"")+m+":"+(s<10?"0":"")+s;
+}
+
+function renderSimQ(){
+  const q=simQs[simCurrent];
+  if(!q)return;
+  const total=simQs.length;
+  document.getElementById("sim-qnum").textContent=`Pregunta ${simCurrent+1} de ${total}`;
+  document.getElementById("sim-q-count").textContent=`${simCurrent+1}/${total}`;
+  document.getElementById("sim-pbar").style.width=`${((simCurrent+1)/total)*100}%`;
+  // Question text — no difficulty badge during exam (just like real exam)
+  document.getElementById("sim-qtext").textContent=q.q;
+  // Options
+  const opts=document.getElementById("sim-opts");
+  opts.innerHTML="";
+  q.o.forEach((opt,i)=>{
+    const btn=document.createElement("button");
+    btn.className="opt";
+    btn.textContent=String.fromCharCode(65+i)+") "+opt;
+    // Highlight if already answered
+    if(simAnswers[simCurrent]===i)btn.style.borderColor="#7c3aed";
+    btn.onclick=()=>simPick(i);
+    opts.appendChild(btn);
+  });
+  // Update answered count
+  const answered=simAnswers.filter(a=>a!==null).length;
+  document.getElementById("sim-answered").textContent=`${answered} de ${total} respondidas`;
+  // Prev/next buttons
+  document.getElementById("sim-prev").disabled=simCurrent===0;
+  const nextBtn=document.getElementById("sim-next");
+  nextBtn.textContent=simCurrent===total-1?"🏁 Terminar":"Siguiente →";
+  nextBtn.onclick=simCurrent===total-1?()=>confirmEndSimulacro():simNext;
+}
+
+function simPick(i){
+  simAnswers[simCurrent]=i;
+  renderSimQ();
+  renderSimNav();
+}
+
+function simNext(){if(simCurrent<simQs.length-1){simCurrent++;renderSimQ();renderSimNav();}}
+function simPrev(){if(simCurrent>0){simCurrent--;renderSimQ();renderSimNav();}}
+
+function renderSimNav(){
+  const nav=document.getElementById("sim-nav");
+  if(!nav)return;
+  nav.innerHTML="";
+  simQs.forEach((_,i)=>{
+    const btn=document.createElement("button");
+    btn.style.cssText=`width:28px;height:28px;border-radius:6px;border:0;cursor:pointer;font-size:.7rem;font-weight:700;transition:.1s;`;
+    const answered=simAnswers[i]!==null;
+    const current=i===simCurrent;
+    if(current)btn.style.background="#7c3aed",btn.style.color="#fff";
+    else if(answered)btn.style.background="#1e3a8a",btn.style.color="#93c5fd";
+    else btn.style.background="#1e293b",btn.style.color="#64748b";
+    btn.textContent=i+1;
+    btn.onclick=()=>{simCurrent=i;renderSimQ();renderSimNav();};
+    nav.appendChild(btn);
+  });
+}
+
+function confirmEndSimulacro(){
+  const answered=simAnswers.filter(a=>a!==null).length;
+  const unanswered=simQs.length-answered;
+  if(unanswered>0){
+    if(!confirm(`Tienes ${unanswered} pregunta(s) sin responder. ¿Terminar de todas formas?`))return;
+  }
+  simRunning=false;
+  if(simTimer)clearInterval(simTimer);
+  finishSimulacro(false);
+}
+
+function finishSimulacro(timedOut){
+  let correct=0;
+  // Analysis by lesson
+  const lessonStats={};
+  simQs.forEach((q,i)=>{
+    const lid=q.lessonId;
+    if(!lessonStats[lid])lessonStats[lid]={title:q.lessonTitle,correct:0,total:0};
+    lessonStats[lid].total++;
+    if(simAnswers[i]===q.a){correct++;lessonStats[lid].correct++;}
+  });
+  const pct=Math.round((correct/simQs.length)*100);
+  const passed=pct>=70;
+  const timeUsed=210*60-simTimeLeft;
+  const th=Math.floor(timeUsed/3600);
+  const tm=Math.floor((timeUsed%3600)/60);
+  const ts=timeUsed%60;
+  const timeStr=(th>0?th+"h ":"")+tm+"min "+ts+"seg";
+  // Save to history
+  saveSimHistory({date:new Date().toLocaleDateString("es"),pct,correct,total:simQs.length,passed,timeStr,timedOut,lessonStats});
+  // Show results
+  hide();
+  document.getElementById("simulacro-result").classList.remove("hidden");
+  // Big score
+  const scoreEl=document.getElementById("sim-score-big");
+  scoreEl.textContent=(passed?"✅ ":"❌ ")+pct+"%";
+  scoreEl.style.color=passed?"#22c55e":"#ef4444";
+  // Verdict
+  const verdictEl=document.getElementById("sim-verdict");
+  if(timedOut)verdictEl.innerHTML='<span style="color:#f59e0b">⏰ Tiempo agotado — '+correct+" de "+simQs.length+" correctas</span>";
+  else verdictEl.innerHTML=passed?'<span style="color:#22c55e">APROBADO 🎉 — '+correct+' de '+simQs.length+' correctas</span>':'<span style="color:#ef4444">NO APROBADO — '+correct+' de '+simQs.length+' correctas · Necesitas '+Math.ceil(simQs.length*0.7)+'</span>';
+  // Stats grid
+  document.getElementById("sim-stats-grid").innerHTML=
+    `<div class="box" style="text-align:center"><div style="font-size:1.6rem;font-weight:900;color:#22c55e">${correct}</div><div style="color:var(--muted);font-size:.78rem">Correctas</div></div>
+     <div class="box" style="text-align:center"><div style="font-size:1.6rem;font-weight:900;color:#ef4444">${simQs.length-correct}</div><div style="color:var(--muted);font-size:.78rem">Incorrectas</div></div>
+     <div class="box" style="text-align:center"><div style="font-size:1.6rem;font-weight:900;color:#a78bfa">${timeStr}</div><div style="color:var(--muted);font-size:.78rem">Tiempo usado</div></div>`;
+  // Breakdown by lesson
+  const breakdown=Object.entries(lessonStats).sort((a,b)=>{
+    const pa=a[1].correct/a[1].total;
+    const pb=b[1].correct/b[1].total;
+    return pa-pb; // Worst first
+  });
+  let bhtml='<div class="st" style="margin-top:16px">📚 Resultado por lección</div>';
+  breakdown.forEach(([lid,stat])=>{
+    const p=Math.round((stat.correct/stat.total)*100);
+    const color=p>=80?"#22c55e":p>=70?"#f59e0b":"#ef4444";
+    const icon=p>=80?"✅":p>=70?"⚠️":"❌";
+    bhtml+=`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #1e3a5f">
+      <span style="font-size:.82rem;flex:1;color:#e2e8f0">${icon} ${stat.title.replace(/^L\d+: /,"")}</span>
+      <span style="font-weight:700;color:${color};font-size:.88rem;min-width:45px;text-align:right">${stat.correct}/${stat.total} (${p}%)</span>
+      <div style="width:60px;height:6px;background:#273449;border-radius:999px;overflow:hidden"><div style="height:100%;width:${p}%;background:${color}"></div></div>
+    </div>`;
+  });
+  document.getElementById("sim-breakdown").innerHTML=bhtml;
+  // Weak areas advice
+  const weak=breakdown.filter(([,s])=>s.correct/s.total<0.7);
+  if(weak.length>0){
+    document.getElementById("sim-weak-areas").innerHTML=
+      `<div class="box" style="border-color:#ef4444;background:#1a0505">
+        <h4 style="color:#fca5a5">🎯 Áreas a reforzar (menos del 70%)</h4>
+        <ul style="padding-left:16px;color:#fecaca;font-size:.84rem;line-height:1.8">
+          ${weak.map(([,s])=>`<li>${s.title.replace(/^L\d+: /,"")}: ${Math.round(s.correct/s.total*100)}%</li>`).join("")}
+        </ul>
+        <p style="color:#fca5a5;font-size:.82rem;margin-top:8px">Repasa esas lecciones antes de hacer otro simulacro.</p>
+      </div>`;
+  } else {
+    document.getElementById("sim-weak-areas").innerHTML=
+      `<div class="box" style="border-color:#22c55e"><p style="color:#bbf7d0;font-size:.85rem">💪 Excelente — todas las lecciones por encima del 70%. Sigue practicando para mantener el nivel.</p></div>`;
+  }
+}
+
+function saveSimHistory(data){
+  try{
+    const h=JSON.parse(localStorage.getItem("sim215")||"[]");
+    h.push(data);
+    localStorage.setItem("sim215",JSON.stringify(h.slice(-20)));
+  }catch(e){}
+}
+
+function showSimulacroHistory(){
+  hide();
+  document.getElementById("simulacro-history").classList.remove("hidden");
+  try{
+    const h=JSON.parse(localStorage.getItem("sim215")||"[]");
+    if(!h.length){
+      document.getElementById("sim-history-content").innerHTML='<p style="color:var(--muted)">Aún no tienes simulacros completados.</p>';
+      return;
+    }
+    let html2='<table><tr><th>Fecha</th><th>Resultado</th><th>Correctas</th><th>Tiempo</th><th>Estado</th></tr>';
+    h.slice().reverse().forEach(r=>{
+      const color=r.passed?"var(--green)":"var(--red)";
+      const status=r.timedOut?"⏰ Tiempo":"✓ Completado";
+      html2+=`<tr>
+        <td style="font-size:.8rem">${r.date}</td>
+        <td style="color:${color};font-weight:700">${r.pct}%</td>
+        <td style="font-size:.82rem">${r.correct}/${r.total}</td>
+        <td style="font-size:.8rem">${r.timeStr||"-"}</td>
+        <td style="font-size:.78rem;color:${r.timedOut?"#f59e0b":"var(--muted)"}">${status}</td>
+      </tr>`;
+    });
+    html2+="</table>";
+    // Average
+    const avg=Math.round(h.reduce((a,b)=>a+b.pct,0)/h.length);
+    const passed=h.filter(x=>x.passed).length;
+    html2=`<div class="box" style="margin-bottom:12px">
+      <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap">
+        <div style="text-align:center"><div style="font-size:1.8rem;font-weight:900;color:#a78bfa">${h.length}</div><div style="color:var(--muted);font-size:.78rem">Simulacros</div></div>
+        <div style="text-align:center"><div style="font-size:1.8rem;font-weight:900;color:#22c55e">${avg}%</div><div style="color:var(--muted);font-size:.78rem">Promedio</div></div>
+        <div style="text-align:center"><div style="font-size:1.8rem;font-weight:900;color:#f59e0b">${passed}/${h.length}</div><div style="color:var(--muted);font-size:.78rem">Aprobados</div></div>
+      </div>
+    </div>`+html2;
+    document.getElementById("sim-history-content").innerHTML=html2;
+  }catch(e){document.getElementById("sim-history-content").innerHTML="<p>Error al cargar historial.</p>";}
+}
+
+function clearSimHistory(){
+  if(confirm("¿Borrar todo el historial de simulacros?"))
+    try{localStorage.removeItem("sim215");showSimulacroHistory();}catch(e){}
+}
+
+// Fix goHome to also stop simulacro timer
+const _origGoHome=goHome;
+function goHome(){
+  if(simTimer){clearInterval(simTimer);simTimer=null;simRunning=false;}
+  hide();
+  document.getElementById("home").classList.remove("hidden");
+  renderGrid();
+}
+
 </script>
 </body>
 </html>
