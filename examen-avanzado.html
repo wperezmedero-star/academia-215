@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Examen Florida 2-15 – Nivel Pearson VUE</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0f1923; --surface: #162030; --card: #1c2c3e; --border: #243447;
+    --accent: #00a8e8; --accent2: #00c896; --warn: #f5a623; --danger: #e84040;
+    --text: #e8edf2; --muted: #7a90a8;
+    --correct-bg: #0a2e22; --wrong-bg: #2e0d0d;
+  }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .logo { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; }
+  .logo span { color: var(--muted); font-weight: 400; }
+  #timer { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--warn); letter-spacing: 2px; }
+  #timer.urgent { color: var(--danger); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+  #progress-bar-wrap { background: var(--border); height: 4px; }
+  #progress-bar { height: 4px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .3s; width: 0%; }
+  main { flex: 1; padding: 24px 16px 80px; max-width: 780px; margin: 0 auto; width: 100%; }
+  .meta { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+  .badge { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; background: var(--card); border: 1px solid var(--border); color: var(--muted); }
+  .badge.accent { border-color: var(--accent); color: var(--accent); }
+  .badge.hard { border-color: var(--danger); color: var(--danger); }
+  #q-counter { margin-left: auto; font-size: 13px; color: var(--muted); }
+  #question-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 26px; margin-bottom: 18px; line-height: 1.75; font-size: 16px; }
+  #options { display: flex; flex-direction: column; gap: 11px; }
+  .option { background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; padding: 15px 18px; cursor: pointer; display: flex; align-items: flex-start; gap: 14px; transition: border-color .15s, background .15s; font-size: 14.5px; line-height: 1.55; }
+  .option:hover:not(.disabled) { border-color: var(--accent); background: #1a2e42; }
+  .opt-letter { min-width: 26px; height: 26px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--muted); flex-shrink: 0; margin-top: 1px; }
+  .option.selected { border-color: var(--accent); background: #102033; }
+  .option.selected .opt-letter { background: var(--accent); color: #fff; }
+  .option.correct { border-color: var(--accent2); background: var(--correct-bg); }
+  .option.correct .opt-letter { background: var(--accent2); color: #fff; }
+  .option.wrong { border-color: var(--danger); background: var(--wrong-bg); }
+  .option.wrong .opt-letter { background: var(--danger); color: #fff; }
+  .option.disabled { cursor: default; }
+  #explanation { display: none; background: #0d1e2e; border: 1px solid var(--border); border-left: 4px solid var(--accent2); border-radius: 8px; padding: 16px 20px; font-size: 13.5px; line-height: 1.75; color: #c0d0e0; margin-top: 14px; }
+  #explanation.show { display: block; }
+  #explanation strong { color: var(--accent2); }
+  #explanation em { color: var(--warn); font-style: normal; }
+  #bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  #score-live { font-size: 13px; color: var(--muted); }
+  #score-live span { color: var(--text); font-weight: 700; }
+  .btn { padding: 11px 26px; border-radius: 8px; border: none; font-size: 15px; font-weight: 700; cursor: pointer; transition: opacity .15s; }
+  .btn:disabled { opacity: .35; cursor: default; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover:not(:disabled) { opacity: .85; }
+  .btn-secondary { background: transparent; border: 1.5px solid var(--border); color: var(--muted); font-size: 13px; padding: 9px 16px; }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  #results-screen { display: none; max-width: 680px; margin: 0 auto; padding: 40px 16px 80px; text-align: center; }
+  #results-screen.show { display: block; }
+  .result-circle { width: 140px; height: 140px; border-radius: 50%; margin: 0 auto 28px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 36px; font-weight: 800; border: 5px solid var(--accent2); }
+  .result-circle.fail { border-color: var(--danger); }
+  h1.result-title { font-size: 26px; margin-bottom: 8px; }
+  .result-sub { color: var(--muted); margin-bottom: 32px; font-size: 15px; }
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 32px; }
+  .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 12px; }
+  .stat-box .num { font-size: 28px; font-weight: 800; color: var(--accent); }
+  .stat-box .lbl { font-size: 11px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: .8px; }
+  .lesson-breakdown { text-align: left; margin-bottom: 32px; }
+  .lesson-breakdown h3 { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+  .lb-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; }
+  .lb-label { min-width: 130px; color: var(--muted); font-size: 12px; }
+  .lb-bar-wrap { flex: 1; background: var(--border); border-radius: 4px; height: 8px; }
+  .lb-bar { height: 8px; border-radius: 4px; background: var(--accent2); }
+  .lb-bar.bad { background: var(--danger); }
+  .lb-pct { min-width: 40px; text-align: right; font-weight: 700; }
+  #start-screen { max-width: 640px; margin: 40px auto; padding: 0 16px; text-align: center; }
+  #start-screen h1 { font-size: 28px; margin-bottom: 10px; }
+  #start-screen p { color: var(--muted); margin-bottom: 30px; line-height: 1.6; }
+  .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
+  .mode-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 22px 16px; cursor: pointer; transition: border-color .15s; text-align: left; }
+  .mode-card:hover { border-color: var(--accent); }
+  .mode-card.selected { border-color: var(--accent); background: #102033; }
+  .mode-card h3 { font-size: 15px; margin-bottom: 6px; }
+  .mode-card p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .mode-icon { font-size: 24px; margin-bottom: 10px; }
+  .difficulty-note { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--warn); border-radius: 8px; padding: 14px 18px; text-align: left; font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+  .difficulty-note strong { color: var(--warn); }
+</style>
+</head>
+<body>
+
+<div id="start-screen">
+  <div style="font-size:13px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;">Florida 2-15 · Nivel Avanzado</div>
+  <h1>Simulador Pearson VUE</h1>
+  <p>Preguntas de escenario y aplicación — nivel examen estatal real.</p>
+
+  <div class="difficulty-note">
+    <strong>⚠️ Nivel de dificultad elevado.</strong> Las preguntas usan escenarios reales, opciones con distractores plausibles, preguntas en negativo ("¿cuál NO es...?") y aplicación de estatutos de Florida. Igual al formato del examen estatal.
+  </div>
+
+  <div class="mode-grid">
+    <div class="mode-card selected" id="mode-50" onclick="selectMode(50)">
+      <div class="mode-icon">⚡</div>
+      <h3>Repaso Rápido</h3>
+      <p>50 preguntas · Sin límite de tiempo · Retroalimentación inmediata</p>
+    </div>
+    <div class="mode-card" id="mode-150" onclick="selectMode(150)">
+      <div class="mode-icon">🎯</div>
+      <h3>Simulacro Completo</h3>
+      <p>150 preguntas · 3.5 horas · Retroalimentación al final</p>
+    </div>
+  </div>
+  <button class="btn btn-primary" onclick="startExam()" style="width:100%;padding:16px;font-size:17px;">Comenzar Examen</button>
+</div>
+
+<div id="exam-screen" style="display:none;">
+  <header>
+    <div class="logo">Florida 2-15 <span>· Pearson VUE</span></div>
+    <div id="timer">3:30:00</div>
+  </header>
+  <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+  <main>
+    <div class="meta">
+      <span class="badge accent" id="lesson-badge">Lección 1</span>
+      <span class="badge" id="topic-badge">Escenario</span>
+      <span class="badge hard" id="type-badge">Aplicación</span>
+      <span id="q-counter">Pregunta 1 de 50</span>
+    </div>
+    <div id="question-card"></div>
+    <div id="options"></div>
+    <div id="explanation"></div>
+  </main>
+  <div id="bottom-bar">
+    <div id="score-live">Correctas: <span id="correct-count">0</span> / <span id="answered-count">0</span></div>
+    <button class="btn btn-secondary" id="skip-btn" onclick="skipQ()">Omitir</button>
+    <button class="btn btn-primary" id="next-btn" onclick="nextQ()" disabled>Siguiente →</button>
+  </div>
+</div>
+
+<div id="results-screen">
+  <div class="result-circle" id="result-circle">
+    <div id="result-pct">--</div>
+    <small>score</small>
+  </div>
+  <h1 class="result-title" id="result-title">Resultado</h1>
+  <p class="result-sub" id="result-sub"></p>
+  <div class="stats-grid">
+    <div class="stat-box"><div class="num" id="res-correct">-</div><div class="lbl">Correctas</div></div>
+    <div class="stat-box"><div class="num" id="res-wrong">-</div><div class="lbl">Incorrectas</div></div>
+    <div class="stat-box"><div class="num" id="res-time">-</div><div class="lbl">Tiempo</div></div>
+  </div>
+  <div class="lesson-breakdown">
+    <h3>Desempeño por lección</h3>
+    <div id="breakdown-rows"></div>
+  </div>
+  <button class="btn btn-primary" onclick="location.reload()" style="width:100%;padding:16px;font-size:16px;">Nueva Sesión</button>
+</div>
+
+<script>
+const Q = [
+
+// ══════════════════════════════════════════════
+// LECCIÓN 1 — Conceptos Básicos
+// ══════════════════════════════════════════════
+{l:1,t:"Conceptos Básicos",q:"María compró una póliza de vida sobre la vida de su esposo hace tres años. Recientemente se divorciaron. Su esposo muere al año siguiente del divorcio. La aseguradora:",a:["Debe pagar el death benefit porque el insurable interest existía al momento de emitir la póliza","Puede negar el pago porque el insurable interest desapareció al divorciarse","Debe pagar solo la mitad del benefit","Puede negar el pago solo si la causa de muerte fue violenta"],c:0,e:"<strong>Regla clave:</strong> en seguros de vida, el insurable interest debe existir al momento de <em>emitir</em> la póliza, no al momento de la muerte. Como existía al emitirse (matrimonio), la aseguradora debe pagar. Distinto de property insurance donde debe existir al momento del siniestro."},
+{l:1,t:"Conceptos Básicos",q:"Un agente le dice a un cliente: 'Esta póliza cubre absolutamente todo, incluyendo condiciones preexistentes desde el primer día.' La póliza en realidad excluye condiciones preexistentes por 12 meses. El agente ha cometido:",a:["Rebating","Twisting","Misrepresentation que puede anular el contrato","Una práctica aceptable si el cliente no preguntó"],c:2,e:"<strong>Misrepresentation:</strong> declaración falsa de un hecho material que induce al cliente a comprar. Si el cliente hubiera conocido la exclusión, podría haber actuado diferente. Esto puede dar al asegurado el derecho de rescindir el contrato o buscar daños."},
+{l:1,t:"Conceptos Básicos",q:"¿Cuál de los siguientes elementos es el que convierte la solicitud del cliente y la promesa de la aseguradora en un contrato vinculante?",a:["La firma del agente en la solicitud","El pago de la primera prima y la aprobación del underwriter","La entrega física de la póliza al asegurado","La firma del médico en el examen médico"],c:1,e:"<strong>Consideration (contraprestación):</strong> el asegurado paga la prima (su consideration); la aseguradora promete pagar beneficios (su consideration). Ambas consideraciones deben existir para tener contrato válido. La aprobación del underwriter completa la aceptación."},
+{l:1,t:"Conceptos Básicos",q:"Una póliza de seguros establece que 'en caso de ambigüedad en los términos de esta póliza, el beneficio de la duda será para el asegurado.' Este principio se llama:",a:["Doctrine of reasonable expectations","Contra proferentem","Principle of utmost good faith","Waiver and estoppel"],c:1,e:"<strong>Contra proferentem:</strong> las ambigüedades se interpretan en contra de quien redactó el documento (el asegurador). Principio aplicable porque es un contrato de adhesión — solo el asegurador redacta los términos."},
+
+// ══════════════════════════════════════════════
+// LECCIÓN 2 — Tipos de Aseguradoras
+// ══════════════════════════════════════════════
+{l:2,t:"Tipos de Aseguradoras",q:"Un cliente pregunta por qué recibió un 'dividend check' de su aseguradora de vida cuando pensaba que los dividendos eran solo para acciones de bolsa. El agente debe explicar que:",a:["Es un error, las aseguradoras no pagan dividendos","Su póliza es de una mutual company donde los asegurados son los dueños y los dividendos son retorno de exceso de prima","Los dividendos de seguros están garantizados y son fijos","La aseguradora cometió un error contable"],c:1,e:"<strong>Mutual companies:</strong> los tomadores de póliza son los propietarios. Los dividendos representan devolución de primas cobradas en exceso — <em>no están garantizados</em> y no son utilidades de inversión. Por eso el IRS los trata como retorno de prima (no como ingreso gravable hasta exceder las primas pagadas)."},
+{l:2,t:"Tipos de Aseguradoras",q:"Un cliente quiere asegurar un riesgo muy inusual (un yate de competición de alto valor) y ninguna aseguradora admitida en Florida quiere cubrir el riesgo. El agente debe:",a:["Negarse a ayudar al cliente porque el riesgo no es asegurable","Buscar cobertura a través del mercado de surplus lines con un agente de surplus lines licenciado","Crear una póliza personalizada él mismo","Recomendar al cliente que viaje sin seguro"],c:1,e:"<strong>Surplus lines:</strong> mercado para riesgos que las aseguradoras admitidas no quieren/pueden cubrir. Requiere agente con licencia de surplus lines (4-43 en Florida). Las aseguradoras surplus lines no están reguladas igual que las admitidas — no hay protección de la Guaranty Association."},
+
+// ══════════════════════════════════════════════
+// LECCIÓN 3 — Agente y Contrato
+// ══════════════════════════════════════════════
+{l:3,t:"Agente y Contrato",q:"Un agente acepta una prima de un cliente sabiendo que la póliza fue cancelada hace dos semanas, y le dice al cliente que 'todo está bien, está cubierto.' La aseguradora después niega el reclamo. En este escenario:",a:["La aseguradora puede negar el reclamo sin consecuencias porque la póliza estaba cancelada","La aseguradora puede estar obligada a pagar porque el agente tenía apparent authority y el cliente actuó de buena fe","El cliente pierde porque es su responsabilidad verificar su cobertura","El agente no tiene responsabilidad porque solo estaba siendo amable"],c:1,e:"<strong>Apparent authority y estoppel:</strong> si la aseguradora permite que su agente actúe de cierta manera y un tercero de buena fe confía en esa autoridad aparente, la aseguradora puede quedar impedida (estopped) de negar responsabilidad. El agente creó una representación que el cliente tenía razón en creer."},
+{l:3,t:"Agente y Contrato",q:"Carlos solicitó una póliza de vida y pagó la primera prima con su solicitud. El agente emitió un 'conditional receipt.' Carlos muere 10 días después, antes de que el underwriter apruebe la solicitud. ¿Qué ocurre?",a:["La aseguradora no paga porque la póliza no fue aprobada","La aseguradora paga si Carlos era insurable al momento de completar la solicitud","La aseguradora paga el 50% del death benefit","La aseguradora devuelve la prima pero no paga beneficio"],c:1,e:"<strong>Conditional receipt:</strong> otorga cobertura retroactiva a la fecha de la solicitud <em>condicionada</em> a que el solicitante hubiera sido aprobado de haber vivido. Si Carlos cumplía los requisitos de insurability, la aseguradora debe pagar el death benefit completo."},
+{l:3,t:"Agente y Contrato",q:"El período de gracia de 30 días en una póliza de vida significa que si el asegurado muere durante ese período sin haber pagado la prima vencida:",a:["La aseguradora no paga porque la póliza estaba técnicamente lapsa","La aseguradora paga el death benefit completo sin deducción","La aseguradora paga el death benefit menos la prima vencida","La aseguradora paga solo si la causa de muerte no fue preexistente"],c:1,e:"Durante el período de gracia la póliza permanece <strong>en plena vigencia</strong>. Si el asegurado muere durante los 30 días de gracia, el beneficiario recibe el death benefit completo. La aseguradora puede deducir la prima vencida del pago, pero sí paga."},
+{l:3,t:"Agente y Contrato",q:"Ana compró una póliza de vida entera hace 18 meses. Al revisar su póliza, descubre que omitió mencionar que fue tratada por diabetes hace 3 años. La aseguradora puede:",a:["Cancelar la póliza en cualquier momento futuro porque fue fraude","Contestar la validez de la póliza dentro del período de contestability de 2 años","Negar reclamos relacionados con diabetes pero no cancelar la póliza","No hacer nada porque el período de gracia ya pasó"],c:1,e:"<strong>Contestability period:</strong> durante los primeros 2 años, la aseguradora puede investigar y potencialmente rescindir la póliza por misrepresentation material en la solicitud. Después de 2 años, la cláusula de incontestabilidad protege al asegurado (salvo fraude)."},
+
+// ══════════════════════════════════════════════
+// LECCIÓN 4 — Tipos de Vida
+// ══════════════════════════════════════════════
+{l:4,t:"Tipos de Vida",q:"Un cliente de 35 años quiere la mayor cantidad posible de cobertura de muerte por el menor costo de prima hoy, entendiendo que la cobertura no será permanente. ¿Qué producto es más apropiado?",a:["Whole life — por la estabilidad de prima","Term life — mayor face amount por menor prima","Universal life — por la flexibilidad","Variable life — por el potencial de crecimiento"],c:1,e:"<strong>Term life</strong> proporciona el mayor death benefit por el menor costo de prima durante el período cubierto. Ideal para necesidades temporales (hipoteca, hijos dependientes). No acumula cash value. La pregunta pide maximizar cobertura a bajo costo, no permanencia."},
+{l:4,t:"Tipos de Vida",q:"Un cliente tiene una póliza whole life emitida a edad 35. A los 65 años necesita dinero. ¿Cuál de las siguientes opciones le permite acceder a fondos SIN crear un evento gravable inmediato?",a:["Surrender total de la póliza","Policy loan contra el cash value","Retiro parcial del cash value","Venta de la póliza a un tercero (viatical)"],c:1,e:"<strong>Policy loan:</strong> el asegurado toma prestado contra su cash value. No es un retiro — es un préstamo. Los préstamos de pólizas de vida <em>no son eventos gravables</em> porque técnicamente es dinero prestado, no ingreso. Si la póliza lapsa con préstamo pendiente, entonces sí puede haber evento gravable."},
+{l:4,t:"Tipos de Vida",q:"Una póliza 'universal life' tiene un cash value de $25,000 y el costo del seguro mensual (COI) es de $180. El dueño no ha pagado prima en 6 meses. ¿Qué ocurre con la póliza?",a:["La póliza lapsa inmediatamente al no pagar la prima","El COI se deduce del cash value — la póliza sigue vigente mientras haya fondos suficientes","La aseguradora cancela la póliza y devuelve el cash value","La cobertura se reduce automáticamente al 50%"],c:1,e:"<strong>Universal Life — flexibilidad de prima:</strong> el COI se deduce mensualmente del cash value. Si hay fondos, la póliza permanece vigente aunque no se paguen primas. La póliza lapsa solo cuando el cash value es insuficiente para cubrir el COI. Esto es una característica clave de UL vs. Whole Life."},
+{l:4,t:"Tipos de Vida",q:"Un agente vende una póliza de vida industrial (industrial life) a un cliente. ¿Cuál de los siguientes es INCOMPATIBLE con una póliza de vida industrial?",a:["Primas cobradas semanalmente o mensualmente","Face amount de $2,500","El agente visita el hogar para cobrar primas","Face amount de $50,000"],c:3,e:"<strong>Industrial life:</strong> face amount máximo de <strong>$3,000</strong> en Florida. Un face amount de $50,000 no califica como industrial life. Las otras características (primas pequeñas, cobro en el hogar, montos bajos) son típicas del industrial life / debit life."},
+
+// ══════════════════════════════════════════════
+// LECCIÓN 5 — Riders y Provisiones
+// ══════════════════════════════════════════════
+{l:5,t:"Riders y Provisiones",q:"Pedro tiene una póliza whole life con waiver of premium rider. A los 45 años sufre un accidente y queda totalmente discapacitado. Después de 6 meses, ¿qué ocurre?",a:["La póliza se cancela automáticamente porque no puede pagar","Las primas quedan exentas y la póliza continúa acumulando cash value como si se pagaran","La póliza convierte a term insurance","La aseguradora paga el death benefit inmediatamente"],c:1,e:"<strong>Waiver of Premium:</strong> después del período de eliminación (generalmente 6 meses de discapacidad total), las primas futuras se eximen. La póliza continúa <em>exactamente igual</em> — sigue acumulando cash value, los dividendos continúan — como si las primas se estuvieran pagando. Pedro recupera su capacidad → las primas se reanudan."},
+{l:5,t:"Riders y Provisiones",q:"Rosa tiene una póliza de vida con un 'guaranteed insurability rider' (GIR). Este rider le permite:",a:["Aumentar el death benefit sin examen médico en fechas específicas o eventos vitales","Convertir su póliza term a whole life sin examen","Reducir su prima si mejora su salud","Cambiar de aseguradora sin penalidad"],c:0,e:"<strong>Guaranteed Insurability Rider:</strong> permite comprar cobertura adicional en fechas o eventos específicos (matrimonio, nacimiento de hijo, aniversario de póliza) <em>sin evidencia de insurability</em>. Ideal para asegurar la capacidad de aumentar cobertura independientemente del estado de salud futuro."},
+{l:5,t:"Riders y Provisiones",q:"José tiene una póliza whole life con 'accidental death benefit rider' (doble indemnity). Muere en un accidente de auto mientras conducía bajo la influencia del alcohol. ¿El rider paga?",a:["Sí, cualquier muerte accidental activa el rider","No, conducir bajo influencia generalmente excluye el accidental death benefit","Sí, pero solo el 50% del monto adicional","No, porque es un suicide indirecto"],c:1,e:"<strong>Exclusiones del Accidental Death Benefit:</strong> la mayoría de las pólizas excluyen muertes accidentales que resultan de: conducir intoxicado, actividades ilegales, aviación privada, guerra. La aseguradora pagaría el <em>death benefit base</em> normal pero NO el beneficio adicional del rider."},
+{l:5,t:"Riders y Provisiones",q:"Laura tiene una póliza whole life que no puede seguir pagando. Quiere mantener alguna cobertura de vida permanente. Su póliza ofrece opciones de non-forfeiture. ¿Cuál opción mantiene el mismo tipo de póliza (whole life) pero con menor death benefit?",a:["Extended term option","Reduced paid-up option","Cash surrender value","Automatic premium loan"],c:1,e:"<strong>Reduced Paid-Up (RPU):</strong> usa el cash value existente para comprar una póliza whole life pagada, mismo tipo, sin más primas, pero con death benefit reducido. <strong>Extended Term:</strong> mismo face amount pero convertido a term por período limitado. RPU = mismo tipo, menos beneficio. Extended Term = mismo beneficio, tipo diferente, período limitado."},
+
+// ══════════════════════════════════════════════
+// LECCIÓN 6 — Anualidades
+// ══════════════════════════════════════════════
+{l:6,t:"Anualidades",q:"Un cliente de 70 años quiere garantizar que recibirá pagos de su anualidad por al menos 10 años, incluso si muere antes. ¿Qué opción de pago debe seleccionar?",a:["Life only (straight life)","Life with period certain (10 years certain)","Joint and survivor","Lump sum withdrawal"],c:1,e:"<strong>Life with Period Certain:</strong> paga mientras el annuitant viva, pero garantiza pagos por un período mínimo (10 años en este caso). Si muere antes, los pagos continúan al beneficiario por el resto de los 10 años. <strong>Life Only</strong> — pagos cesan al morir, sin garantía de mínimo."},
+{l:6,t:"Anualidades",q:"Una anualidad variable tiene un 'mortality and expense risk charge' (M&E). ¿Para qué sirve este cargo?",a:["Para cubrir comisiones del agente","Para compensar a la aseguradora por garantizar el death benefit mínimo y los gastos de operación","Para financiar los sub-accounts de inversión","Para pagar los impuestos de la anualidad"],c:1,e:"<strong>M&E charge:</strong> es la compensación que cobra la aseguradora en anualidades variables por asumir el riesgo de mortalidad (garantía de death benefit mínimo) y los gastos de administración del contrato. Es un cargo porcentual anual sobre el valor de la cuenta (típicamente 1-1.5%)."},
+{l:6,t:"Anualidades",q:"Carlos acumuló $200,000 en una anualidad diferida. Su base (primas pagadas) es $80,000. Hace un retiro de $30,000 antes de los 59½ años. ¿Qué tratamiento fiscal aplica?",a:["$30,000 libre de impuestos porque es retorno de prima","$30,000 completamente gravable más 10% de penalidad del IRS","Gravable según la proporción de ganancia vs. base","Solo la penalidad del 10%, no impuesto sobre la renta"],c:1,e:"<strong>LIFO rule para anualidades:</strong> el IRS considera que las ganancias salen primero (Last In, First Out). Como la ganancia acumulada ($120,000) es mayor que el retiro ($30,000), los $30,000 se tratan como 100% ganancia — gravable como ingreso ordinario + <em>10% de penalidad</em> por ser menor de 59½."},
+{l:6,t:"Anualidades",q:"¿Cuál de los siguientes NO es una característica de una anualidad fija indexada (Fixed Indexed Annuity)?",a:["El principal está protegido contra pérdidas del mercado","El crecimiento está vinculado parcialmente a un índice bursátil","El propietario asume directamente el riesgo del mercado de valores","Puede tener un cap rate que limita las ganancias máximas"],c:2,e:"En una <strong>Fixed Indexed Annuity</strong>, el asegurador asume el riesgo de mercado — el propietario <em>nunca pierde el principal</em> por caídas del mercado. El crecimiento está vinculado a un índice (como S&P 500) pero limitado por un cap, spread o participation rate. Diferente de variable annuity donde el propietario SÍ asume el riesgo."},
+
+// ══════════════════════════════════════════════
+// LECCIÓN 7 — Planes de Retiro
+// ══════════════════════════════════════════════
+{l:7,t:"Planes de Retiro",q:"María contribuye $7,000 a un Roth IRA este año. Su ingreso es de $180,000 (casada, declaración conjunta). ¿Puede hacer esta contribución completa?",a:["Sí, cualquier persona con ingreso puede contribuir al Roth IRA","No, su ingreso supera el límite de phase-out para contribuciones Roth IRA","Sí, pero solo si no tiene 401(k) en el trabajo","No, el Roth IRA es solo para personas sin plan de retiro en el trabajo"],c:1,e:"El Roth IRA tiene <strong>límites de ingreso</strong>. En 2024, para casados declarando conjuntamente, el phase-out comienza en $230,000 y se elimina a $240,000. Con $180,000, María SÍ puede contribuir el monto completo. (Nota: verifique cifras exactas — el principio del phase-out es lo que el examen evalúa.)"},
+{l:7,t:"Planes de Retiro",q:"Un empleado retira $50,000 de su 401(k) a los 52 años porque necesita pagar una deuda. ¿Cuál es la consecuencia fiscal?",a:["El retiro es libre de impuestos porque es su propio dinero","Paga impuesto sobre la renta ordinario más 10% de penalidad por retiro anticipado","Solo paga 10% de penalidad, sin impuesto sobre la renta","El 50% es libre de impuestos como retorno de contribuciones"],c:1,e:"Retiro anticipado de plan calificado (antes de 59½): <strong>100% gravable como ingreso ordinario + 10% de penalidad</strong>. Las contribuciones 401(k) tradicionales son pre-impuesto — todo el retiro es gravable. La penalidad del 10% aplica salvo excepciones (discapacidad, separación de servicio a 55+, pagos SEPP, etc.)."},
+{l:7,t:"Planes de Retiro",q:"Un plan SIMPLE IRA requiere que el empleador contribuya de una de dos maneras. ¿Cuál de los siguientes NO es una opción de contribución del empleador en un SIMPLE IRA?",a:["Match de hasta 3% del salario del empleado","Contribución no electiva de 2% para todos los empleados elegibles","Contribución discrecional — el empleador elige cada año cuánto aportar","Match reducido de hasta 1% por 2 de cada 5 años"],c:2,e:"Los planes <strong>SIMPLE IRA</strong> requieren que el empleador elija entre: (1) match de hasta 3% del salario, o (2) contribución no electiva fija del 2% para todos elegibles. Las contribuciones <em>discrecionales</em> no existen en SIMPLE IRA — la contribución del empleador es obligatoria. Eso lo diferencia de un plan profit-sharing."},
+
+// ══════════════════════════════════════════════
+// LECCIÓN 8 — Salud — Conceptos
+// ══════════════════════════════════════════════
+{l:8,t:"Salud — Conceptos",q:"Juan tiene un plan de salud con deductible de $2,000, coinsurance de 80/20 y out-of-pocket maximum de $6,000. Recibe una factura médica de $12,000. ¿Cuánto paga Juan en total?",a:["$2,400","$4,000","$6,000","$2,000 + 20% del resto hasta el OOP max"],c:2,e:"Juan paga el deductible: $2,000. Luego el coinsurance: 20% de los $10,000 restantes = $2,000. Total: $4,000. Sin embargo, si el OOP max es $6,000 y aún no lo ha alcanzado en el año, paga $4,000 en este siniestro. <strong>El OOP max de $6,000 es el tope anual total</strong> — una vez alcanzado, el seguro cubre el 100%."},
+{l:8,t:"Salud — Conceptos",q:"Una póliza de discapacidad tiene un 'elimination period' de 90 días y un 'benefit period' de 2 años. Pedro queda discapacitado el 1 de enero. ¿Cuándo recibe su primer pago y hasta cuándo?",a:["Primer pago el 1 de enero, hasta el 1 de enero del año siguiente","Primer pago el 1 de abril, hasta el 1 de abril dos años después","Primer pago el 1 de abril, hasta el 1 de enero dos años después del inicio de discapacidad","Primer pago el 1 de febrero, hasta que pueda regresar a trabajar"],c:1,e:"<strong>Elimination period de 90 días:</strong> primeros 90 días sin pago (período de espera) → primer pago el 1 de abril. <strong>Benefit period de 2 años:</strong> 2 años desde que empiezan los beneficios (1 abril) → pagos hasta 1 de abril, 2 años después. El benefit period comienza cuando empiezan los pagos, no cuando comienza la discapacidad."},
+{l:8,t:"Salud — Conceptos",q:"¿Cuál de los siguientes es un evento calificante que NO activa la cobertura COBRA?",a:["El empleado pierde su trabajo involuntariamente","El empleado reduce sus horas a tiempo parcial quedando inelegible para el plan grupal","El empleado renuncia voluntariamente","El empleado es despedido por conducta grave (gross misconduct)"],c:3,e:"<strong>Excepción COBRA:</strong> el despido por <em>gross misconduct</em> es la única razón de terminación de empleo que NO activa el derecho a COBRA. Todos los demás eventos (renuncia voluntaria, despido sin causa grave, reducción de horas) SÍ activan COBRA."},
+
+// ══════════════════════════════════════════════
+// LECCIÓN 9 — Provisiones de Pólizas de Salud
+// ══════════════════════════════════════════════
+{l:9,t:"Provisiones Salud",q:"Una póliza de salud individual contiene la siguiente cláusula: 'Esta póliza, junto con la solicitud adjunta, constituye el contrato completo entre las partes.' Esta provisión se llama:",a:["Entire contract clause","Incontestability clause","Consideration clause","Grace period clause"],c:0,e:"<strong>Entire Contract Clause:</strong> requiere que la póliza y la solicitud constituyan el contrato completo. Protege al asegurado porque significa que el asegurador no puede invocar documentos externos o declaraciones no incluidas en la solicitud para negar un reclamo. Provisión requerida en pólizas de salud."},
+{l:9,t:"Provisiones Salud",q:"Carmen tenía dos pólizas de salud: una como empleada (Plan A, primario) y otra como dependiente del esposo (Plan B, secundario). Plan A paga $3,000 de una factura de $4,000. ¿Cuánto paga Plan B?",a:["$4,000 — el total de la factura","$1,000 — la cantidad no cubierta por Plan A","$0 — Plan B no paga si Plan A ya pagó algo","$2,000 — el 50% del restante"],c:1,e:"<strong>Coordination of Benefits (COB):</strong> el objetivo es que el total pagado entre los dos planes no exceda el 100% del gasto. Plan A pagó $3,000; quedan $1,000 sin pagar. Plan B como secundario paga los $1,000 restantes. Carmen no recibe más del 100% del gasto médico ($4,000 total de ambos planes)."},
+{l:9,t:"Provisiones Salud",q:"Una póliza de salud individual lapsa porque Luis no pagó la prima. Luis quiere reinstalarla 45 días después. La aseguradora DEBE reinstalar la póliza si:",a:["Luis paga todas las primas vencidas con interés dentro de 3 años","Luis paga las primas vencidas y proporciona evidencia de insurability satisfactoria","Luis solo paga la prima del mes más reciente","La aseguradora no puede rechazar la reinstalación si Luis pagó antes"],c:1,e:"<strong>Reinstatement provision:</strong> si el asegurado solicita reinstalación y paga las primas vencidas + intereses, y proporciona evidencia de insurability aceptable, la aseguradora <em>debe</em> reinstalar dentro de 45 días o se considera reinstalada automáticamente. Condiciones preexistentes que surgieron durante el lapso pueden estar excluidas por hasta 10 días."},
+
+// ══════════════════════════════════════════════
+// LECCIÓN 10 — Tipos de Planes de Salud
+// ══════════════════════════════════════════════
+{l:10,t:"Tipos de Planes",q:"Roberto quiere un plan de salud que le permita ver cualquier especialista sin necesidad de referral, pero también acceder a una red de proveedores con costos más bajos. ¿Qué tipo de plan se adapta mejor?",a:["HMO — porque tiene la red más amplia","PPO — permite ver fuera de red con mayor costo pero no requiere referrals","EPO — porque cubre cualquier médico automáticamente","POS — porque el PCP puede referirlo a cualquier especialista del mundo"],c:1,e:"<strong>PPO (Preferred Provider Organization):</strong> no requiere PCP ni referrals para especialistas. Tiene red preferida (in-network, menor costo) pero permite salirse de la red (out-of-network, mayor costo). Combinación de libertad + incentivo de costos. EPO = no necesita referral pero NO cubre fuera de red."},
+{l:10,t:"Tipos de Planes",q:"Un HSA (Health Savings Account) tiene las siguientes características. ¿Cuál de las siguientes es INCORRECTA?",a:["Las contribuciones son deducibles de impuestos","Los fondos no utilizados se acumulan año tras año (no se pierden)","Se puede usar un HSA junto con cualquier tipo de plan de salud","Los retiros para gastos médicos calificados son libres de impuestos"],c:2,e:"<strong>HSA requiere HDHP:</strong> un HSA solo puede abrirse y mantenerse si el titular tiene un High Deductible Health Plan (HDHP) calificado. No se puede tener un HSA junto con un plan de salud regular (HMO, PPO estándar). Las otras características son correctas: triple ventaja fiscal (contribución deducible, crecimiento libre de impuestos, retiros médicos libres de impuestos)."},
+
+// ══════════════════════════════════════════════
+// LECCIÓN 11 — Medicare
+// ══════════════════════════════════════════════
+{l:11,t:"Medicare",q:"Gloria tiene 67 años y sigue trabajando. Su empleador tiene 25 empleados. ¿Cómo funciona la coordinación entre Medicare y el seguro del empleador?",a:["Medicare es siempre primario para personas mayores de 65","El seguro del empleador es primario; Medicare es secundario porque el empleador tiene más de 20 empleados","Medicare es primario porque Gloria ya cumplió 65","El seguro del empleador y Medicare pagan en partes iguales"],c:1,e:"<strong>Regla de coordinación Medicare-empleador:</strong> si el empleador tiene <strong>20+ empleados</strong>, el plan del empleador es <strong>primario</strong> y Medicare es secundario. Si el empleador tiene menos de 20 empleados, Medicare sería primario. Gloria con empleador de 25 empleados: el plan del trabajo paga primero."},
+{l:11,t:"Medicare",q:"Un beneficiario de Medicare Original fue hospitalizado 90 días. ¿Cuántos 'lifetime reserve days' le quedan disponibles?",a:["60 días","30 días","90 días","0 días — los 90 días agotaron todos los días disponibles"],c:0,e:"<strong>Medicare Part A — hospitalización:</strong> cubre días 1-60 sin copay (después del deductible); días 61-90 con copay diario. Para estadías que exceden 90 días, se usan los <strong>60 lifetime reserve days</strong> — días adicionales de por vida con copay más alto. Una hospitalización de 90 días agota los días 1-90 pero deja los 60 lifetime reserve days intactos."},
+{l:11,t:"Medicare",q:"Un médico que 'no acepta asignación' de Medicare puede cobrar al paciente con Medicare hasta:",a:["Lo que le plazca — no hay límite si no acepta Medicare","115% del Medicare approved amount (limiting charge)","El doble del Medicare approved amount","El costo real del servicio sin ningún límite"],c:1,e:"<strong>Limiting charge:</strong> médicos que no aceptan asignación de Medicare aún pueden ser visitados por beneficiarios, pero solo pueden cobrar hasta el <strong>115% del Medicare approved amount</strong>. No pueden cobrar cualquier cantidad. El exceso (15%) lo paga el beneficiario de su bolsillo (o su Medigap)."},
+
+// ══════════════════════════════════════════════
+// LECCIÓN 12 — Medicaid
+// ══════════════════════════════════════════════
+{l:12,t:"Medicaid",q:"Una persona con Medicaid recibe servicios de long-term care en un asilo de ancianos durante 3 años, con un costo total de $150,000 pagado por Medicaid. Al fallecer, ¿qué puede ocurrir con su herencia?",a:["Los herederos reciben la herencia completa — Medicaid no puede reclamar nada","El estado de Florida puede reclamar la herencia hasta el monto pagado por Medicaid bajo el programa de recuperación (MERP)","Medicaid perdona la deuda automáticamente al fallecer","Solo se puede reclamar si la persona tenía propiedades valoradas en más de $500,000"],c:1,e:"<strong>Medicaid Estate Recovery Program (MERP):</strong> los estados están obligados por ley federal a recuperar los costos de Medicaid de la herencia del beneficiario fallecido para servicios de long-term care. Florida puede reclamar hasta el monto pagado de la herencia. Excepción: el cónyuge sobreviviente, hijos menores, o hijos discapacitados vivos pueden proteger la herencia."},
+{l:12,t:"Medicaid",q:"¿Cuál de los siguientes describe correctamente la diferencia entre Medicare y Medicaid respecto a long-term care?",a:["Medicare cubre long-term care indefinidamente; Medicaid no cubre long-term care","Medicare cubre skilled nursing facility solo hasta 100 días (bajo condiciones); Medicaid puede cubrir long-term care indefinidamente para elegibles","Ambos cubren long-term care por igual","Medicaid cubre solo los primeros 30 días; Medicare cubre el resto"],c:1,e:"<strong>Distinción clave:</strong> Medicare Part A cubre skilled nursing facility <em>solo hasta 100 días</em> y solo después de hospitalización calificante de 3 días — no cubre cuidado custodial a largo plazo. <strong>Medicaid</strong> es el principal pagador de long-term care en EE.UU. para personas con bajos recursos, sin límite de días si el individuo califica."},
+
+// ══════════════════════════════════════════════
+// LECCIÓN 13 — Otros Seguros de Salud
+// ══════════════════════════════════════════════
+{l:13,t:"Otros Seguros Salud",q:"Isabel, de 58 años, compra una póliza de long-term care. Al año siguiente tiene un accidente que la deja sin poder bañarse ni vestirse sola (2 de las 6 ADLs). La aseguradora dice que necesita demostrar que la condición es permanente antes de pagar. ¿Es esto correcto?",a:["Sí, la condición debe ser permanente para calificar","No, el estándar típico es no poder realizar 2 de 6 ADLs por un período esperado de al menos 90 días, no necesariamente permanente","Sí, la aseguradora puede establecer cualquier criterio que quiera","No, cualquier discapacidad temporal activa inmediatamente los beneficios LTC"],c:1,e:"<strong>Criterio de elegibilidad LTC:</strong> el estándar federal (HIPAA) para pólizas LTC con ventajas fiscales requiere que el asegurado no pueda realizar 2 de 6 ADLs por un período esperado de <strong>al menos 90 días</strong>. La condición no debe ser necesariamente permanente — 90 días esperados es el umbral."},
+{l:13,t:"Otros Seguros Salud",q:"Un médico gana $250,000 anuales. Quiere una póliza de disability income que le pague si no puede ejercer su especialidad médica. ¿Qué definición de discapacidad le conviene?",a:["Any occupation — porque paga más","Own occupation — porque le paga si no puede ejercer su especialidad aunque pueda hacer otro trabajo","Modified own occupation — porque es la más común","Social Security disability — porque tiene la cobertura más amplia"],c:1,e:"<strong>Own Occupation:</strong> la definición más favorable para profesionales de alto ingreso. Paga si no puede ejercer <em>su ocupación específica</em>, aunque pueda hacer otro trabajo. Un cirujano que pierde el uso de sus manos califica bajo own occupation aunque pueda ser maestro. <strong>Any occupation</strong> solo paga si no puede hacer ningún trabajo — mucho más difícil de calificar."},
+
+// ══════════════════════════════════════════════
+// LECCIÓN 14 — Seguros Grupales
+// ══════════════════════════════════════════════
+{l:14,t:"Seguros Grupales",q:"Sofía trabaja en una empresa con seguro de vida grupal por $100,000. Renuncia y quiere mantener alguna cobertura. La empresa no ofrece COBRA para vida. ¿Cuál es su opción?",a:["No puede mantener ninguna cobertura de vida al renunciar","Puede ejercer el conversion privilege dentro de 31 días para obtener póliza individual sin examen médico","Puede transferir la póliza grupal a su nuevo empleador","Puede mantener la póliza grupal pagando ella misma la prima por 18 meses"],c:1,e:"<strong>Conversion privilege:</strong> al terminar el empleo, Sofía tiene <strong>31 días</strong> para convertir su cobertura grupal a una póliza individual (generalmente whole life) <em>sin evidencia de insurability</em>. La prima será mayor (basada en su edad y la clase de riesgo estándar), pero no puede ser rechazada por razones médicas."},
+{l:14,t:"Seguros Grupales",q:"Un plan de salud grupal ERISA se diferencia de uno no-ERISA principalmente porque los planes ERISA:",a:["Están sujetos a la regulación estatal de seguros de Florida","Están regulados por el gobierno federal, lo que puede pre-emptar (superar) las leyes estatales de seguros","Son siempre planes de contribución definida","No pueden incluir beneficios de salud mental"],c:1,e:"<strong>ERISA (Employee Retirement Income Security Act):</strong> regula los planes de beneficios de empleados a nivel federal. Los planes ERISA auto-asegurados (self-funded) están exentos de regulación estatal — las leyes de mandatos de Florida no aplican. Esto es por qué grandes empleadores self-funded pueden ofrecer planes con menos beneficios mandatados que las pólizas de seguro reguladas por el estado."},
+
+// ══════════════════════════════════════════════
+// LECCIÓN 15 — Estatutos FL — Licencias
+// ══════════════════════════════════════════════
+{l:15,t:"Estatutos FL — Licencias",q:"Ricardo obtiene su licencia 2-15 en Florida el 1 de marzo. Un mes después, su aseguradora lo 'appoints.' Ricardo ya puede vender para esa aseguradora. Si la aseguradora no renueva su appointment 24 meses después, Ricardo:",a:["Pierde su licencia automáticamente","Puede seguir vendiendo para otras aseguradoras con las que tenga appointment vigente","Debe re-tomar el examen estatal","Tiene 48 meses adicionales antes de perder su licencia"],c:1,e:"<strong>Licencia vs. Appointment:</strong> la <em>licencia</em> la otorga el estado y es del agente. El <em>appointment</em> lo otorga cada aseguradora específica. Si una aseguradora no renueva el appointment, Ricardo pierde la autorización para vender para <em>esa aseguradora</em>, pero su licencia sigue vigente y puede trabajar con otras aseguradoras que sí lo tengan appointado."},
+{l:15,t:"Estatutos FL — Licencias",q:"¿Cuál de las siguientes personas NO necesita una licencia de agente de seguros en Florida?",a:["Un empleado bancario que vende anualidades a clientes del banco","Una persona que cobra primas para su empleador asegurador sin solicitación","Un corredor de bolsa que explica productos de variable annuity","Un agente que solo vende seguros de propiedad pero quiere vender vida ahora"],c:1,e:"<strong>Excepciones a la licencia:</strong> los empleados de aseguradoras que realizan funciones administrativas (cobrar primas, procesar reclamos) <em>sin solicitación</em> no necesitan licencia de agente. La clave es 'sin solicitación' — si el empleado solo recibe primas sin tratar de convencer a nadie de comprar seguros, está exento."},
+{l:15,t:"Estatutos FL — Licencias",q:"Un agente de Florida fue condenado por un delito que involucra deshonestidad financiera hace 8 años. Ahora quiere solicitar una licencia 2-15. El DFS:",a:["Debe aprobar la licencia porque el delito fue hace más de 7 años","Puede denegar la licencia — ciertos delitos relacionados con deshonestidad son causa permanente de denegación independientemente del tiempo","Debe aprobar si el agente ha pagado su deuda con la sociedad","Puede aprobar con condiciones por 2 años de prueba"],c:1,e:"<strong>Antecedentes criminales:</strong> Florida puede denegar licencias por delitos que involucran <em>deshonestidad, fraude, o conducta criminal</em> sin importar cuánto tiempo ha pasado. No hay un límite de años automático. El DFS evalúa cada caso, pero delitos de deshonestidad financiera son señales de alerta serias para una profesión basada en confianza."},
+
+// ══════════════════════════════════════════════
+// LECCIÓN 16 — Estatutos FL — Conducta
+// ══════════════════════════════════════════════
+{l:16,t:"Estatutos FL — Conducta",q:"Un agente le dice a una cliente de 65 años: 'Su póliza whole life actual es obsoleta. Esta nueva póliza de vida universal le dará mejores rendimientos.' Sin mostrar una comparación escrita de valores, convence a la cliente de cancelar su póliza de 20 años y comprar la nueva. El agente ha cometido:",a:["Rebating — porque prometió mejor rendimiento","Twisting — inducir reemplazo mediante representación incompleta o falsa","Sliding — porque agregó cobertura sin consentimiento","Churning — porque es la misma compañía"],c:1,e:"<strong>Twisting:</strong> inducir a un asegurado a cancelar una póliza existente y reemplazarla con una de <em>diferente aseguradora</em> usando información falsa o incompleta. La cliente pierde 20 años de cash value acumulado, reinicia el período de contestability, y posiblemente paga mayor prima. Florida requiere formulario de comparación en reemplazos."},
+{l:16,t:"Estatutos FL — Conducta",q:"Un agente le ofrece a un cliente: 'Si compra esta póliza de vida conmigo, yo mismo pago el primer mes de prima de mi bolsillo.' Esto es:",a:["Una práctica de ventas aceptable si el agente lo hace voluntariamente","Rebating — ilegal en Florida independientemente de la intención","Twisting — porque cambia las condiciones de la póliza","Una práctica aceptable solo si el DFS la aprueba"],c:1,e:"<strong>Rebating:</strong> ofrecer o dar al prospecto cualquier parte de la prima, comisión, u otro beneficio de valor como incentivo para comprar — es <strong>ilegal en Florida</strong> sin importar si el agente lo hace 'de buena fe' o voluntariamente. Viola la ley de seguros y puede resultar en suspensión o revocación de licencia."},
+{l:16,t:"Estatutos FL — Conducta",q:"Una aseguradora de salud recibe un reclamo limpio (clean claim) el 1 de enero. El estatuto de Florida requiere pago dentro de 45 días. El 20 de febrero, el reclamo aún no ha sido pagado. ¿Qué aplica?",a:["La aseguradora tiene 30 días adicionales sin consecuencias","La aseguradora debe pagar el reclamo más interés sobre el monto vencido","El proveedor médico pierde el derecho al pago","La aseguradora puede negar el reclamo si lo considera tardío"],c:1,e:"<strong>Florida Statute — clean claims:</strong> si no se paga dentro de 45 días, la aseguradora debe pagar el monto del reclamo <em>más interés</em> sobre el saldo vencido. El 20 de febrero ya pasaron 50 días — aplica interés de mora. El incumplimiento repetido puede resultar en sanciones regulatorias del DFS."},
+{l:16,t:"Estatutos FL — Conducta",q:"Un agente de seguros de vida en Florida actúa también como asesor financiero. Sin mencionarlo al cliente, recibe una comisión de una aseguradora por recomendar un producto. Esto puede constituir:",a:["Una práctica aceptable porque las comisiones son normales en seguros","Una violación del deber fiduciario si el agente se presenta como asesor independiente sin revelar el conflicto de interés","Twisting porque cambia las recomendaciones","Rebating porque recibe dinero adicional"],c:1,e:"<strong>Conflicto de interés y fiduciary duty:</strong> si el agente se presenta como asesor neutral o independiente, pero recibe compensación no revelada, viola su deber fiduciario. En el contexto de seguros regulares, la revelación de comisiones puede ser requerida; en el contexto de inversiones (RIA), la revelación es obligatoria bajo fiduciary standard."},
+
+// ══════════════════════════════════════════════
+// LECCIÓN 17 — NAIC y Disposiciones Modelo
+// ══════════════════════════════════════════════
+{l:17,t:"NAIC y Modelo",q:"Florida adopta el modelo de reemplazo de la NAIC. Cuando un agente propone reemplazar una póliza de vida existente, ¿cuál de los siguientes NO es requerido?",a:["Entregar un formulario de comparación al prospecto","Notificar a la aseguradora existente sobre el reemplazo propuesto","Obtener la aprobación del DFS antes de proceder con el reemplazo","Mantener copias de los documentos de reemplazo en el expediente"],c:2,e:"El proceso de reemplazo bajo las regulaciones de Florida <strong>no requiere aprobación previa del DFS</strong>. Los requisitos son: formulario de comparación al cliente, notificación a la aseguradora existente (que tiene derecho a contactar al cliente para intentar retenerlo), y mantener registros. La aprobación del DFS no es un paso del proceso."},
+{l:17,t:"NAIC y Modelo",q:"El Buyer's Guide que los agentes deben entregar al vender vida en Florida tiene como propósito principal:",a:["Explicar específicamente los valores de la póliza que se está vendiendo","Educar al consumidor sobre conceptos generales de seguro de vida para que pueda tomar decisiones informadas","Comparar los productos de la aseguradora con los competidores","Revelar la comisión del agente"],c:1,e:"El <strong>Buyer's Guide</strong> es un documento de educación general sobre seguros de vida — no es específico de ninguna póliza. Explica conceptos como face amount, cash value, tipos de pólizas. El <strong>Policy Summary</strong> es el documento que contiene los detalles específicos de la póliza propuesta. Ambos son requeridos."},
+
+// ══════════════════════════════════════════════
+// LECCIÓN 18 — Variable Products
+// ══════════════════════════════════════════════
+{l:18,t:"Variable Products",q:"Un agente licenciado 2-15 sin registro FINRA le vende una variable annuity a un cliente. ¿Qué ha ocurrido?",a:["Nada — la licencia 2-15 es suficiente para vender cualquier anualidad","Ha cometido una violación grave — vender productos variables sin registro FINRA es ilegal","Solo necesita el registro FINRA si la prima supera $100,000","Es aceptable si la venta fue bajo supervisión de un agente con FINRA"],c:1,e:"Vender productos variables (variable life, variable annuity) requiere: <strong>(1) licencia 2-15 de Florida + (2) registro FINRA (Series 6 o 7) + (3) afiliación con un broker-dealer</strong>. Hacerlo sin registro FINRA es una violación seria tanto de las leyes de securities como de las de seguros, sujeto a sanciones del DFS y de FINRA/SEC."},
+{l:18,t:"Variable Products",q:"Los fondos en una anualidad variable se invierten en 'separate accounts.' ¿Cuál es la característica principal de los separate accounts?",a:["Están garantizados por la FDIC como depósitos bancarios","Están separados de los activos generales de la aseguradora y reflejan el valor del mercado","Están invertidos exclusivamente en bonos del gobierno federal","Solo pueden invertirse en acciones del S&P 500"],c:1,e:"<strong>Separate accounts:</strong> los fondos de productos variables se mantienen <em>separados</em> de los activos generales (general account) de la aseguradora. Su valor fluctúa con el mercado. Esta separación protege al propietario si la aseguradora quiebra (los fondos no pueden ser tomados por acreedores de la aseguradora). No están garantizados por FDIC."},
+
+// ══════════════════════════════════════════════
+// LECCIÓN 19 — Ética y Mejores Prácticas
+// ══════════════════════════════════════════════
+{l:19,t:"Ética y Mejores Prácticas",q:"Un agente visita a una señora de 82 años en un asilo de ancianos. Después de una larga conversación, la convence de firmar una solicitud de anualidad de $200,000 con período de surrender de 15 años. La señora tiene demencia leve según sus registros médicos. ¿Qué problema ético y legal existe aquí?",a:["Ninguno, si la señora firmó voluntariamente","Posible explotación financiera de adulto mayor y venta de producto inadecuado — la señora puede no tener capacidad legal para contratar y la anualidad es inadecuada para su edad y situación","Solo es un problema si los herederos se quejan","El agente debe pagar una multa de $500 por visitar en asilos"],c:1,e:"<strong>Múltiples problemas:</strong> (1) <em>Capacidad legal</em> — alguien con demencia puede carecer de capacidad contractual, haciendo el contrato anulable; (2) <em>Suitability</em> — una anualidad con 15 años de surrender period para una persona de 82 años es claramente inadecuada; (3) <em>Senior exploitation</em> — Florida tiene protecciones especiales para adultos mayores vulnerables. El agente puede enfrentar cargos civiles y criminales."},
+{l:19,t:"Ética y Mejores Prácticas",q:"¿Cuál de las siguientes acciones por parte de un agente de seguros constituye 'churning'?",a:["Convencer a un cliente de cambiar de State Farm a Allstate para obtener mejor cobertura","Recomendar a un cliente que cambie su póliza whole life de Compañía X por una de la misma Compañía X con más riders, generando nueva comisión sin beneficio real para el cliente","Vender múltiples pólizas de diferentes tipos al mismo cliente","Vender seguros de vida y salud al mismo cliente en la misma reunión"],c:1,e:"<strong>Churning vs. Twisting:</strong> Churning = reemplazar pólizas del <em>mismo asegurador</em> repetidamente para generar comisiones nuevas. Twisting = reemplazar pólizas entre <em>diferentes aseguradoras</em>. Ambos son ilegales y perjudican al cliente (pierde cash value acumulado, reinicia contestability, paga nuevos gastos de adquisición)."},
+
+// ══════════════════════════════════════════════
+// LECCIÓN 20 — Regulación y Compliance
+// ══════════════════════════════════════════════
+{l:20,t:"Regulación y Compliance",q:"El DFS de Florida investiga a un agente por una queja de cliente. El agente alega que no sabía que su acción era ilegal. ¿Cómo afecta esto a las posibles sanciones?",a:["El desconocimiento elimina cualquier sanción — no hay intención maliciosa","El desconocimiento puede reducir la multa de $10,000 (intencional) a $5,000 (no intencional), pero no elimina la sanción","El desconocimiento siempre exime de responsabilidad en derecho de seguros","Solo aplica sanción si hay víctima que haya perdido dinero"],c:1,e:"<strong>Florida Insurance Code:</strong> las violaciones pueden ser intencionales o no intencionales. <em>Intencional</em>: hasta $10,000 por violación. <em>No intencional</em>: hasta $5,000 por violación. El desconocimiento <em>no exime</em> — es responsabilidad del agente conocer las leyes bajo las que opera. 'Ignorantia juris non excusat' (la ignorancia de la ley no excusa)."},
+{l:20,t:"Regulación y Compliance",q:"La Florida Life and Health Insurance Guaranty Association (FLAHIGA) protege a los asegurados si una aseguradora quiebra. ¿Cuál de los siguientes NO está cubierto por FLAHIGA?",a:["Pólizas de vida individual con death benefit hasta $300,000","Anualidades fijas hasta $250,000 en valor de acumulación","Pólizas de salud individuales hasta $300,000 en beneficios","Anualidades variables con inversiones en separate accounts"],c:3,e:"<strong>FLAHIGA NO cubre productos variables</strong> (variable life, variable annuities). Los separate accounts de productos variables pertenecen al propietario y están separados de los activos de la aseguradora, por lo que tienen protección diferente. FLAHIGA cubre: vida (hasta $300K death benefit, $100K cash value), salud (hasta $300K), anualidades fijas (hasta $250K). Las cifras exactas pueden variar — el principio es que variables están excluidos."},
+{l:20,t:"Regulación y Compliance",q:"Un agente recibe una notificación de que el DFS quiere investigarlo. El agente decide no cooperar y no responde a las citaciones. ¿Qué puede ocurrir?",a:["Nada, el DFS no tiene poder de enforcement directo sobre agentes privados","La no cooperación con una investigación del DFS es causa independiente de suspensión o revocación de licencia","El DFS solo puede multar, no revocar la licencia por no cooperar","El DFS necesita orden judicial antes de poder tomar cualquier acción"],c:1,e:"<strong>DFS enforcement powers:</strong> el Departamento de Servicios Financieros de Florida tiene amplia autoridad regulatoria sobre agentes licenciados. La <em>no cooperación con investigaciones</em> es una violación independiente que puede resultar en suspensión o revocación de licencia, adicional a cualquier sanción por la conducta original investigada. Los agentes licenciados aceptan esta jurisdicción como condición de la licencia."},
+{l:20,t:"Regulación y Compliance",q:"Un agente de seguros de vida en Florida muere. Su viuda quiere continuar operando el negocio del agente. ¿Cuánto tiempo tiene para obtener su propia licencia bajo la ley de Florida?",a:["No puede operar el negocio bajo ninguna circunstancia","Hasta 6 meses bajo supervisión de un agente licenciado, mientras obtiene su propia licencia","Puede continuar indefinidamente si nombra a un agente licenciado como supervisor","Solo puede operar si el agente tenía un partnership registrado"],c:1,e:"<strong>Temporary license / estate provisions:</strong> Florida permite períodos de transición cuando un agente muere o queda incapacitado, generalmente <strong>hasta 6 meses</strong> bajo supervisión adecuada para dar tiempo a que los sobrevivientes o sucesores obtengan sus propias licencias o transfieran el negocio. Los detalles exactos dependen del tipo de negocio y estructura."},
+
+];
+
+// ══════════════════════════════════════════════
+// LÓGICA DEL EXAMEN
+// ══════════════════════════════════════════════
+let MODE = 50;
+let questions = [];
+let current = 0;
+let answers = {};
+let timerInterval = null;
+let secondsLeft = 0;
+let startTime = null;
+let showFeedback = true;
+
+function selectMode(n) {
+  MODE = n;
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('mode-' + n).classList.add('selected');
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startExam() {
+  showFeedback = MODE === 50;
+  let pool = shuffle(Q);
+  if (MODE === 50) {
+    questions = pool.slice(0, 50);
+  } else {
+    while (pool.length < 150) pool = pool.concat(shuffle(Q));
+    questions = pool.slice(0, 150);
+  }
+  secondsLeft = MODE === 50 ? 0 : 3 * 3600 + 30 * 60;
+  startTime = Date.now();
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('exam-screen').style.display = 'block';
+  if (MODE === 150) {
+    timerInterval = setInterval(tickTimer, 1000);
+    updateTimerDisplay();
+  } else {
+    document.getElementById('timer').style.display = 'none';
+  }
+  renderQuestion();
+}
+
+function tickTimer() {
+  secondsLeft--;
+  updateTimerDisplay();
+  if (secondsLeft <= 0) { clearInterval(timerInterval); finishExam(); }
+  if (secondsLeft <= 300) document.getElementById('timer').classList.add('urgent');
+}
+
+function updateTimerDisplay() {
+  const h = Math.floor(secondsLeft / 3600);
+  const m = Math.floor((secondsLeft % 3600) / 60);
+  const s = secondsLeft % 60;
+  document.getElementById('timer').textContent =
+    h + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  document.getElementById('lesson-badge').textContent = 'Lección ' + q.l;
+  document.getElementById('topic-badge').textContent = q.t;
+  document.getElementById('q-counter').textContent = 'Pregunta ' + (current + 1) + ' de ' + questions.length;
+  document.getElementById('progress-bar').style.width = ((current / questions.length) * 100) + '%';
+  document.getElementById('question-card').textContent = q.q;
+
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.a.forEach((text, i) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${text}</span>`;
+    div.dataset.idx = i;
+    div.onclick = () => selectOption(div, i);
+    opts.appendChild(div);
+  });
+
+  document.getElementById('explanation').className = '';
+  document.getElementById('explanation').innerHTML = '';
+  document.getElementById('next-btn').disabled = true;
+  updateScore();
+}
+
+function selectOption(el, idx) {
+  if (el.classList.contains('disabled')) return;
+  const q = questions[current];
+  document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  answers[current] = idx;
+
+  if (showFeedback) {
+    document.querySelectorAll('.option').forEach(o => {
+      o.classList.add('disabled');
+      const oIdx = parseInt(o.dataset.idx);
+      if (oIdx === q.c) o.classList.add('correct');
+      else if (o === el && oIdx !== q.c) o.classList.add('wrong');
+    });
+    const exp = document.getElementById('explanation');
+    exp.innerHTML = (idx === q.c ? '✅ <strong>Correcto.</strong> ' : '❌ <strong>Incorrecto.</strong> ') + q.e;
+    exp.className = 'show';
+  }
+  document.getElementById('next-btn').disabled = false;
+  updateScore();
+}
+
+function nextQ() {
+  if (current < questions.length - 1) { current++; renderQuestion(); }
+  else finishExam();
+}
+
+function skipQ() {
+  if (current < questions.length - 1) { current++; renderQuestion(); }
+}
+
+function updateScore() {
+  let correct = 0, answered = 0;
+  Object.keys(answers).forEach(k => {
+    answered++;
+    if (answers[k] === questions[k].c) correct++;
+  });
+  document.getElementById('correct-count').textContent = correct;
+  document.getElementById('answered-count').textContent = answered;
+}
+
+function finishExam() {
+  clearInterval(timerInterval);
+  document.getElementById('exam-screen').style.display = 'none';
+  document.getElementById('results-screen').className = 'show';
+
+  let correct = 0;
+  const total = questions.length;
+  const byLesson = {};
+
+  questions.forEach((q, i) => {
+    const key = 'L' + q.l + ' ' + q.t;
+    if (!byLesson[key]) byLesson[key] = { correct: 0, total: 0 };
+    byLesson[key].total++;
+    if (answers[i] === q.c) { correct++; byLesson[key].correct++; }
+  });
+
+  const pct = Math.round((correct / total) * 100);
+  const passed = pct >= 70;
+
+  document.getElementById('result-pct').innerHTML = pct + '%';
+  if (!passed) document.getElementById('result-circle').classList.add('fail');
+  document.getElementById('result-title').textContent = passed ? '¡Aprobado!' : 'A Seguir Estudiando';
+  document.getElementById('result-sub').textContent = passed
+    ? 'Superaste el 70% requerido. Estás listo para el examen estatal.'
+    : 'El mínimo es 70%. Revisa las lecciones en rojo y vuelve a intentarlo.';
+
+  document.getElementById('res-correct').textContent = correct;
+  document.getElementById('res-wrong').textContent = total - correct;
+  const elapsed = Math.round((Date.now() - startTime) / 1000);
+  document.getElementById('res-time').textContent = Math.floor(elapsed/60) + ':' + String(elapsed%60).padStart(2,'0');
+
+  const rows = document.getElementById('breakdown-rows');
+  rows.innerHTML = '';
+  Object.entries(byLesson)
+    .sort((a,b) => (a[1].correct/a[1].total) - (b[1].correct/b[1].total))
+    .forEach(([key, data]) => {
+      const p = Math.round((data.correct / data.total) * 100);
+      const row = document.createElement('div');
+      row.className = 'lb-row';
+      row.innerHTML = `<span class="lb-label">${key}</span>
+        <div class="lb-bar-wrap"><div class="lb-bar ${p < 70 ? 'bad' : ''}" style="width:${p}%"></div></div>
+        <span class="lb-pct">${p}%</span>`;
+      rows.appendChild(row);
+    });
+}
+</script>
+</body>
+</html>
