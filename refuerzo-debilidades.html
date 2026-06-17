@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refuerzo de Áreas Débiles — Florida 2-15</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0f1923; --surface: #162030; --card: #1c2c3e; --border: #243447;
+    --accent: #f5a623; --accent2: #00c896; --warn: #f5a623; --danger: #e84040;
+    --text: #e8edf2; --muted: #7a90a8;
+    --correct-bg: #0a2e22; --wrong-bg: #2e0d0d;
+  }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .logo { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; }
+  .logo span { color: var(--muted); font-weight: 400; }
+  #qtimer { font-size: 14px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+  #progress-bar-wrap { background: var(--border); height: 4px; }
+  #progress-bar { height: 4px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .3s; width: 0%; }
+  main { flex: 1; padding: 24px 16px 80px; max-width: 780px; margin: 0 auto; width: 100%; }
+  .meta { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+  .badge { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; background: var(--card); border: 1px solid var(--border); color: var(--muted); }
+  .badge.accent { border-color: var(--accent); color: var(--accent); }
+  #q-counter { margin-left: auto; font-size: 13px; color: var(--muted); }
+  #question-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 26px; margin-bottom: 18px; line-height: 1.75; font-size: 16px; }
+  #options { display: flex; flex-direction: column; gap: 11px; }
+  .option { background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px; padding: 15px 18px; cursor: pointer; display: flex; align-items: flex-start; gap: 14px; transition: border-color .15s, background .15s; font-size: 14.5px; line-height: 1.55; }
+  .option:hover:not(.disabled) { border-color: var(--accent); background: #1a2e42; }
+  .opt-letter { min-width: 26px; height: 26px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--muted); flex-shrink: 0; margin-top: 1px; }
+  .option.selected { border-color: var(--accent); background: #102033; }
+  .option.selected .opt-letter { background: var(--accent); color: #1a1200; }
+  .option.correct { border-color: var(--accent2); background: var(--correct-bg); }
+  .option.correct .opt-letter { background: var(--accent2); color: #fff; }
+  .option.wrong { border-color: var(--danger); background: var(--wrong-bg); }
+  .option.wrong .opt-letter { background: var(--danger); color: #fff; }
+  .option.disabled { cursor: default; }
+  #explanation { display: none; background: #0d1e2e; border: 1px solid var(--border); border-left: 4px solid var(--accent2); border-radius: 8px; padding: 16px 20px; font-size: 13.5px; line-height: 1.75; color: #c0d0e0; margin-top: 14px; }
+  #explanation.show { display: block; }
+  #explanation strong { color: var(--accent2); }
+  #explanation em { color: var(--warn); font-style: normal; }
+  #bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  #score-live { font-size: 13px; color: var(--muted); }
+  #score-live span { color: var(--text); font-weight: 700; }
+  .btn { padding: 11px 26px; border-radius: 8px; border: none; font-size: 15px; font-weight: 700; cursor: pointer; transition: opacity .15s; }
+  .btn:disabled { opacity: .35; cursor: default; }
+  .btn-primary { background: var(--accent); color: #1a1200; }
+  .btn-primary:hover:not(:disabled) { opacity: .85; }
+  .btn-secondary { background: transparent; border: 1.5px solid var(--border); color: var(--muted); font-size: 13px; padding: 9px 16px; }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  #results-screen { display: none; max-width: 680px; margin: 0 auto; padding: 40px 16px 80px; text-align: center; }
+  #results-screen.show { display: block; }
+  .result-circle { width: 140px; height: 140px; border-radius: 50%; margin: 0 auto 28px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 36px; font-weight: 800; border: 5px solid var(--accent2); }
+  .result-circle.fail { border-color: var(--danger); }
+  h1.result-title { font-size: 26px; margin-bottom: 8px; }
+  .result-sub { color: var(--muted); margin-bottom: 32px; font-size: 15px; }
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 32px; }
+  .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 12px; }
+  .stat-box .num { font-size: 28px; font-weight: 800; color: var(--accent); }
+  .stat-box .lbl { font-size: 11px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: .8px; }
+  .lesson-breakdown { text-align: left; margin-bottom: 32px; }
+  .lesson-breakdown h3 { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+  .lb-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 13px; }
+  .lb-label { min-width: 150px; color: var(--muted); font-size: 11.5px; line-height: 1.3; }
+  .lb-bar-wrap { flex: 1; background: var(--border); border-radius: 4px; height: 8px; position: relative; }
+  .lb-bar { height: 8px; border-radius: 4px; background: var(--accent2); }
+  .lb-bar.bad { background: var(--danger); }
+  .lb-baseline { position: absolute; top: -3px; width: 2px; height: 14px; background: #fff; opacity: .6; }
+  .lb-pct { min-width: 86px; text-align: right; font-weight: 700; font-size: 12px; }
+  .lb-pct .delta { font-size: 10px; font-weight: 700; margin-left: 4px; }
+  .lb-pct .delta.up { color: var(--accent2); }
+  .lb-pct .delta.down { color: var(--danger); }
+  #start-screen { max-width: 680px; margin: 30px auto; padding: 0 16px; }
+  #start-screen h1 { font-size: 26px; margin-bottom: 6px; text-align: center; }
+  #start-screen .lead { color: var(--muted); margin-bottom: 24px; line-height: 1.6; text-align: center; font-size: 14px; }
+  .sec-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; cursor: pointer; transition: border-color .15s, opacity .15s; display: flex; align-items: center; gap: 14px; }
+  .sec-card.off { opacity: .45; }
+  .sec-card:hover { border-color: var(--accent); }
+  .sec-check { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--muted); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: transparent; }
+  .sec-card.selected .sec-check { background: var(--accent); border-color: var(--accent); color: #1a1200; }
+  .sec-body { flex: 1; }
+  .sec-body h3 { font-size: 14.5px; margin-bottom: 3px; }
+  .sec-body p { font-size: 12px; color: var(--muted); line-height: 1.45; }
+  .sec-pct { font-size: 20px; font-weight: 800; min-width: 54px; text-align: center; padding: 6px 0; border-radius: 8px; }
+  .sec-pct.r1 { background: rgba(232,64,64,.18); color: #ff8888; }
+  .sec-pct.r2 { background: rgba(245,166,35,.18); color: #ffc36b; }
+  .mode-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 22px 0; }
+  .mode-btn { background: var(--card); border: 1.5px solid var(--border); border-radius: 10px; padding: 14px 10px; text-align: center; cursor: pointer; font-size: 13px; font-weight: 700; color: var(--text); }
+  .mode-btn:hover { border-color: var(--accent); }
+  .mode-btn small { display: block; color: var(--muted); font-weight: 400; font-size: 11px; margin-top: 3px; }
+  details.glossary { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; margin: 22px 0; }
+  details.glossary summary { cursor: pointer; font-size: 14px; font-weight: 700; color: var(--accent); list-style: none; }
+  details.glossary summary::-webkit-details-marker { display: none; }
+  .gloss-item { margin-top: 14px; font-size: 12.5px; line-height: 1.6; color: #c0d0e0; }
+  .gloss-item b { color: var(--text); }
+  .history-note { font-size: 11.5px; color: var(--muted); text-align: center; margin-top: 18px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div id="start-screen">
+  <div style="font-size:12px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;text-align:center;">Florida 2-15 · Refuerzo Dirigido</div>
+  <h1>Tus 4 Áreas Débiles</h1>
+  <p class="lead">Basado en tu reporte de Pearson VUE del 16/06/2026 (56/70). Estas son las secciones donde más puntos perdiste. Elige cuáles practicar ahora.</p>
+
+  <div class="sec-card selected" data-s="2" onclick="toggleSec(this,2)">
+    <div class="sec-check">✓</div>
+    <div class="sec-body"><h3>Retiro y Otros Conceptos de Seguro</h3><p>IRA, 401(k), anualidades como vehículo de retiro, Seguro Social, planes calificados</p></div>
+    <div class="sec-pct r1">37%</div>
+  </div>
+  <div class="sec-card selected" data-s="1" onclick="toggleSec(this,1)">
+    <div class="sec-check">✓</div>
+    <div class="sec-body"><h3>Provisiones de Vida, Riders y Exclusiones</h3><p>Período de revisión gratuita, no decomiso, cláusulas adicionales, beneficiarios</p></div>
+    <div class="sec-pct r1">40%</div>
+  </div>
+  <div class="sec-card selected" data-s="3" onclick="toggleSec(this,3)">
+    <div class="sec-check">✓</div>
+    <div class="sec-body"><h3>Tipos de Pólizas de Salud</h3><p>HMO/PPO, HSA, ingreso por discapacidad, Cuidado a Largo Plazo, Medicare</p></div>
+    <div class="sec-pct r2">43%</div>
+  </div>
+  <div class="sec-card selected" data-s="4" onclick="toggleSec(this,4)">
+    <div class="sec-check">✓</div>
+    <div class="sec-body"><h3>Estatutos FL — Vida y Anualidades</h3><p>Reemplazo de pólizas, FLAHIGA, productos variables, prácticas indebidas</p></div>
+    <div class="sec-pct r2">46%</div>
+  </div>
+
+  <details class="glossary">
+    <summary>📖 Glosario rápido — términos oficiales en español</summary>
+    <div class="gloss-item"><b>Período de revisión gratuita:</b> días tras recibir la póliza para cancelarla con reembolso completo. En Florida: 14 días en vida, 21 días en anualidades.</div>
+    <div class="gloss-item"><b>Período de gracia:</b> tiempo adicional tras vencer una prima durante el cual la póliza sigue vigente. En salud con prima mensual en Florida: al menos 10 días.</div>
+    <div class="gloss-item"><b>Período de impugnabilidad:</b> generalmente 2 años; tiempo en que la aseguradora puede investigar y anular la póliza por información falsa en la solicitud.</div>
+    <div class="gloss-item"><b>Cláusula de exención de prima:</b> libera al asegurado de pagar primas si queda totalmente discapacitado, sin perder ningún beneficio de la póliza.</div>
+    <div class="gloss-item"><b>Opciones de no decomiso:</b> póliza saldada reducida (mismo tipo, menor beneficio, sin más primas) y término extendido (mismo beneficio, cobertura temporal).</div>
+    <div class="gloss-item"><b>Cuidado a Largo Plazo (LTC):</b> cubre asistencia cuando el asegurado no puede realizar al menos 2 de 6 Actividades de la Vida Diaria (AVD) por un período esperado de 90 días o más.</div>
+    <div class="gloss-item"><b>IRA Tradicional vs. IRA Roth:</b> en la Tradicional las contribuciones suelen ser deducibles y los retiros se gravan; en la Roth las contribuciones no son deducibles, pero los retiros calificados están libres de impuestos.</div>
+    <div class="gloss-item"><b>Reemplazo de pólizas:</b> proceso regulado al proponer cancelar una póliza vigente por una nueva; exige formulario de comparación y notificación a la aseguradora actual, nunca aprobación previa del Departamento de Servicios Financieros.</div>
+  </details>
+
+  <div class="mode-row">
+    <div class="mode-btn" onclick="startQuiz(15)">Sesión Rápida<small>15 preguntas</small></div>
+    <div class="mode-btn" onclick="startQuiz(999)">Sesión Completa<small>todas las disponibles</small></div>
+  </div>
+
+  <div class="history-note" id="history-note"></div>
+</div>
+
+<div id="exam-screen" style="display:none;">
+  <header>
+    <a href="index.html" style="font-size:13px;color:var(--muted);text-decoration:none;white-space:nowrap;">← Academia</a>
+    <div class="logo">Florida 2-15 <span>· Refuerzo</span></div>
+    <div id="qtimer">⏱ 0:00</div>
+  </header>
+  <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+  <main>
+    <div class="meta">
+      <span class="badge accent" id="topic-badge">Sección</span>
+      <span id="q-counter">Pregunta 1 de 15</span>
+    </div>
+    <div id="question-card"></div>
+    <div id="options"></div>
+    <div id="explanation"></div>
+  </main>
+  <div id="bottom-bar">
+    <div id="score-live">Correctas: <span id="correct-count">0</span> / <span id="answered-count">0</span></div>
+    <button class="btn btn-secondary" id="skip-btn" onclick="skipQ()">Omitir</button>
+    <button class="btn btn-primary" id="next-btn" onclick="nextQ()" disabled>Siguiente →</button>
+  </div>
+</div>
+
+<div id="results-screen">
+  <div class="result-circle" id="result-circle">
+    <div id="result-pct">--</div>
+    <small>score</small>
+  </div>
+  <h1 class="result-title" id="result-title">Resultado</h1>
+  <p class="result-sub" id="result-sub"></p>
+  <div class="stats-grid">
+    <div class="stat-box"><div class="num" id="res-correct">-</div><div class="lbl">Correctas</div></div>
+    <div class="stat-box"><div class="num" id="res-wrong">-</div><div class="lbl">Incorrectas</div></div>
+    <div class="stat-box"><div class="num" id="res-time">-</div><div class="lbl">Prom./pregunta</div></div>
+  </div>
+  <div class="lesson-breakdown">
+    <h3>Tu sección débil original (línea blanca) vs. esta práctica</h3>
+    <div id="breakdown-rows"></div>
+  </div>
+  <button class="btn btn-primary" onclick="location.reload()" style="width:100%;padding:16px;font-size:16px;">Nueva Sesión</button>
+</div>
+
+<script>
+const SECTION_META = {
+  1: { name: "Provisiones de Vida, Riders y Exclusiones", baseline: 40 },
+  2: { name: "Retiro y Otros Conceptos de Seguro", baseline: 37 },
+  3: { name: "Tipos de Pólizas de Salud", baseline: 43 },
+  4: { name: "Estatutos FL — Vida y Anualidades", baseline: 46 }
+};
+
+const R = [
+
+// ── SECCIÓN 1: Provisiones de Vida, Riders y Exclusiones ──
+{s:1,q:"Jorge recibe en sus manos la póliza de vida entera que firmó, entregada personalmente por su agente el 3 de junio. El 15 de junio decide que no la quiere. Bajo el período de revisión gratuita de Florida para pólizas de vida, ¿tiene derecho a un reembolso completo de la prima?",a:["No, porque ya pasaron más de 10 días desde la entrega","Sí, porque el período de revisión gratuita de vida en Florida es de 14 días desde la entrega","Sí, pero solo le devuelven el 50% de la prima pagada","No, el período de revisión gratuita solo aplica a las anualidades"],c:1,e:"<strong>Período de revisión gratuita — vida:</strong> 14 días desde la entrega de la póliza. Del 3 al 15 de junio han pasado 12 días, dentro del plazo. Jorge tiene derecho al reembolso completo, sin cargos ni penalidades."},
+{s:1,q:"Una clienta de 60 años compra una anualidad fija el 1 de marzo y recibe el contrato el 10 de marzo. El 28 de marzo decide cancelarlo. ¿Tiene derecho a un reembolso completo bajo el período de revisión gratuita en Florida?",a:["No, ya pasaron 18 días desde la entrega y el límite es de 14 días","Sí, el período de revisión gratuita para contratos de anualidad en Florida es de 21 días desde la entrega","No, los contratos de anualidad no tienen período de revisión gratuita","Sí, pero debe pagar un cargo por rescate del 10%"],c:1,e:"<strong>Diferencia clave que cae en el examen:</strong> vida = 14 días; anualidad = 21 días. Del 10 al 28 de marzo son 18 días, dentro del plazo de 21 para anualidades. Reembolso completo, sin cargo por rescate."},
+{s:1,q:"Una póliza de vida entera tiene un período de gracia de 30 días. El asegurado fallece el día 25 después de la fecha de vencimiento de la prima, sin haberla pagado. ¿Qué debe hacer la aseguradora?",a:["Negar el pago porque la póliza ya estaba técnicamente vencida","Pagar el beneficio por fallecimiento completo, pudiendo deducir la prima adeudada","Pagar solo el 50% del beneficio por fallecimiento","Esperar a que termine el período de gracia antes de decidir"],c:1,e:"Durante el período de gracia la póliza permanece en plena vigencia. Si el asegurado fallece dentro de esos 30 días, el beneficiario recibe el beneficio completo; la aseguradora solo puede deducir la prima vencida."},
+{s:1,q:"Carmen compró una póliza de vida entera hace 30 meses. Al solicitarla, omitió que había sido tratada por hipertensión dos años antes. Carmen fallece y la aseguradora descubre la omisión al investigar el reclamo. ¿Puede la aseguradora negar el pago del beneficio por fallecimiento?",a:["Sí, toda omisión permite negar el pago sin límite de tiempo","No, ya transcurrió el período de impugnabilidad de 2 años; la cláusula de incontestabilidad protege a la beneficiaria, salvo que se demuestre fraude","No, las omisiones de historial médico nunca afectan el pago de un reclamo","Sí, pero solo puede negar el 50% del beneficio"],c:1,e:"<strong>Período de impugnabilidad:</strong> 2 años desde la emisión. Pasados 30 meses, la cláusula de incontestabilidad impide que la aseguradora rescinda el contrato por una omisión, salvo prueba de fraude deliberado."},
+{s:1,q:"Una póliza de vida entera de Roberto se cancela por falta de pago. Ocho meses después solicita reinstalarla. ¿Qué debe exigir la aseguradora para reinstalarla?",a:["Solo el pago de la prima del mes más reciente, sin más requisitos","El pago de las primas atrasadas con intereses y evidencia de asegurabilidad satisfactoria","Nada, las pólizas de vida se reinstalan automáticamente dentro del primer año","Un examen médico obligatorio sin ninguna excepción posible"],c:1,e:"<strong>Reinstalación:</strong> requiere pago de primas vencidas más intereses, y evidencia de asegurabilidad que la aseguradora considere satisfactoria. No es automática ni basta con pagar solo el último mes."},
+{s:1,q:"Marta no puede seguir pagando las primas de su póliza de vida entera, pero quiere conservar una póliza del mismo tipo, sin pagar más primas, aunque el beneficio por fallecimiento sea menor. ¿Qué opción de no decomiso debe elegir?",a:["Término extendido","Póliza saldada reducida","Retiro del valor en efectivo","Préstamo automático de prima"],c:1,e:"<strong>Póliza saldada reducida:</strong> usa el valor en efectivo acumulado para comprar una póliza del mismo tipo (vida entera), totalmente pagada, sin más primas, pero con un beneficio por fallecimiento menor."},
+{s:1,q:"Pedro deja de pagar su póliza de vida entera. Quiere mantener el mismo monto de cobertura de muerte que tenía, aceptando que la cobertura sea temporal en lugar de permanente. ¿Qué opción de no decomiso es correcta?",a:["Término extendido","Póliza saldada reducida","Retiro del valor en efectivo","Dividendo en efectivo"],c:0,e:"<strong>Término extendido:</strong> conserva el mismo monto de beneficio por fallecimiento, pero convertido en cobertura temporal por el tiempo que el valor en efectivo acumulado pueda financiar. Opuesto a la saldada reducida."},
+{s:1,q:"Una beneficiaria de 55 años recibe un beneficio por fallecimiento de $300,000 y quiere recibir pagos mensuales garantizados durante el resto de su vida, pero también asegurar que, si fallece pronto, sus hijos reciban pagos durante al menos 15 años más. ¿Qué opción de liquidación debe elegir?",a:["Renta vitalicia simple","Renta vitalicia con período garantizado de 15 años","Suma global","Interés solamente"],c:1,e:"<strong>Renta vitalicia con período garantizado:</strong> paga mientras la beneficiaria viva, pero garantiza un mínimo de 15 años de pagos. Si fallece antes, los pagos restantes continúan a sus hijos. La renta vitalicia simple no tiene esa garantía."},
+{s:1,q:"Luis tiene una póliza de vida entera con cláusula de exención de prima. A los 40 años queda totalmente discapacitado tras un accidente. Después de cumplir el período de eliminación de la cláusula, ¿qué ocurre con su póliza?",a:["La póliza se cancela porque no puede pagar","Las primas futuras quedan exentas y la póliza continúa con todos sus beneficios, incluida la acumulación del valor en efectivo","La póliza se convierte automáticamente en seguro temporal","La aseguradora paga el beneficio por fallecimiento de inmediato"],c:1,e:"<strong>Cláusula de exención de prima:</strong> tras el período de eliminación de discapacidad total, las primas se eximen y la póliza sigue exactamente igual — el valor en efectivo sigue creciendo como si se pagara."},
+{s:1,q:"Sofía tiene una cláusula de asegurabilidad garantizada en su póliza de vida. ¿Qué le permite hacer esta cláusula adicional?",a:["Aumentar su cobertura sin nueva evidencia de asegurabilidad en fechas o eventos específicos, como matrimonio o nacimiento de un hijo","Reducir su prima si su salud mejora con el tiempo","Cambiar de aseguradora sin penalidad alguna","Convertir su póliza temporal en vida entera sin costo adicional"],c:0,e:"<strong>Cláusula de asegurabilidad garantizada:</strong> permite comprar cobertura adicional en fechas u eventos predeterminados, sin demostrar buena salud. Protege la capacidad de aumentar cobertura aunque la salud futura empeore."},
+{s:1,q:"Daniel tiene una póliza de vida entera con un beneficio adicional por muerte accidental. Fallece en un accidente de tránsito mientras conducía bajo la influencia del alcohol. ¿Qué pagará la aseguradora?",a:["El beneficio por fallecimiento base más el beneficio adicional por muerte accidental","Únicamente el beneficio por fallecimiento base, ya que conducir bajo la influencia generalmente excluye el beneficio adicional por accidente","Nada, porque toda muerte relacionada con alcohol está excluida del contrato","Solo el 50% del beneficio por fallecimiento base"],c:1,e:"Las exclusiones típicas del beneficio adicional por muerte accidental incluyen conducir intoxicado, actividades ilegales y aviación privada. El beneficio base de la póliza sí se paga; el adicional por accidente, no."},
+{s:1,q:"Un asegurado designó a su exesposa como beneficiaria irrevocable de su póliza de vida hace diez años, como parte de un acuerdo de divorcio. Ahora quiere cambiar el beneficiario a su nueva pareja. ¿Qué debe hacer?",a:["Puede cambiarlo libremente en cualquier momento, ya que es su póliza","Necesita el consentimiento por escrito de la beneficiaria irrevocable para poder cambiarla","Solo puede cambiarla después de 20 años de designada","Debe esperar a que la beneficiaria irrevocable fallezca"],c:1,e:"Una designación de beneficiario <em>irrevocable</em> solo puede cambiarse con el consentimiento por escrito de esa misma beneficiaria. Es distinto de una designación revocable, que el propietario puede cambiar a voluntad."},
+{s:1,q:"Un asegurado compra una póliza de vida entera el 1 de enero. Se suicida 18 meses después. La póliza contiene la cláusula estándar de exclusión por suicidio de 2 años. ¿Qué debe hacer la aseguradora?",a:["Negar el pago por completo porque hubo suicidio","Pagar el beneficio por fallecimiento completo porque ya pasó el período de impugnabilidad","Devolver únicamente las primas pagadas, sin intereses, porque el suicidio ocurrió dentro del período de exclusión","Pagar el 50% del beneficio por fallecimiento"],c:2,e:"<strong>Cláusula de exclusión por suicidio:</strong> dentro de los primeros 2 años, la aseguradora no paga el beneficio por fallecimiento por suicidio, pero debe devolver las primas pagadas. Después de ese período, el suicidio se cubre igual que cualquier otra causa de muerte."},
+{s:1,q:"Roberto tiene una póliza de vida entera participante y recibe dividendos anuales. Quiere usar esos dividendos para comprar cobertura adicional permanente de pequeño monto, sin presentar nueva evidencia de asegurabilidad. ¿Qué opción de dividendo debe elegir?",a:["Dividendo en efectivo","Adiciones pagadas (cobertura adicional comprada con el dividendo)","Acumulación a interés","Reducción de la prima"],c:1,e:"<strong>Adiciones pagadas:</strong> el dividendo se usa como prima única para comprar pequeñas cantidades de cobertura permanente adicional, sin examen médico ni nueva evidencia de asegurabilidad."},
+{s:1,q:"Un asegurado cede temporalmente su póliza de vida a un banco como garantía de un préstamo, conservando el derecho de recuperarla por completo una vez pagada la deuda. ¿Qué tipo de cesión es esta?",a:["Cesión absoluta","Cesión colateral (en garantía)","Designación de beneficiario irrevocable","Cláusula de reincorporación"],c:1,e:"<strong>Cesión colateral:</strong> transfiere derechos limitados como garantía de una deuda; el propietario original recupera todos sus derechos al pagarla. La cesión absoluta, en cambio, transfiere todos los derechos de forma permanente."},
+
+// ── SECCIÓN 2: Retiro y Otros Conceptos de Seguro ──
+{s:2,q:"Marcos, de 40 años, contribuye $6,000 a una IRA Tradicional. Su ingreso le permite deducir la contribución completa. ¿Cómo se gravarán los retiros que haga después de los 59 años y medio?",a:["Libres de impuestos, porque ya pagó impuestos al contribuir","Gravados como ingreso ordinario, porque tanto las contribuciones como las ganancias crecieron sin pagar impuestos hasta el momento del retiro","Gravados solo sobre las ganancias, no sobre el capital aportado","Exentos si los retiros se usan para gastos médicos"],c:1,e:"En la IRA Tradicional, las contribuciones deducibles y sus ganancias crecen con impuestos diferidos. Al retirar, todo se grava como ingreso ordinario — no solo la ganancia, sino también el capital aportado."},
+{s:2,q:"Si Marcos, en cambio, hubiera contribuido a una IRA Roth con dinero después de impuestos, ¿cómo se gravarían los retiros calificados después de los 59 años y medio?",a:["Igual que la IRA Tradicional, como ingreso ordinario","Completamente libres de impuestos, tanto el capital aportado como las ganancias","Solo el capital es libre de impuestos; las ganancias se gravan","Sujetos a una penalidad del 10% sin importar la edad"],c:1,e:"La IRA Roth se financia con dinero ya gravado. Si el retiro es calificado (después de 59½ años y con la cuenta abierta al menos 5 años), tanto el capital como las ganancias salen completamente libres de impuestos."},
+{s:2,q:"Un empleado retira $40,000 de su Plan 401(k) a los 45 años para pagar deudas, sin calificar para ninguna excepción. ¿Cuál es la consecuencia fiscal?",a:["Libre de impuestos, porque es su propio dinero","Gravado como ingreso ordinario más una penalidad adicional del 10% por retiro anticipado","Solo paga la penalidad del 10%, sin impuesto sobre la renta","El 50% está libre de impuestos como retorno de contribuciones"],c:1,e:"Las contribuciones tradicionales al 401(k) son antes de impuestos, así que el retiro completo se grava como ingreso ordinario. Al ser antes de los 59½ años y sin excepción aplicable, se añade una penalidad del 10%."},
+{s:2,q:"Un titular de una IRA Tradicional cumple la edad en la que la ley exige comenzar a retirar fondos cada año. Si no retira la Distribución Mínima Requerida a tiempo, ¿qué sucede?",a:["No pasa nada, es solo una recomendación","Se le aplica una penalidad fiscal sobre la cantidad que debió retirar y no retiró","La cuenta se congela automáticamente","Pierde el estatus de cuenta calificada de forma permanente"],c:1,e:"La Distribución Mínima Requerida (RMD) es obligatoria a partir de cierta edad. No retirarla a tiempo genera una penalidad fiscal calculada sobre el monto que debió haberse retirado."},
+{s:2,q:"Carlos acumuló $250,000 en una anualidad no calificada. Sus primas pagadas (base) suman $100,000. Antes de cumplir 59 años y medio, retira $50,000. ¿Qué tratamiento fiscal aplica a ese retiro?",a:["Libre de impuestos porque es menor que la base de $100,000","Completamente gravable como ingreso ordinario, más una penalidad del 10% del IRS, porque las ganancias se consideran retiradas primero","Gravado solo en proporción a la ganancia total acumulada","Exento de penalidad si el dinero se usa para la jubilación"],c:1,e:"Bajo la regla de que la ganancia sale primero, los primeros dólares retirados de una anualidad no calificada se consideran ganancia. Como la ganancia ($150,000) supera el retiro, el 100% se grava como ingreso ordinario más penalidad del 10% por ser anterior a los 59½ años."},
+{s:2,q:"Una anualidad diferida tiene dos fases. Durante la primera, el propietario deposita y acumula fondos. Durante la segunda, el contrato comienza a pagarle un ingreso periódico. ¿Cómo se llama la segunda fase?",a:["Fase de acumulación","Fase de anualización","Período de eliminación","Período de revisión gratuita"],c:1,e:"<strong>Fase de anualización:</strong> el contrato convierte el valor acumulado en una corriente de pagos periódicos. La fase anterior, de depósitos y crecimiento, es la fase de acumulación."},
+{s:2,q:"Una clienta quiere cambiar su anualidad fija actual por una anualidad fija indexada de otra aseguradora, sin reconocer ganancia gravable en el momento del cambio. ¿Qué mecanismo del código fiscal le permite hacerlo?",a:["Una distribución mínima requerida","Un intercambio bajo la Sección 1035","Un préstamo sobre el valor en efectivo","Una conversión a IRA Roth"],c:1,e:"El intercambio bajo la Sección 1035 permite cambiar un contrato de anualidad (o de vida) por otro similar sin gravar la ganancia acumulada en el momento del intercambio, siempre que se haga correctamente entre aseguradoras."},
+{s:2,q:"Un plan de retiro garantiza al empleado un pago mensual fijo en la jubilación, calculado según años de servicio y salario, sin importar cómo se desempeñen las inversiones del plan. ¿Qué tipo de plan es?",a:["Plan de contribución definida","Plan de beneficio definido","IRA Roth","Plan SIMPLE IRA"],c:1,e:"<strong>Plan de beneficio definido:</strong> promete un monto de pago específico en la jubilación. El riesgo de inversión lo asume el empleador. El plan de contribución definida, en cambio, garantiza solo el aporte, no el resultado final."},
+{s:2,q:"Un empleador que ofrece un Plan SIMPLE IRA a sus empleados debe elegir entre dos formas de contribuir. ¿Cuál de las siguientes NO es una de esas dos opciones?",a:["Igualar hasta el 3% del salario del empleado","Aportar el 2% del salario a todos los empleados elegibles, contribuyan o no","Aportar la cantidad que el empleador decida cada año, a su discreción","Reducir el porcentaje de igualación al 1% durante 2 de cada 5 años"],c:2,e:"El Plan SIMPLE IRA exige que el empleador elija entre igualar hasta 3% o aportar 2% fijo a todos los elegibles. La contribución puramente discrecional no es una opción válida — el aporte del empleador es obligatorio bajo una de esas dos fórmulas."},
+{s:2,q:"Una persona con edad plena de jubilación de 67 años decide comenzar a recibir su beneficio de Seguro Social a los 62 años. ¿Qué ocurre con el monto de su beneficio mensual?",a:["Se reduce permanentemente por reclamarlo antes de la edad plena de jubilación","Permanece igual, ya que el Seguro Social no penaliza por edad","Aumenta porque empieza a recibirlo antes","Se calcula solo después de los 65 años"],c:0,e:"Reclamar el Seguro Social antes de la edad plena de jubilación reduce permanentemente el beneficio mensual. Esperar hasta después de la edad plena, en cambio, lo aumenta mediante créditos por jubilación retrasada."},
+{s:2,q:"Un plan de salud grupal autoasegurado por un gran empleador está sujeto a la Ley de Seguridad de Ingresos de Jubilación para Empleados (ERISA) a nivel federal. ¿Qué consecuencia tiene esto frente a las leyes estatales de seguros de Florida?",a:["El plan debe cumplir todos los mandatos estatales de cobertura de Florida","El plan puede estar exento de los mandatos estatales de seguros, porque la regulación federal de ERISA puede prevalecer sobre la ley estatal","El plan debe registrarse cada año ante el Departamento de Servicios Financieros","ERISA solo aplica a planes de retiro, nunca a planes de salud"],c:1,e:"Los planes de salud autoasegurados (self-funded) bajo ERISA están regulados a nivel federal, lo que puede eximirlos de los mandatos de cobertura estatales de Florida. ERISA cubre tanto planes de retiro como planes de salud de empleadores."},
+{s:2,q:"Una anualidad fija indexada vincula parte de su crecimiento al desempeño de un índice bursátil, pero limita la ganancia máxima con una tasa de límite. ¿Qué característica distingue a este producto de una anualidad variable?",a:["El propietario asume directamente las pérdidas del mercado, igual que en una anualidad variable","El capital del propietario está protegido contra pérdidas del mercado; la aseguradora asume ese riesgo","No tiene ningún límite de ganancia","Solo puede comprarse después de los 70 años"],c:1,e:"En la anualidad fija indexada, el propietario nunca pierde principal por caídas del mercado — la aseguradora asume ese riesgo. En la variable, el propietario sí asume directamente el riesgo de inversión."},
+{s:2,q:"Una empresa establece un plan de retiro no calificado solo para sus tres ejecutivos principales, sin ofrecerlo al resto de los empleados. ¿Cuál es la principal diferencia fiscal frente a un plan calificado?",a:["Las contribuciones del empleador no son deducibles de impuestos en el momento en que se hacen, a diferencia de un plan calificado","El plan no calificado siempre tiene mejores beneficios fiscales que el calificado","Los planes no calificados deben cubrir a todos los empleados por igual","Los planes no calificados están exentos de impuesto sobre la renta para siempre"],c:0,e:"Los planes no calificados no requieren cobertura amplia de empleados, pero pierden la deducción fiscal inmediata para el empleador que sí tienen los planes calificados. El beneficio es flexibilidad, no ventaja fiscal."},
+{s:2,q:"Una anualidad diferida tiene un período de rescate de 7 años con cargos decrecientes. La propietaria retira el 100% del valor de la cuenta en el año 3, sin haber alcanzado los 59 años y medio. Además del cargo por rescate, ¿qué otra consecuencia fiscal podría aplicar?",a:["Ninguna, los cargos por rescate sustituyen cualquier impuesto","Una penalidad fiscal federal del 10% sobre la porción de ganancia retirada antes de los 59 años y medio","La pérdida automática del estatus fiscal diferido de toda la anualidad","Un reembolso completo de las comisiones pagadas al agente"],c:1,e:"El cargo por rescate es contractual, separado de la penalidad fiscal. Si hay ganancia en el retiro y la propietaria tiene menos de 59½ años, además del cargo por rescate aplica la penalidad federal del 10% sobre esa ganancia."},
+{s:2,q:"Un agente recomienda a un cliente jubilado de 70 años retirar fondos de su cuenta de inversión líquida para comprar una anualidad fija indexada con un período de rescate de 10 años. ¿Qué debe evaluar el agente antes de hacer esta recomendación?",a:["Únicamente si el cliente puede pagar la prima inicial","La idoneidad del producto considerando la edad del cliente, su necesidad de liquidez, situación financiera y objetivos","Solo la comisión que generará la venta","Nada adicional, ya que cualquier anualidad es adecuada para cualquier jubilado"],c:1,e:"La idoneidad exige evaluar edad, liquidez necesaria, situación financiera, impuestos y objetivos del cliente — no solo si puede pagar la prima. Un período de rescate de 10 años para un jubilado de 70 años requiere justificación clara."},
+
+// ── SECCIÓN 3: Tipos de Pólizas de Salud ──
+{s:3,q:"Juan tiene un plan de salud con deducible de $1,500, coaseguro de 80/20 y un máximo de gastos de bolsillo de $5,000 al año. Recibe una factura médica de $20,000, y es la primera atención médica del año. ¿Cuánto debe pagar Juan de su bolsillo?",a:["$5,200","$3,700","$5,000, porque ese es su máximo de gastos de bolsillo anual","$1,500"],c:2,e:"Deducible: $1,500. Coaseguro 20% de los $18,500 restantes = $3,700. Suma: $5,200. Pero el máximo de gastos de bolsillo es $5,000 — una vez alcanzado ese tope, el seguro cubre el 100% restante. Juan paga $5,000."},
+{s:3,q:"Una persona quiere abrir una Cuenta de Ahorros para Gastos Médicos (HSA) para ahorrar con ventajas fiscales para sus gastos médicos. ¿Qué requisito debe cumplir primero?",a:["Debe tener un Plan de Salud con Deducible Alto (HDHP); no puede tenerse junto con un plan de salud regular","Debe tener al menos 65 años","Debe estar inscrito en Medicare","Cualquier persona con cualquier tipo de plan de salud puede abrir una HSA"],c:0,e:"La HSA solo puede abrirse y mantenerse si el titular tiene un Plan de Salud con Deducible Alto (HDHP) calificado. No puede combinarse con un plan de salud regular sin deducible alto."},
+{s:3,q:"Una familia quiere un plan que les permita ver especialistas fuera de la red preferida, aunque con un costo mayor, sin necesidad de un referido del médico de cabecera. ¿Qué tipo de plan se ajusta mejor?",a:["Organización para el Mantenimiento de la Salud (HMO)","Organización de Proveedores Preferidos (PPO)","Organización de Proveedores Exclusivos (EPO)","Plan de Punto de Servicio (POS) con referido obligatorio"],c:1,e:"La Organización de Proveedores Preferidos (PPO) no exige médico de cabecera ni referidos, y permite salir de la red preferida a mayor costo. La Organización de Proveedores Exclusivos (EPO) no cubre fuera de red en absoluto."},
+{s:3,q:"Una cirujana con ingresos altos quiere una póliza de ingreso por discapacidad que le pague si pierde la capacidad de operar, aun cuando pudiera ejercer otra profesión médica que no requiera el mismo nivel de destreza manual. ¿Qué definición de discapacidad le conviene?",a:["Cualquier ocupación","Propia ocupación","Discapacidad presuntiva únicamente","Discapacidad residual únicamente"],c:1,e:"<strong>Propia ocupación:</strong> paga si el asegurado no puede ejercer su especialidad específica, aunque pueda trabajar en otra cosa. La definición de \"cualquier ocupación\" es mucho más restrictiva — exige no poder hacer ningún trabajo."},
+{s:3,q:"Isabel, de 60 años, compra una póliza de Cuidado a Largo Plazo (LTC) con ventajas fiscales. Tras una caída, no puede bañarse ni vestirse sola. La aseguradora exige que demuestre que la condición es permanente antes de pagar. ¿Es correcto este requisito?",a:["Sí, la condición siempre debe ser permanente para que pague una póliza de LTC","No, el estándar federal exige no poder realizar 2 de 6 Actividades de la Vida Diaria (AVD) por un período esperado de al menos 90 días, no necesariamente permanente","Sí, cada aseguradora puede fijar libremente cualquier criterio sin restricción","No, una sola Actividad de la Vida Diaria afectada activa el beneficio de inmediato"],c:1,e:"El estándar federal para pólizas de LTC con ventajas fiscales exige no poder realizar al menos 2 de 6 Actividades de la Vida Diaria (AVD) por un período esperado de 90 días — no permanencia."},
+{s:3,q:"Una póliza de Cuidado a Largo Plazo (LTC) tiene un período de eliminación de 90 días. El asegurado comienza a necesitar cuidado el 1 de enero. ¿Cuándo comienza a recibir los beneficios?",a:["El 1 de enero, de forma inmediata","El 1 de abril, después de cumplir los 90 días del período de eliminación","El 1 de febrero","Nunca, porque el período de eliminación elimina la cobertura"],c:1,e:"El período de eliminación es el tiempo de espera antes de que comiencen los pagos, similar a un deducible en tiempo. 90 días desde el 1 de enero llevan al 1 de abril como fecha del primer pago."},
+{s:3,q:"Un cliente con Medicare Original quiere una póliza privada que le ayude a pagar los deducibles y coaseguros que Medicare no cubre, manteniendo su Medicare Original sin cambios. ¿Qué producto necesita?",a:["Medicare Advantage","Suplemento de Medicare","Un Plan de Punto de Servicio (POS)","Una póliza de enfermedad específica"],c:1,e:"El Suplemento de Medicare (Medigap) cubre los huecos de costos de Medicare Original — deducibles y coaseguros — sin reemplazarlo. Medicare Advantage, en cambio, sustituye a Medicare Original por un plan privado."},
+{s:3,q:"Un cliente compra una póliza de Suplemento de Medicare y la recibe por correo. ¿Dentro de cuántos días puede devolverla y recibir un reembolso del 100% de la prima?",a:["10 días","30 días","45 días","60 días"],c:1,e:"Las pólizas de Suplemento de Medicare tienen un período de devolución de 30 días tras la entrega, con reembolso completo de la prima si el cliente decide no quedarse con ella."},
+{s:3,q:"Un empleador ofrece un plan de salud grupal donde paga el 100% del costo de la prima de sus empleados, sin que ellos aporten nada. ¿Qué porcentaje de los empleados elegibles debe estar cubierto bajo este tipo de plan no contributivo?",a:["Al menos el 75%","El 100% de los empleados elegibles","Al menos el 50%","No hay un porcentaje mínimo requerido"],c:1,e:"En un plan grupal no contributivo (el empleador paga toda la prima), se exige que el 100% de los empleados elegibles estén cubiertos, ya que no hay aporte individual que pudiera causar que alguien decline voluntariamente."},
+{s:3,q:"¿Cuál de las siguientes afirmaciones sobre una Cuenta de Ahorros para Gastos Médicos (HSA) es INCORRECTA?",a:["Las contribuciones son deducibles de impuestos","Los fondos no utilizados se acumulan de un año a otro","Se puede mantener una HSA junto con cualquier tipo de plan de salud, incluido uno regular sin deducible alto","Los retiros para gastos médicos calificados están libres de impuestos"],c:2,e:"La HSA exige un Plan de Salud con Deducible Alto (HDHP); no puede combinarse con un plan regular de deducible bajo. Las demás afirmaciones describen correctamente su triple ventaja fiscal."},
+{s:3,q:"Una póliza paga una suma única de $25,000 si al asegurado se le diagnostica cáncer, sin cubrir ninguna otra condición médica. ¿Qué tipo de póliza es esta?",a:["Póliza de gastos médicos mayores","Póliza de enfermedad específica","Póliza de Suplemento de Medicare","Póliza de indemnización hospitalaria"],c:1,e:"Una póliza de enfermedad específica paga solo ante el diagnóstico de la condición nombrada en el contrato (en este caso, cáncer), sin cubrir ningún otro evento médico."},
+{s:3,q:"Una póliza paga $200 por cada día de hospitalización del asegurado, sin importar el costo real de los servicios médicos recibidos. ¿Qué tipo de póliza es esta?",a:["Póliza de gastos médicos mayores","Póliza de indemnización hospitalaria","Plan de Punto de Servicio (POS)","Suplemento de Medicare"],c:1,e:"La póliza de indemnización hospitalaria paga una cantidad fija por día de hospitalización, independientemente del costo real de los servicios recibidos durante esos días."},
+{s:3,q:"Después de una discapacidad, un asegurado regresa a trabajar solo a tiempo parcial y su ingreso cae un 40% respecto al que tenía antes. Su póliza de ingreso por discapacidad le paga un beneficio proporcional a esa pérdida parcial de ingreso. ¿Qué tipo de beneficio es este?",a:["Beneficio de discapacidad presuntiva","Beneficio de discapacidad residual","Beneficio de exención de prima","Beneficio acelerado por fallecimiento"],c:1,e:"El beneficio de discapacidad residual paga de forma proporcional cuando el asegurado puede trabajar parcialmente, pero su ingreso se reduce por causa de la discapacidad."},
+{s:3,q:"Un asegurado pierde la vista de ambos ojos en un accidente. Su póliza de ingreso por discapacidad le paga el beneficio completo de inmediato, sin tener que demostrar que no puede trabajar. ¿Qué disposición de la póliza permite esto?",a:["Discapacidad residual","Discapacidad presuntiva, que considera ciertas pérdidas (como la vista, el habla o ambas extremidades) como discapacidad total automática","Período de eliminación","Cláusula de reincorporación"],c:1,e:"La disposición de discapacidad presuntiva activa el beneficio completo automáticamente ante ciertas pérdidas específicas (vista, habla, audición, ambas extremidades), sin exigir prueba adicional de incapacidad para trabajar."},
+{s:3,q:"Una escuela compra una póliza que cubre automáticamente a todos los estudiantes de un equipo deportivo durante los juegos y entrenamientos, sin nombrar individualmente a cada asegurado ni emitir certificados individuales. ¿Qué tipo de cobertura es esta?",a:["Seguro de salud individual","Seguro de salud colectivo general, que cubre a un grupo cambiante de personas sin nombrarlas individualmente","Suplemento de Medicare","Seguro de salud de crédito"],c:1,e:"Esta es una cobertura colectiva general: protege a un grupo de personas que cambia constantemente (los estudiantes del equipo) sin necesidad de identificar individualmente a cada asegurado ni emitir certificados personales."},
+
+// ── SECCIÓN 4: Estatutos FL — Vida y Anualidades ──
+{s:4,q:"Un agente en Florida propone reemplazar la póliza de vida vigente de un cliente por una nueva de otra aseguradora. ¿Cuál de los siguientes pasos NO es parte del proceso de reemplazo exigido por Florida?",a:["Entregar al cliente un formulario de comparación","Notificar a la aseguradora existente sobre el reemplazo propuesto","Obtener la aprobación previa del Departamento de Servicios Financieros antes de proceder","Conservar copia de los documentos de reemplazo en el expediente"],c:2,e:"El proceso de reemplazo exige formulario de comparación, notificación a la aseguradora existente y conservación de registros — pero nunca aprobación previa del Departamento de Servicios Financieros; ese no es un paso del proceso."},
+{s:4,q:"Según las reglas de divulgación de Florida, ¿qué dos documentos se espera que reciba un solicitante de seguro de vida al momento de la solicitud?",a:["Solo la póliza física","Una Guía de Compradores y un Resumen de la Póliza","Solo un comprobante de pago de la prima","Un certificado de buena salud"],c:1,e:"La Guía de Compradores explica conceptos generales de seguro de vida; el Resumen de la Póliza detalla los valores específicos del producto propuesto. Ambos documentos son obligatorios en la divulgación al solicitante."},
+{s:4,q:"La Asociación de Garantía de Seguros de Vida y Salud de Florida protege a los asegurados si una aseguradora se vuelve insolvente. ¿Cuál de las siguientes opciones NO está protegida por esta asociación?",a:["Pólizas de vida individual, hasta cierto límite de beneficio por fallecimiento","Anualidades fijas, hasta cierto límite de valor de acumulación","Anualidades variables, ya que sus fondos están en cuentas separadas a nombre del propietario","Pólizas de salud individuales, hasta cierto límite de beneficios"],c:2,e:"Los productos variables (anualidades y vida variable) mantienen sus fondos en cuentas separadas del activo general de la aseguradora, por lo que quedan fuera de la protección de esta asociación de garantía — tienen un tratamiento distinto en caso de insolvencia."},
+{s:4,q:"Un agente con licencia 2-15 en Florida, sin registro ante el regulador de valores correspondiente, vende una anualidad variable a un cliente. ¿Qué ha ocurrido?",a:["Nada, la licencia 2-15 es suficiente para vender cualquier tipo de anualidad","Es una violación grave, ya que los productos variables requieren además registro como representante de valores y afiliación con una firma de corretaje","Solo se requiere el registro de valores si la prima supera los $100,000","Es aceptable si lo hace bajo supervisión informal de otro agente"],c:1,e:"Vender productos variables requiere licencia 2-15 más registro de valores (representante registrado) y afiliación con una firma de corretaje. Venderlos sin ese registro es una violación seria, sujeta a sanciones tanto de seguros como de valores."},
+{s:4,q:"El Departamento de Servicios Financieros de Florida determina que un agente cometió una violación no intencional del Código de Seguros. ¿Qué sanción monetaria máxima podría aplicarse por esa violación?",a:["$10,000","$5,000","$1,000","No existe sanción monetaria para violaciones no intencionales"],c:1,e:"El Código de Seguros distingue entre violaciones intencionales (sanción mayor, hasta $10,000) y no intencionales (sanción menor, hasta $5,000). El desconocimiento de la ley no elimina la sanción, solo puede reducir su categoría."},
+{s:4,q:"Un agente obtiene su licencia 2-15 en marzo. Dos meses después, una aseguradora lo designa formalmente para representarla. Si esa aseguradora termina la designación 18 meses después, ¿qué ocurre con la licencia del agente?",a:["Pierde la licencia automáticamente","Conserva su licencia y puede seguir vendiendo para cualquier otra aseguradora que sí lo tenga designado","Debe presentar el examen estatal nuevamente","Tiene 60 días para encontrar nueva designación o pierde la licencia"],c:1,e:"La licencia la otorga el estado y pertenece al agente; la designación la otorga cada aseguradora individualmente. Perder la designación de una aseguradora no afecta la licencia ni impide trabajar con otras que sí lo designen."},
+{s:4,q:"Un agente con licencia 2-15 (sin licencia de líneas excedentarias) le sugiere a un cliente comprar cobertura de una aseguradora que no está autorizada para operar en Florida. ¿Es esto permitido?",a:["Sí, siempre que el cliente firme un documento aceptando el riesgo","No, un agente regular nunca puede representar a una entidad no autorizada sin la licencia específica de líneas excedentarias","Sí, si la prima es menor a $5,000","Sí, porque cualquier agente licenciado puede colocar negocios con cualquier aseguradora"],c:1,e:"Representar a una aseguradora no autorizada está reservado exclusivamente a agentes con licencia específica de líneas excedentarias. Un agente regular con licencia 2-15 nunca puede hacerlo, sin excepción de monto."},
+{s:4,q:"Antes de poder vender contratos de anualidad en Florida, un agente debe completar una capacitación específica sobre idoneidad de anualidades, además de su educación continua regular. ¿Cuál es el propósito principal de esta capacitación?",a:["Enseñar técnicas de cierre de ventas más agresivas","Asegurar que el agente comprenda los productos de anualidad y evalúe correctamente la idoneidad de la recomendación para cada cliente, especialmente clientes mayores","Permitir que el agente venda anualidades variables sin registro de valores","Sustituir el examen estatal de licencia"],c:1,e:"La capacitación de idoneidad de anualidades busca que el agente entienda bien los productos y evalúe correctamente si son apropiados para la situación de cada cliente, con atención especial a consumidores mayores."},
+{s:4,q:"Una agente le vende una anualidad con un período de rescate de 12 años a un cliente de 72 años. Bajo las protecciones de idoneidad para personas mayores en Florida, ¿qué debe considerar especialmente la agente antes de recomendar este producto?",a:["Únicamente la comisión que recibirá por la venta","La necesidad de liquidez del cliente, su expectativa de vida razonable y si un período de rescate tan largo es razonable para su edad y situación","Nada distinto a cualquier otro cliente; la edad no es un factor relevante","Solo si el cliente tiene un asesor financiero independiente"],c:1,e:"Las protecciones de idoneidad exigen evaluar la situación financiera completa del cliente, incluyendo liquidez necesaria y si un período de rescate largo tiene sentido dado su edad — un factor de alerta especial en clientes mayores."},
+{s:4,q:"Según los estatutos de Florida, ¿cuál es la duración correcta del período de revisión gratuita para una póliza de vida individual frente a un contrato de anualidad individual?",a:["14 días para vida; 21 días para anualidades","21 días para vida; 14 días para anualidades","30 días para ambas","10 días para ambas"],c:0,e:"Esta es una de las distinciones que más se confunden en el examen: vida = 14 días; anualidades = 21 días. Recordar el número más alto para el producto más complejo (anualidad) ayuda a no invertirlos."},
+{s:4,q:"Cuando un agente notifica a la aseguradora existente sobre un reemplazo propuesto, ¿qué derecho tiene esa aseguradora bajo la regulación de reemplazo de Florida?",a:["Ninguno; no puede contactar al cliente bajo ninguna circunstancia","Puede comunicarse con el cliente para explicarle las consecuencias del reemplazo y tratar de conservar la póliza","Puede bloquear el reemplazo de forma permanente","Puede demandar al agente que propuso el reemplazo"],c:1,e:"La aseguradora existente tiene derecho a contactar al cliente para explicar las consecuencias de cancelar su póliza actual y, si lo considera apropiado, intentar conservarlo como cliente — pero no puede impedir el reemplazo."},
+{s:4,q:"Un agente le dice a una clienta de 65 años que su póliza de vida entera actual 'ya no sirve' y la convence de cancelarla para comprar una nueva de otra aseguradora, sin mostrarle nunca un formulario de comparación de valores. La clienta pierde 20 años de valor en efectivo acumulado. ¿Qué práctica indebida describe mejor esta conducta?",a:["Inducir el reemplazo de una póliza mediante representaciones falsas o incompletas sobre el producto existente o el nuevo","Compartir parte de su comisión con la clienta como incentivo para comprar","Agregar cobertura adicional sin el consentimiento informado de la clienta","Reemplazar repetidamente pólizas de la misma aseguradora para generar nuevas comisiones"],c:0,e:"Esta es una práctica desleal de reemplazo: inducir al cliente a cancelar y sustituir su póliza mediante información incompleta o engañosa sobre el producto existente o el nuevo, sin el formulario de comparación obligatorio."},
+{s:4,q:"Un agente le ofrece a un prospecto: 'Si compra esta póliza conmigo, le devuelvo el 10% de mi comisión en efectivo.' ¿Es esto permitido en Florida?",a:["Sí, si el agente lo hace de buena fe y lo declara por escrito","No, devolver o compartir parte de la prima, comisión o cualquier beneficio de valor como incentivo para comprar está prohibido en Florida, sin importar la intención","Sí, siempre que el monto sea menor al 15% de la prima anual","Solo está prohibido si el cliente se queja después"],c:1,e:"Ofrecer cualquier parte de la comisión, prima o beneficio de valor como incentivo para que alguien compre una póliza está prohibido en Florida, independientemente de la buena intención del agente o si el cliente se queja."},
+{s:4,q:"Un agente convence repetidamente a un mismo cliente de cambiar su póliza de vida entera de la Compañía X por otra póliza de la misma Compañía X, agregando cláusulas adicionales cada vez y generando una nueva comisión en cada cambio, sin que el cliente obtenga un beneficio real. ¿Cómo se describe esta práctica?",a:["Reemplazo repetido indebido dentro de la misma aseguradora, para generar comisiones sin beneficio genuino para el cliente","Adición no autorizada de cobertura sin consentimiento","Devolución ilegal de parte de la prima como incentivo","Falsificación de la solicitud de seguro"],c:0,e:"Esta práctica consiste en reemplazar repetidamente pólizas dentro de la misma aseguradora para generar comisiones nuevas, sin que el cliente obtenga ningún beneficio real — distinta del reemplazo entre aseguradoras diferentes."},
+{s:4,q:"Un agente recibe una citación del Departamento de Servicios Financieros para una investigación y decide no responder ni cooperar. ¿Qué consecuencia puede tener esto?",a:["Ninguna; el Departamento de Servicios Financieros no tiene autoridad directa sobre agentes privados","La falta de cooperación con una investigación es, por sí misma, causa independiente de suspensión o revocación de la licencia","Solo puede recibir una multa, nunca la suspensión de la licencia","El Departamento necesita una orden judicial antes de poder actuar"],c:1,e:"El Departamento de Servicios Financieros tiene amplia autoridad regulatoria sobre agentes licenciados. No cooperar con una investigación es, en sí misma, una violación independiente que puede llevar a suspensión o revocación de licencia."}
+
+];
+
+// ══════════════════════════════════════════════
+// LÓGICA DEL SIMULADOR
+// ══════════════════════════════════════════════
+let selectedSections = new Set([1,2,3,4]);
+let questions = [];
+let current = 0;
+let answers = {};
+let qStart = 0;
+let qTimerInterval = null;
+let elapsedTimes = [];
+
+function toggleSec(el, s) {
+  if (selectedSections.has(s)) {
+    if (selectedSections.size === 1) return;
+    selectedSections.delete(s);
+    el.classList.remove('selected'); el.classList.add('off');
+    el.querySelector('.sec-check').textContent = '';
+  } else {
+    selectedSections.add(s);
+    el.classList.add('selected'); el.classList.remove('off');
+    el.querySelector('.sec-check').textContent = '✓';
+  }
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz(limit) {
+  const pool = shuffle(R.filter(q => selectedSections.has(q.s)));
+  questions = pool.slice(0, Math.min(limit, pool.length));
+  current = 0; answers = {}; elapsedTimes = [];
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('exam-screen').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  document.getElementById('topic-badge').textContent = SECTION_META[q.s].name;
+  document.getElementById('q-counter').textContent = 'Pregunta ' + (current + 1) + ' de ' + questions.length;
+  document.getElementById('progress-bar').style.width = ((current / questions.length) * 100) + '%';
+  document.getElementById('question-card').textContent = q.q;
+
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.a.forEach((text, i) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.innerHTML = '<span class="opt-letter">' + letters[i] + '</span><span>' + text + '</span>';
+    div.dataset.idx = i;
+    div.onclick = () => selectOption(div, i);
+    opts.appendChild(div);
+  });
+
+  document.getElementById('explanation').className = '';
+  document.getElementById('explanation').innerHTML = '';
+  document.getElementById('next-btn').disabled = true;
+  updateScore();
+
+  qStart = Date.now();
+  if (qTimerInterval) clearInterval(qTimerInterval);
+  qTimerInterval = setInterval(updateQTimer, 1000);
+  updateQTimer();
+}
+
+function updateQTimer() {
+  const secs = Math.floor((Date.now() - qStart) / 1000);
+  const m = Math.floor(secs / 60), s = secs % 60;
+  document.getElementById('qtimer').textContent = '⏱ ' + m + ':' + String(s).padStart(2,'0');
+}
+
+function selectOption(el, idx) {
+  if (el.classList.contains('disabled')) return;
+  const q = questions[current];
+  document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  answers[current] = idx;
+  elapsedTimes[current] = Math.floor((Date.now() - qStart) / 1000);
+  clearInterval(qTimerInterval);
+
+  document.querySelectorAll('.option').forEach(o => {
+    o.classList.add('disabled');
+    const oIdx = parseInt(o.dataset.idx);
+    if (oIdx === q.c) o.classList.add('correct');
+    else if (o === el && oIdx !== q.c) o.classList.add('wrong');
+  });
+  const exp = document.getElementById('explanation');
+  exp.innerHTML = (idx === q.c ? '✅ <strong>Correcto.</strong> ' : '❌ <strong>Incorrecto.</strong> ') + q.e;
+  exp.className = 'show';
+  document.getElementById('next-btn').disabled = false;
+  updateScore();
+}
+
+function nextQ() {
+  if (current < questions.length - 1) { current++; renderQuestion(); }
+  else finishExam();
+}
+
+function skipQ() {
+  if (answers[current] === undefined) elapsedTimes[current] = Math.floor((Date.now() - qStart) / 1000);
+  if (current < questions.length - 1) { current++; renderQuestion(); }
+  else finishExam();
+}
+
+function updateScore() {
+  let correct = 0, answered = 0;
+  Object.keys(answers).forEach(k => {
+    answered++;
+    if (answers[k] === questions[k].c) correct++;
+  });
+  document.getElementById('correct-count').textContent = correct;
+  document.getElementById('answered-count').textContent = answered;
+}
+
+function finishExam() {
+  clearInterval(qTimerInterval);
+  document.getElementById('exam-screen').style.display = 'none';
+  document.getElementById('results-screen').className = 'show';
+
+  let correct = 0;
+  const total = questions.length;
+  const bySection = {};
+
+  questions.forEach((q, i) => {
+    if (!bySection[q.s]) bySection[q.s] = { correct: 0, total: 0 };
+    bySection[q.s].total++;
+    if (answers[i] === q.c) { correct++; bySection[q.s].correct++; }
+  });
+
+  const pct = Math.round((correct / total) * 100);
+  const passed = pct >= 70;
+
+  document.getElementById('result-pct').innerHTML = pct + '%';
+  if (!passed) document.getElementById('result-circle').classList.add('fail');
+  document.getElementById('result-title').textContent = passed ? '¡Excelente!' : 'Sigue Practicando';
+  document.getElementById('result-sub').textContent = passed
+    ? 'Superaste el 70%. Estas eran tus secciones más débiles — ya no lo son tanto.'
+    : 'El mínimo del examen es 70%. Sigue repasando las secciones marcadas en rojo.';
+
+  document.getElementById('res-correct').textContent = correct;
+  document.getElementById('res-wrong').textContent = total - correct;
+  const validTimes = elapsedTimes.filter(t => t !== undefined);
+  const avgTime = validTimes.length ? Math.round(validTimes.reduce((a,b) => a+b, 0) / validTimes.length) : 0;
+  document.getElementById('res-time').textContent = avgTime + 's';
+
+  const rows = document.getElementById('breakdown-rows');
+  rows.innerHTML = '';
+  Object.entries(bySection)
+    .sort((a,b) => SECTION_META[a[0]].baseline - SECTION_META[b[0]].baseline)
+    .forEach(([sId, data]) => {
+      const p = Math.round((data.correct / data.total) * 100);
+      const baseline = SECTION_META[sId].baseline;
+      const delta = p - baseline;
+      const deltaHtml = delta === 0 ? '' :
+        (delta > 0 ? '<span class="delta up">▲' + delta + '</span>' : '<span class="delta down">▼' + Math.abs(delta) + '</span>');
+      const row = document.createElement('div');
+      row.className = 'lb-row';
+      row.innerHTML = '<span class="lb-label">' + SECTION_META[sId].name + '</span>' +
+        '<div class="lb-bar-wrap"><div class="lb-bar ' + (p < 70 ? 'bad' : '') + '" style="width:' + p + '%"></div>' +
+        '<div class="lb-baseline" style="left:' + baseline + '%"></div></div>' +
+        '<span class="lb-pct">' + p + '%' + deltaHtml + '</span>';
+      rows.appendChild(row);
+    });
+
+  saveHistory(pct, correct, total);
+}
+
+// ══════════════════════════════════════════════
+// HISTORIAL EN ESTE DISPOSITIVO
+// ══════════════════════════════════════════════
+function saveHistory(pct, correct, total) {
+  try {
+    const h = JSON.parse(localStorage.getItem('refuerzo215') || '[]');
+    h.push({ d: new Date().toLocaleDateString('es'), pct, correct, total });
+    localStorage.setItem('refuerzo215', JSON.stringify(h.slice(-30)));
+  } catch (e) {}
+}
+
+function showHistoryNote() {
+  try {
+    const h = JSON.parse(localStorage.getItem('refuerzo215') || '[]');
+    if (!h.length) return;
+    const best = Math.max(...h.map(x => x.pct));
+    const last = h[h.length - 1];
+    document.getElementById('history-note').textContent =
+      'Ya completaste ' + h.length + ' sesión(es) aquí. Última: ' + last.pct + '% (' + last.d + ') · Mejor resultado: ' + best + '%';
+  } catch (e) {}
+}
+showHistoryNote();
+</script>
+</body>
+</html>
