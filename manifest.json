@@ -1,21 +1,19 @@
 {
   "name": "Academia 2-15 Florida",
   "short_name": "Academia 2-15",
-  "description": "Preparación para el examen de licencia 2-15 de Florida",
   "start_url": "/estudio-215/",
   "display": "standalone",
   "background_color": "#060e1f",
   "theme_color": "#0a1628",
-  "orientation": "portrait",
   "icons": [
     {
-      "src": "icon-192.png",
-      "sizes": "192x192",
+      "src": "icon-academia215-v3.png",
+      "sizes": "180x180",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "icon-academia215-v3-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
