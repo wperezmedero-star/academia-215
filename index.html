@@ -2,7 +2,10 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"/>
-<link rel="apple-touch-icon" href="icon.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"/>
+<link rel="apple-touch-icon" sizes="512x512" href="apple-touch-icon.png"/>
+<link rel="shortcut icon" href="apple-touch-icon.png"/>
+
 <script>
 (function(){
   try{
@@ -473,6 +476,122 @@ th{color:#bfdbfe;}
 </style>
 </head>
 <body>
+<div id="splash" style="position:fixed;inset:0;z-index:9999;background:#060e1f;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;">
+
+  <!-- Background particles -->
+  <canvas id="splash-canvas" style="position:absolute;inset:0;width:100%;height:100%;opacity:0.4"></canvas>
+
+  <!-- Icon -->
+  <div id="splash-icon" style="width:140px;height:140px;border-radius:32px;overflow:hidden;box-shadow:0 0 60px rgba(255,198,0,0.4),0 0 120px rgba(255,198,0,0.15),0 20px 60px rgba(0,0,0,0.8);position:relative;z-index:2;transform:scale(0.3) translateY(40px);opacity:0;transition:transform 0.7s cubic-bezier(0.34,1.56,0.64,1),opacity 0.5s ease">
+    <img src="apple-touch-icon.png" style="width:100%;height:100%;display:block" onerror="this.parentElement.style.background='linear-gradient(135deg,#0d2158,#1a3a8a)'"/>
+  </div>
+
+  <!-- Title -->
+  <div id="splash-title" style="margin-top:28px;text-align:center;position:relative;z-index:2;opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease">
+    <div style="font-family:Georgia,serif;font-size:1.5rem;font-weight:700;color:#ffffff;letter-spacing:1px;text-shadow:0 0 30px rgba(255,198,0,0.5)">Academia</div>
+    <div style="font-family:Georgia,serif;font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,#ffd700,#ffb800,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:3px;line-height:1.1">2-15</div>
+    <div style="font-size:0.78rem;color:#93c5fd;letter-spacing:6px;font-weight:600;margin-top:2px">FLORIDA</div>
+  </div>
+
+  <!-- Tagline -->
+  <div id="splash-tag" style="margin-top:10px;font-size:0.78rem;color:#475569;text-align:center;position:relative;z-index:2;opacity:0;transition:opacity 0.6s ease;letter-spacing:1px">
+    Life · Health · Annuities
+  </div>
+
+  <!-- Progress bar -->
+  <div style="margin-top:48px;width:180px;height:3px;background:rgba(255,255,255,0.08);border-radius:999px;overflow:hidden;position:relative;z-index:2">
+    <div id="splash-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#1a3a8a,#ffd700);border-radius:999px;transition:width 2s cubic-bezier(0.4,0,0.2,1)"></div>
+  </div>
+
+  <!-- Version -->
+  <div style="position:absolute;bottom:28px;font-size:0.68rem;color:#1e3a5f;letter-spacing:2px">v3.0 · 435 PREGUNTAS</div>
+</div>
+
+<script>
+(function(){
+  // Particle animation
+  var canvas=document.getElementById('splash-canvas');
+  var ctx=canvas.getContext('2d');
+  var W=window.innerWidth, H=window.innerHeight;
+  canvas.width=W; canvas.height=H;
+  var particles=[];
+  for(var i=0;i<60;i++){
+    particles.push({
+      x:Math.random()*W, y:Math.random()*H,
+      r:Math.random()*2+0.5,
+      vx:(Math.random()-0.5)*0.4,
+      vy:(Math.random()-0.5)*0.4,
+      a:Math.random()*0.6+0.1,
+      c:Math.random()>0.6?'255,198,0':'147,197,253'
+    });
+  }
+  var animId;
+  function drawParticles(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(function(p){
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba('+p.c+','+p.a+')';
+      ctx.fill();
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>W) p.vx*=-1;
+      if(p.y<0||p.y>H) p.vy*=-1;
+    });
+    animId=requestAnimationFrame(drawParticles);
+  }
+  drawParticles();
+
+  // Animate elements
+  setTimeout(function(){
+    var icon=document.getElementById('splash-icon');
+    icon.style.transform='scale(1) translateY(0)';
+    icon.style.opacity='1';
+  }, 80);
+
+  setTimeout(function(){
+    var title=document.getElementById('splash-title');
+    title.style.opacity='1';
+    title.style.transform='translateY(0)';
+  }, 380);
+
+  setTimeout(function(){
+    var tag=document.getElementById('splash-tag');
+    tag.style.opacity='1';
+  }, 620);
+
+  setTimeout(function(){
+    document.getElementById('splash-bar').style.width='100%';
+  }, 200);
+
+  // Pulse glow on icon
+  setTimeout(function(){
+    var icon=document.getElementById('splash-icon');
+    icon.style.boxShadow='0 0 80px rgba(255,198,0,0.7),0 0 160px rgba(255,198,0,0.3),0 20px 60px rgba(0,0,0,0.8)';
+    icon.style.transition='transform 0.7s cubic-bezier(0.34,1.56,0.64,1),opacity 0.5s ease,box-shadow 0.8s ease';
+  }, 800);
+
+  // Dismiss splash
+  setTimeout(function(){
+    cancelAnimationFrame(animId);
+    var splash=document.getElementById('splash');
+    splash.style.transition='opacity 0.6s ease,transform 0.6s ease';
+    splash.style.opacity='0';
+    splash.style.transform='scale(1.05)';
+    setTimeout(function(){ 
+      splash.style.display='none'; 
+    }, 600);
+  }, 2800);
+
+  // Tap to skip
+  document.getElementById('splash').addEventListener('click', function(){
+    cancelAnimationFrame(animId);
+    var splash=document.getElementById('splash');
+    splash.style.transition='opacity 0.3s ease';
+    splash.style.opacity='0';
+    setTimeout(function(){ splash.style.display='none'; }, 300);
+  });
+})();
+</script>
 <header>
   <div class="hi">
     <div><h1>📚 Academia Personal 2-15 Florida</h1><div class="sub">10 lecciones activas · Explicación fácil · Ejemplos reales · Quiz · Frases para memorizar</div></div>
