@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Academia 2-15 Florida</title>
+  <meta name="theme-color" content="#071225" />
+  <style>
+    :root{
+      --bg:#071225;--card:#0d1b33;--card2:#102447;--gold:#facc15;--orange:#f97316;
+      --blue:#60a5fa;--text:#f8fafc;--muted:#94a3b8;--red:#ef4444;--green:#22c55e;--line:#1e3a5f;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:radial-gradient(circle at top,#12315f 0,#071225 44%,#030712 100%);color:var(--text);min-height:100vh}
+    .wrap{max-width:1100px;margin:0 auto;padding:18px}
+    .hero{padding:26px;border:1px solid rgba(250,204,21,.35);border-radius:28px;background:linear-gradient(145deg,rgba(15,35,70,.96),rgba(7,18,37,.98));box-shadow:0 18px 50px rgba(0,0,0,.35)}
+    .badge{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;background:rgba(250,204,21,.12);color:#fde68a;border:1px solid rgba(250,204,21,.3);font-weight:800;font-size:13px}
+    h1{font-size:clamp(31px,5vw,58px);margin:14px 0 8px;line-height:1.02}
+    h2{margin:0 0 10px}
+    p{color:var(--muted);line-height:1.55}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+    .stat{padding:14px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+    .stat b{display:block;font-size:25px;color:#fff}.stat span{font-size:12px;color:var(--muted)}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+    .btn{border:0;border-radius:16px;padding:13px 17px;font-weight:900;cursor:pointer;color:#071225;background:linear-gradient(135deg,var(--gold),var(--orange));box-shadow:0 10px 24px rgba(250,204,21,.18)}
+    .btn.sec{background:#12284f;color:#dbeafe;border:1px solid #2b4f82;box-shadow:none}.btn.red{background:linear-gradient(135deg,#ef4444,#991b1b);color:#fff}
+    .panel{margin-top:16px;padding:18px;border-radius:22px;background:rgba(13,27,51,.94);border:1px solid var(--line)}
+    .hidden{display:none}.topicGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+    .topic{padding:16px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);cursor:pointer}
+    .topic:hover{border-color:var(--gold)}.topic h3{margin:0 0 6px;font-size:16px}.topic small{color:var(--muted)}
+    .question{font-size:22px;font-weight:900;line-height:1.28;margin:16px 0}.option{width:100%;text-align:left;margin:10px 0;padding:14px;border-radius:16px;background:#0b1730;color:#e5e7eb;border:1px solid #203a63;cursor:pointer;font-size:16px}
+    .option:hover{border-color:#60a5fa}.option.correct{border-color:#22c55e;background:rgba(34,197,94,.13)}.option.wrong{border-color:#ef4444;background:rgba(239,68,68,.12)}
+    .explain{margin-top:14px;padding:14px;border-radius:16px;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.35);color:#dbeafe}
+    .topbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:14px}.pill{padding:7px 10px;border-radius:999px;background:#0b1730;border:1px solid #203a63;color:#cbd5e1;font-size:13px}
+    .progress{height:9px;border-radius:999px;background:#0b1730;overflow:hidden}.progress>div{height:100%;background:linear-gradient(90deg,#60a5fa,#facc15);width:0}
+    .table{width:100%;border-collapse:collapse;margin-top:12px}.table td,.table th{border-bottom:1px solid #1f3558;padding:10px;text-align:left;color:#dbeafe}.danger{color:#fecaca}.ok{color:#bbf7d0}
+    .term{padding:13px;border-radius:14px;background:#0b1730;border:1px solid #203a63;margin:8px 0}.term b{color:#fde68a}
+    .footer{margin:18px 0;color:#64748b;font-size:12px;text-align:center}
+    @media(max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}.wrap{padding:12px}.hero{padding:20px}.question{font-size:19px}.topbar{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section id="home" class="hero">
+      <span class="badge">🎯 Academia 2-15 Florida · Pearson Killer</span>
+      <h1>Entrenamiento para pasar de 65 a PASS</h1>
+      <p>Aplicación de estudio para el examen Florida 2-15 en español. Enfocada en preguntas con sinónimos, respuestas muy parecidas, excepciones legales y razonamiento por eliminación.</p>
+      <div class="grid">
+        <div class="stat"><b id="totalQ">0</b><span>preguntas activas</span></div>
+        <div class="stat"><b>70%</b><span>mínimo oficial</span></div>
+        <div class="stat"><b>85%</b><span>meta de práctica</span></div>
+        <div class="stat"><b id="bestScore">--</b><span>mejor resultado</span></div>
+      </div>
+      <div class="actions">
+        <button class="btn" onclick="startMode('pearson')">Iniciar Modo Pearson</button>
+        <button class="btn sec" onclick="startSim()">Simulacro cronometrado</button>
+        <button class="btn sec" onclick="showTopics()">Practicar por tema</button>
+        <button class="btn sec" onclick="showDictionary()">Diccionario</button>
+        <button class="btn sec" onclick="showPlan()">Plan 65 → PASS</button>
+        <button class="btn sec" onclick="showErrors()">Banco de errores</button>
+        <button class="btn red" onclick="resetProgress()">Reiniciar progreso</button>
+      </div>
+    </section>
+
+    <section id="topics" class="panel hidden">
+      <div class="topbar"><h2>Practicar por tema</h2><button class="btn sec" onclick="goHome()">Inicio</button></div>
+      <div id="topicGrid" class="topicGrid"></div>
+    </section>
+
+    <section id="dict" class="panel hidden">
+      <div class="topbar"><h2>Diccionario de sinónimos Pearson</h2><button class="btn sec" onclick="goHome()">Inicio</button></div>
+      <div id="dictBox"></div>
+    </section>
+
+    <section id="plan" class="panel hidden">
+      <div class="topbar"><h2>Plan 65 → PASS</h2><button class="btn sec" onclick="goHome()">Inicio</button></div>
+      <p>Este plan está basado en tus dos intentos: subiste de 56 a 65, pero las áreas que más te frenaron fueron Field Underwriting, Retiro, Leyes de Vida/Anualidades, Provisiones de Salud y preguntas con sinónimos.</p>
+      <table class="table">
+        <tr><th>Prioridad</th><th>Área</th><th>Meta</th></tr>
+        <tr><td>1</td><td>Field Underwriting</td><td>Subir de crítico a 80%+</td></tr>
+        <tr><td>2</td><td>Planes de Retiro</td><td>Dominar IRA, Roth, RMD, ERISA, 401(k)</td></tr>
+        <tr><td>3</td><td>Leyes de Florida</td><td>Conservar fortaleza y subir anualidades</td></tr>
+        <tr><td>4</td><td>Provisiones de Salud</td><td>Evitar confundir plazos de salud con vida</td></tr>
+        <tr><td>5</td><td>Sinónimos Pearson</td><td>Entrenar palabras raras y distractores</td></tr>
+      </table>
+      <div class="actions">
+        <button class="btn" onclick="startWeakPlan()">Entrenar prioridades</button>
+        <button class="btn sec" onclick="startSim()">Simulacro cronometrado</button>
+      </div>
+    </section>
+
+    <section id="quiz" class="panel hidden">
+      <div class="topbar"><span class="pill" id="qMode"></span><span class="pill" id="timer">Sin tiempo</span><span class="pill" id="qCount"></span></div>
+      <div class="progress"><div id="bar"></div></div>
+      <p class="pill" id="qTopic" style="display:inline-block;margin-top:14px"></p>
+      <div class="question" id="qText"></div>
+      <div id="opts"></div>
+      <div id="explain" class="explain hidden"></div>
+      <div class="actions"><button id="nextBtn" class="btn hidden" onclick="nextQ()">Siguiente</button><button class="btn sec" onclick="finishQuiz()">Terminar</button></div>
+    </section>
+
+    <section id="result" class="panel hidden">
+      <h2>Resultado</h2>
+      <p id="scoreText"></p>
+      <table class="table" id="topicTable"></table>
+      <div class="actions"><button class="btn" onclick="startMode('pearson')">Repetir Pearson</button><button class="btn sec" onclick="showErrors()">Ver errores</button><button class="btn sec" onclick="goHome()">Inicio</button></div>
+    </section>
+
+    <section id="errors" class="panel hidden">
+      <div class="topbar"><h2>Banco de errores</h2><button class="btn sec" onclick="goHome()">Inicio</button></div>
+      <div id="errorsBox"></div>
+    </section>
+
+    <div class="footer">Versión inicial · Academia 2-15 Florida · William Pérez Mederos</div>
+  </main>
+
+<script>
+const QUESTIONS=[
+{topic:'Field Underwriting',level:5,q:'Un solicitante firma la solicitud, paga la prima inicial y recibe un recibo condicional. Muere antes de que la póliza sea emitida. La aseguradora determina que habría sido asegurable exactamente como solicitó. ¿Qué ocurre?',o:['No hay cobertura porque la póliza no fue entregada','Hay cobertura provisional por el recibo condicional','Solo se devuelve la prima inicial','El agente decide si se paga el beneficio'],a:1,e:'El recibo condicional puede activar cobertura provisional si hubo pago inicial y el solicitante habría sido asegurable en los términos solicitados.'},
+{topic:'Field Underwriting',level:5,q:'¿Cuál diferencia es la más precisa entre MIB y APS?',o:['MIB es el examen médico; APS es el reporte de crédito','MIB contiene información médica codificada compartida; APS viene del médico tratante del solicitante','MIB decide la prima final; APS decide si hay recibo condicional','MIB reemplaza la solicitud; APS reemplaza la firma del agente'],a:1,e:'MIB ayuda a detectar inconsistencias mediante información codificada. APS es el Attending Physician Statement del médico tratante.'},
+{topic:'Field Underwriting',level:4,q:'Si el agente nota que la salud del solicitante empeoró antes de entregar la póliza, debe:',o:['Entregar la póliza para no perder la venta','Cobrar otra prima y no decir nada','Reportar el cambio a la aseguradora antes de entregar','Cambiar la fecha de solicitud para proteger al cliente'],a:2,e:'El agente es el primer filtro de campo. Si la salud cambia, debe reportarlo antes de entregar.'},
+{topic:'Retiro',level:5,q:'¿Cuál cuenta NO exige RMD durante la vida del dueño original?',o:['IRA Tradicional','SEP-IRA','Roth IRA','401(k) tradicional'],a:2,e:'Roth IRA no exige Required Minimum Distributions durante la vida del dueño original.'},
+{topic:'Retiro',level:5,q:'Un rollover indirecto de IRA debe completarse dentro de ___ y generalmente está limitado a ___ por período de 12 meses.',o:['30 días / dos','60 días / uno','90 días / uno','45 días / ilimitados'],a:1,e:'Rollover indirecto: 60 días. Normalmente solo uno en 12 meses.'},
+{topic:'Retiro',level:4,q:'En un plan Defined Benefit, ¿quién asume el riesgo de inversión?',o:['El empleado','El empleador','El agente','El beneficiario contingente'],a:1,e:'Defined Benefit promete un beneficio definido; el empleador asume el riesgo de inversión.'},
+{topic:'Leyes de Florida',level:5,q:'En Florida, una persona de 70 años compra una anualidad. ¿Cuál es su Free Look Period?',o:['10 días','21 días','30 días','45 días'],a:2,e:'Para anualidades en Florida, el período general es 21 días; para personas de 65 años o más se extiende a 30 días.'},
+{topic:'Leyes de Florida',level:5,q:'Bajo la Florida Replacement Rule, el agente debe notificar a la aseguradora reemplazada dentro de:',o:['3 días calendario','3 días hábiles','10 días calendario','31 días'],a:1,e:'La trampa está en “hábiles”. Son 3 business days.'},
+{topic:'Leyes de Florida',level:4,q:'El Florida Life and Health Insurance Guaranty Association protege principalmente pólizas de:',o:['Aseguradoras Non-Admitted','Aseguradoras Admitted insolventes','Cualquier aseguradora extranjera','Pólizas canceladas por el dueño'],a:1,e:'El fondo protege a asegurados de compañías admitted/autorizadas que se vuelven insolventes.'},
+{topic:'Provisiones de Salud',level:5,q:'En una póliza de salud con primas mensuales, el período de gracia es:',o:['7 días','10 días','21 días','31 días'],a:1,e:'Salud no siempre son 31 días. Semanal: 7; mensual: 10; otras frecuencias: 31.'},
+{topic:'Provisiones de Salud',level:5,q:'Tras reinstalar una póliza de salud, el período de espera de 10 días aplica a:',o:['Accidentes solamente','Enfermedades, no accidentes','Accidentes y enfermedades por igual','Ningún reclamo'],a:1,e:'Después de reinstatement en salud, el período de 10 días aplica a enfermedad. Accidentes quedan cubiertos inmediatamente.'},
+{topic:'Provisiones de Salud',level:4,q:'¿Cuál disposición permite subir primas por clase, pero no cancelar individualmente la póliza?',o:['Non-Cancelable','Guaranteed Renewable','Cancelable','Optionally Renewable'],a:1,e:'Guaranteed Renewable obliga a renovar, pero permite aumentos de prima por clase.'},
+{topic:'Anualidades',level:5,q:'Una anualidad variable requiere licencia de seguros y además licencia de:',o:['Bienes raíces','Valores / securities','Mortgage broker','Ajustador público'],a:1,e:'Los productos variables invierten en subcuentas del mercado, por eso requieren licencia de valores.'},
+{topic:'Anualidades',level:5,q:'¿Cuál intercambio 1035 NO está permitido?',o:['Vida a vida','Vida a anualidad','Anualidad a anualidad','Anualidad a vida'],a:3,e:'El intercambio de anualidad a vida no está permitido.'},
+{topic:'Anualidades',level:4,q:'En una Equity Indexed Annuity, el cap significa:',o:['El mínimo garantizado','El porcentaje de participación','El límite máximo de rendimiento acreditado','La penalidad de retiro anticipado'],a:2,e:'Cap es el techo máximo. Floor es el mínimo. Participation rate es el porcentaje de ganancia acreditada.'},
+{topic:'Salud / COBRA',level:4,q:'COBRA normalmente permite continuar cobertura de salud grupal por 18 meses, pero en ciertos eventos como divorcio o muerte puede extenderse a:',o:['24 meses','30 meses','36 meses','48 meses'],a:2,e:'COBRA suele ser 18 meses. Algunos qualifying events lo extienden a 36 meses.'},
+{topic:'Salud / Medicare',level:4,q:'¿Qué programa puede cubrir cuidado a largo plazo para personas de bajos ingresos?',o:['Medicare Parte B','Medicare Supplement','Medicaid','AD&D'],a:2,e:'Medicare no cubre long-term care custodial de rutina. Medicaid sí puede cubrirlo para personas elegibles.'},
+{topic:'Vida',level:5,q:'Si la edad del asegurado fue declarada incorrectamente en una póliza de vida, la aseguradora normalmente:',o:['Anula la póliza automáticamente','Niega el reclamo completo','Ajusta el beneficio a lo que la prima habría comprado con la edad correcta','Devuelve solo las primas'],a:2,e:'Misstatement of age no anula automáticamente. Se ajusta el beneficio según la edad correcta.'},
+{topic:'Vida',level:4,q:'La opción de no pérdida que mantiene el MISMO valor nominal pero por menos tiempo es:',o:['Reduced Paid-Up','Cash Surrender','Extended Term','Automatic Premium Loan'],a:2,e:'Extended Term mantiene el mismo face amount por un período más corto.'},
+{topic:'Sinónimos Pearson',level:5,q:'En una pregunta, “enajenar una póliza vigente para adquirir una en otra compañía mediante información engañosa” se refiere a:',o:['Churning','Twisting','Rebating','Defamation'],a:1,e:'Enajenar puede significar ceder, transferir o renunciar. Si es a otra compañía con engaño, es Twisting.'}
+];
+
+const DICT=[
+['Enajenar','Ceder, transferir, renunciar o desprenderse de una póliza. En preguntas de reemplazo puede apuntar a Twisting o Churning.'],
+['Rescindir','Cancelar o anular un contrato. Cuidado: no siempre significa “no renovar”.'],
+['Deceso','Muerte o fallecimiento. “Deceso accidental” suele apuntar a AD&D.'],
+['Resarcimiento','Indemnización, pago o compensación por una pérdida.'],
+['Pecuniario','Relacionado con dinero. “Pérdida pecuniaria” = pérdida económica.'],
+['Prima nivelada','Prima uniforme o fija durante el período indicado.'],
+['Valor acumulado','Puede referirse al valor en efectivo/cash value si el contexto es vida permanente.'],
+['Suscripción','Underwriting: evaluación del riesgo.'],
+['Periodo de carencia','Waiting period o elimination period según contexto.'],
+['Cláusula','Artículo o disposición dentro del contrato.']
+];
+
+let current=[],idx=0,score=0,answered=false,sessionStats={},sessionMistakes=[],timerId=null,timeLeft=0;
+function $(id){return document.getElementById(id)}
+function hideAll(){['home','topics','dict','plan','quiz','result','errors'].forEach(id=>$(id).classList.add('hidden'))}
+function goHome(){hideAll();$('home').classList.remove('hidden');loadStats()}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function loadStats(){ $('totalQ').textContent=QUESTIONS.length; const best=localStorage.getItem('pk_best'); $('bestScore').textContent=best?best+'%':'--'; }
+function showTopics(){hideAll();$('topics').classList.remove('hidden'); const topics=[...new Set(QUESTIONS.map(q=>q.topic))]; $('topicGrid').innerHTML=topics.map(t=>{const qs=QUESTIONS.filter(q=>q.topic===t);return `<div class="topic" onclick="startTopic('${t.replace(/'/g,"\\'")}')"><h3>${t}</h3><small>${qs.length} preguntas · dificultad ${Math.max(...qs.map(q=>q.level))}</small></div>`}).join('')}
+function showDictionary(){hideAll();$('dict').classList.remove('hidden');$('dictBox').innerHTML=DICT.map(x=>`<div class="term"><b>${x[0]}</b><p>${x[1]}</p></div>`).join('')}
+function showPlan(){hideAll();$('plan').classList.remove('hidden')}
+function startWeakPlan(){
+  const priority=['Field Underwriting','Retiro','Leyes de Florida','Provisiones de Salud','Anualidades','Sinónimos Pearson'];
+  const qs=QUESTIONS.filter(q=>priority.includes(q.topic));
+  startQuiz(qs,'Plan 65 → PASS',0);
+}
+function startTopic(t){startQuiz(QUESTIONS.filter(q=>q.topic===t),t,0)}
+function startMode(){startQuiz(QUESTIONS.filter(q=>q.level>=4),'Modo Pearson Killer',0)}
+function startSim(){
+  // Simulacro corto inicial: 20 preguntas / 25 minutos. Luego lo subiremos a 165.
+  startQuiz(shuffle(QUESTIONS).slice(0,Math.min(20,QUESTIONS.length)),'Simulacro cronometrado',25*60);
+}
+function startTimer(seconds){
+  clearInterval(timerId);
+  timeLeft=seconds;
+  if(!seconds){$('timer').textContent='Sin tiempo';return}
+  const tick=()=>{
+    const m=Math.floor(timeLeft/60), s=timeLeft%60;
+    $('timer').textContent=`⏱ ${m}:${String(s).padStart(2,'0')}`;
+    if(timeLeft<=0){clearInterval(timerId);finishQuiz();}
+    timeLeft--;
+  };
+  tick(); timerId=setInterval(tick,1000);
+}
+function startQuiz(qs,title,seconds=0){current=shuffle(qs);idx=0;score=0;answered=false;sessionStats={};sessionMistakes=[];hideAll();$('quiz').classList.remove('hidden');$('qMode').textContent=title;startTimer(seconds);renderQ()}
+function renderQ(){answered=false;const q=current[idx];$('qCount').textContent=`${idx+1} / ${current.length}`;$('bar').style.width=((idx)/current.length*100)+'%';$('qTopic').textContent=q.topic+' · dificultad '+q.level;$('qText').textContent=q.q;$('explain').classList.add('hidden');$('nextBtn').classList.add('hidden');$('opts').innerHTML=q.o.map((op,i)=>`<button class="option" onclick="answer(${i})">${String.fromCharCode(65+i)}. ${op}</button>`).join('')}
+function answer(i){if(answered)return;answered=true;const q=current[idx];const buttons=[...document.querySelectorAll('.option')];buttons.forEach((b,n)=>{if(n===q.a)b.classList.add('correct'); if(n===i&&n!==q.a)b.classList.add('wrong')}); if(!sessionStats[q.topic])sessionStats[q.topic]={c:0,t:0}; sessionStats[q.topic].t++; if(i===q.a){score++;sessionStats[q.topic].c++}else{sessionMistakes.push({...q,chosen:i}); saveMistake({...q,chosen:i,date:new Date().toISOString()})} $('explain').innerHTML=`<b>${i===q.a?'✅ Correcto':'❌ Incorrecto'}</b><br>${q.e}`;$('explain').classList.remove('hidden');$('nextBtn').classList.remove('hidden')}
+function nextQ(){idx++; if(idx>=current.length)finishQuiz(); else renderQ()}
+function finishQuiz(){clearInterval(timerId);hideAll();$('result').classList.remove('hidden');const pct=Math.round(score/current.length*100);$('scoreText').innerHTML=`Sacaste <b class="${pct>=85?'ok':pct>=70?'ok':'danger'}">${pct}%</b> (${score}/${current.length}). Meta de práctica: 85%.`;const best=parseInt(localStorage.getItem('pk_best')||'0');if(pct>best)localStorage.setItem('pk_best',pct);let rows='<tr><th>Tema</th><th>Resultado</th><th>Acción</th></tr>';Object.entries(sessionStats).forEach(([t,s])=>{const p=Math.round(s.c/s.t*100);rows+=`<tr><td>${t}</td><td>${p}% (${s.c}/${s.t})</td><td>${p<70?'Crítico':p<85?'Reforzar':'Mantener'}</td></tr>`});$('topicTable').innerHTML=rows;$('bar').style.width='100%'}
+function saveMistake(m){let arr=[];try{arr=JSON.parse(localStorage.getItem('pk_mistakes')||'[]')}catch(e){}arr.unshift(m);localStorage.setItem('pk_mistakes',JSON.stringify(arr.slice(0,80)))}
+function showErrors(){hideAll();$('errors').classList.remove('hidden');let arr=[];try{arr=JSON.parse(localStorage.getItem('pk_mistakes')||'[]')}catch(e){} if(!arr.length){$('errorsBox').innerHTML='<p>No hay errores guardados todavía. Haz un modo Pearson primero.</p>';return} $('errorsBox').innerHTML=`<p>${arr.length} errores guardados. Usa esto como repaso antes del examen.</p>`+arr.slice(0,20).map((m,i)=>`<div class="panel"><b>${i+1}. ${m.topic}</b><p>${m.q}</p><p class="danger">Tu respuesta: ${m.o[m.chosen]}</p><p class="ok">Correcta: ${m.o[m.a]}</p><p>${m.e}</p></div>`).join('')+`<div class="actions"><button class="btn" onclick="startQuiz(JSON.parse(localStorage.getItem('pk_mistakes')||'[]'),'Banco de errores',0)">Practicar errores</button></div>`}
+function resetProgress(){if(confirm('¿Reiniciar progreso local de Pearson Killer?')){localStorage.removeItem('pk_best');localStorage.removeItem('pk_mistakes');goHome()}}
+loadStats();
+</script>
+</body>
+</html>
