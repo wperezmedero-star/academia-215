@@ -631,3 +631,7 @@ const PK_HEALTH = [
 ]; // fin PK_HEALTH
 
 if (typeof module !== 'undefined') module.exports = { PK_HEALTH };
+
+// Asignación explícita a window para garantizar disponibilidad
+// global sin importar el motor JS o el timing de ejecución del navegador
+if (typeof window !== 'undefined') window.PK_HEALTH = PK_HEALTH;
