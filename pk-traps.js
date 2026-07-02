@@ -239,3 +239,5 @@ const PK_TRAMPAS = {
 // Exportar para uso del motor principal
 // ============================================================
 if (typeof module !== 'undefined') module.exports = { PK_TRAMPAS };
+
+if (typeof window !== 'undefined') window.PK_TRAMPAS = PK_TRAMPAS;
