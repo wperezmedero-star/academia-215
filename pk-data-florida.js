@@ -528,3 +528,7 @@ const PK_FLORIDA = [
 ]; // fin PK_FLORIDA
 
 if (typeof module !== 'undefined') module.exports = { PK_FLORIDA };
+
+// Asignación explícita a window para garantizar disponibilidad
+// global sin importar el motor JS o el timing de ejecución del navegador
+if (typeof window !== 'undefined') window.PK_FLORIDA = PK_FLORIDA;
