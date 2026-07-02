@@ -425,3 +425,7 @@ const PK_GENERAL = [
 ]; // fin PK_GENERAL
 
 if (typeof module !== 'undefined') module.exports = { PK_GENERAL };
+
+// Asignación explícita a window para garantizar disponibilidad
+// global sin importar el motor JS o el timing de ejecución del navegador
+if (typeof window !== 'undefined') window.PK_GENERAL = PK_GENERAL;
