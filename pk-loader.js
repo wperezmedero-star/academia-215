@@ -45,15 +45,15 @@
   // esto permite cargar pearson-killer.html incluso si todavía
   // no se han subido todos los archivos de contenido.
   const MODULOS = [
-    { nombre: "underwriting", data: typeof PK_UNDERWRITING !== 'undefined' ? PK_UNDERWRITING : null },
-    { nombre: "life",         data: typeof PK_LIFE !== 'undefined' ? PK_LIFE : null },
-    { nombre: "annuities",    data: typeof PK_ANNUITIES !== 'undefined' ? PK_ANNUITIES : null },
-    { nombre: "health",       data: typeof PK_HEALTH !== 'undefined' ? PK_HEALTH : null },
-    { nombre: "retirement",   data: typeof PK_RETIREMENT !== 'undefined' ? PK_RETIREMENT : null },
-    { nombre: "florida",      data: typeof PK_FLORIDA !== 'undefined' ? PK_FLORIDA : null },
-    { nombre: "medicare",     data: typeof PK_MEDICARE !== 'undefined' ? PK_MEDICARE : null },
-    { nombre: "ltc",          data: typeof PK_LTC !== 'undefined' ? PK_LTC : null },
-    { nombre: "general",      data: typeof PK_GENERAL !== 'undefined' ? PK_GENERAL : null }
+    { nombre: "underwriting", data: window.PK_UNDERWRITING || null },
+    { nombre: "life",         data: window.PK_LIFE || null },
+    { nombre: "annuities",    data: window.PK_ANNUITIES || null },
+    { nombre: "health",       data: window.PK_HEALTH || null },
+    { nombre: "retirement",   data: window.PK_RETIREMENT || null },
+    { nombre: "florida",      data: window.PK_FLORIDA || null },
+    { nombre: "medicare",     data: window.PK_MEDICARE || null },
+    { nombre: "ltc",          data: window.PK_LTC || null },
+    { nombre: "general",      data: window.PK_GENERAL || null }
   ];
 
   // Combinar todos los módulos cargados en un único array
@@ -94,8 +94,8 @@
   window.PK_AREAS_FULL = AREAS_UNIFICADAS;
 
   // Referencias a sinónimos y trampas si están cargadas
-  window.PK_SINONIMOS_FULL = (typeof PK_SINONIMOS !== 'undefined') ? PK_SINONIMOS : {};
-  window.PK_TRAMPAS_FULL = (typeof PK_TRAMPAS !== 'undefined') ? PK_TRAMPAS : {};
+  window.PK_SINONIMOS_FULL = window.PK_SINONIMOS || {};
+  window.PK_TRAMPAS_FULL = window.PK_TRAMPAS || {};
 
   // Estadísticas de carga — visibles en consola para debugging
   let totalVariantes = 0;
