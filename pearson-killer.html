@@ -73,11 +73,16 @@ th{color:var(--muted);font-weight:600}
 
   <div class="card">
     <h2>📚 Por área específica</h2>
-    <button class="btn btn-sec" onclick="startMode('underwriting',25)">📋 Field Underwriting Procedures</button>
-    <button class="btn btn-sec" onclick="startMode('florida',25)">🌴 FL Statutes, Rules & Annuities</button>
-    <button class="btn btn-sec" onclick="startMode('retirement',25)">💰 Retirement & Other Concepts</button>
-    <button class="btn btn-sec" onclick="startMode('provisions',25)">📜 Policy Provisions, Clauses & Riders</button>
-    <button class="btn btn-sec" onclick="startMode('health',25)">🏥 Types of Health Policies</button>
+    <button class="btn btn-sec" onclick="startMode('suscripcion',25)">📋 Suscripción en Campo</button>
+    <button class="btn btn-sec" onclick="startMode('vida',35)">❤️ Seguros de Vida</button>
+    <button class="btn btn-sec" onclick="startMode('anualidades',30)">📈 Anualidades</button>
+    <button class="btn btn-sec" onclick="startMode('salud',30)">🏥 Tipos de Pólizas de Salud</button>
+    <button class="btn btn-sec" onclick="startMode('retiro',30)">💰 Planes de Retiro y Seguro Social</button>
+    <button class="btn btn-sec" onclick="startMode('florida',25)">🌴 Leyes y Regulaciones de Florida</button>
+    <button class="btn btn-sec" onclick="startMode('medicare',20)">🏛️ Medicare y Medicaid</button>
+    <button class="btn btn-sec" onclick="startMode('ltc',20)">🛏️ Cuidado a Largo Plazo</button>
+    <button class="btn btn-sec" onclick="startMode('provisiones',20)">📜 Provisiones, Cláusulas y Anexos</button>
+    <button class="btn btn-sec" onclick="startMode('generales',20)">⚖️ Conceptos Generales</button>
   </div>
 
   <div style="text-align:center;margin-top:10px">
@@ -120,14 +125,30 @@ th{color:var(--muted);font-weight:600}
 
 </div><!-- /wrap -->
 
+<!-- ============================================================
+     BANCO DE CONCEPTOS — Fase 2B
+     9 módulos temáticos + sinónimos + trampas + loader central
+     ============================================================ -->
+<script src="pk-synonyms.js"></script>
+<script src="pk-traps.js"></script>
+<script src="pk-data-underwriting.js"></script>
+<script src="pk-data-life.js"></script>
+<script src="pk-data-annuities.js"></script>
+<script src="pk-data-health.js"></script>
+<script src="pk-data-retirement.js"></script>
+<script src="pk-data-florida.js"></script>
+<script src="pk-data-medicare.js"></script>
+<script src="pk-data-ltc.js"></script>
+<script src="pk-data-general.js"></script>
+<script src="pk-loader.js"></script>
+
 <script>
 // ============================================================
-// CONCEPT DATABASE — Variantes múltiples por concepto
-// Cada concepto tiene 3-5 variantes con redacción diferente
-// misma idea, sinónimos, ángulos distintos
+// CONCEPT DATABASE — Cargado desde pk-loader.js (Fase 2B)
+// 9 módulos temáticos unificados: 47 conceptos, 235 variantes
 // ============================================================
 
-const AREAS = {
+const AREAS = (typeof PK_AREAS_FULL !== 'undefined') ? PK_AREAS_FULL : {
   underwriting: "Field Underwriting Procedures",
   florida: "FL Statutes, Rules & Annuities",
   retirement: "Retirement & Other Concepts",
@@ -135,343 +156,13 @@ const AREAS = {
   health: "Types of Health Policies"
 };
 
-// Format: {concept, area, variants:[{q,o:[],a,e}]}
-const CONCEPTS = [
+const CONCEPTS = (typeof PK_CONCEPTOS_FULL !== 'undefined' && PK_CONCEPTOS_FULL.length > 0)
+  ? PK_CONCEPTOS_FULL
+  : [];
 
-// ═══════════════════════════════════════════════════════════
-// FIELD UNDERWRITING PROCEDURES
-// ═══════════════════════════════════════════════════════════
-{concept:"Conditional Receipt",area:"underwriting",variants:[
-  {q:"Pedro pays his first premium and signs the application. The agent gives him a Conditional Receipt. Pedro dies that same night in an accident. What happens?",
-   o:["The insurer pays the full benefit automatically","The insurer pays the benefit ONLY IF Pedro would have been approved as a standard risk","The insurer returns the premium and pays nothing","The insurer pays 50% as a compromise"],a:1,
-   e:"Conditional Receipt = coverage is effective ONLY if the applicant would have qualified. If Pedro had a condition that would have disqualified him, no benefit is paid — only the premium is returned."},
-  {q:"A 'binding receipt' differs from a 'conditional receipt' in that the binding receipt:",
-   o:["Requires a medical exam before coverage begins","Provides coverage immediately regardless of insurability","Only covers accidental death","Is issued only for group policies"],a:1,
-   e:"Binding Receipt = immediate coverage regardless of insurability outcome. Conditional Receipt = coverage only if the applicant would have been approved. The binding receipt is unconditional; the conditional receipt has the condition of insurability."},
-  {q:"An agent collects the initial premium and issues a receipt that states coverage begins on the date of the application IF the applicant is found to be insurable. This is a:",
-   o:["Binding receipt","Inspection receipt","Conditional receipt","Premium receipt"],a:2,
-   e:"The key phrase is 'IF the applicant is found to be insurable' — that is the definition of a Conditional Receipt. Coverage is contingent on the underwriting approval."},
-  {q:"Which of the following statements about the Conditional Receipt is INCORRECT?",
-   o:["It provides temporary coverage from the application date","Coverage is only effective if the applicant qualifies as a standard risk","The insurer must pay regardless of whether the applicant was insurable","It is issued upon payment of the first premium"],a:2,
-   e:"INCORRECT statement: The insurer does NOT have to pay regardless. Under a Conditional Receipt, the insurer pays ONLY if the applicant would have qualified. This is the whole point of 'conditional' coverage."},
-]},
+// Banco anterior conservado como respaldo — ya no se usa activamente
+// (Banco anterior eliminado — ya no se usa. El banco activo es PK_CONCEPTOS_FULL)
 
-{concept:"Sources of Underwriting Information",area:"underwriting",variants:[
-  {q:"Which document provides the underwriter with the applicant's PERSONAL MEDICAL HISTORY as reported by their own physician?",
-   o:["MIB Report","MVR (Motor Vehicle Report)","APS (Attending Physician Statement)","Inspection Report"],a:2,
-   e:"APS = Attending Physician Statement. It comes from the applicant's OWN doctor and contains their personal medical history. Different from the MIB (coded data from prior applications) or MVR (driving record)."},
-  {q:"The MIB (Medical Information Bureau) provides insurance companies with:",
-   o:["Complete medical diagnoses of applicants","Coded information from prior insurance applications — NOT definitive diagnoses","Applicant's driving record and accidents","Applicant's financial credit history"],a:1,
-   e:"MIB provides CODED information from prior insurance applications submitted to member companies. It flags items for further investigation but does NOT provide diagnoses. Applicants have the right to request and correct their MIB file."},
-  {q:"An underwriter wants to know about an applicant's CHARACTER, REPUTATION, and FINANCIAL STATUS. Which report provides this information?",
-   o:["APS (Attending Physician Statement)","MIB Report","Inspection Report","MVR Report"],a:2,
-   e:"Inspection Report = covers character, reputation, lifestyle, and financial status. It's an investigative consumer report governed by the Fair Credit Reporting Act (FCRA), which requires the applicant to be notified."},
-  {q:"Under the Fair Credit Reporting Act (FCRA), if an insurer orders an investigative consumer report about an applicant, the applicant must be:",
-   o:["Asked to pay for the report","Notified that the report may be requested","Denied coverage automatically","Given a copy of the report before it is ordered"],a:1,
-   e:"FCRA requires that the applicant be NOTIFIED that an investigative consumer report (inspection report) may be requested. The applicant has the right to know this information is being gathered about them."},
-]},
-
-{concept:"Backdating Policies",area:"underwriting",variants:[
-  {q:"A policy can be backdated up to how many months to obtain a lower premium based on a younger age?",
-   o:["3 months","6 months","12 months","18 months"],a:1,
-   e:"Backdating is allowed up to 6 MONTHS in Florida. The insured pays the retroactive premiums for the backdated period but benefits from the lower premium rate for the younger age — permanently."},
-  {q:"Ana turns 40 in January (higher premium). She applies for a policy in March and asks the agent to backdate it to December. What is the DISADVANTAGE for Ana?",
-   o:["She loses coverage for the backdated period","She must pay retroactive premiums for the backdated months even though no coverage existed then","The policy is illegal and void","The insurer can cancel anytime during the first 6 months"],a:1,
-   e:"Backdating means paying premiums for a period BEFORE the policy was actually issued. Ana pays for December-February retroactively with no actual coverage during that time, in exchange for a permanently lower premium rate."},
-  {q:"Which statement about backdating a life insurance policy is TRUE?",
-   o:["It is always illegal in Florida","It allows obtaining a lower premium by using a younger issue age, permitted up to 6 months","It eliminates the need for a medical examination","It allows the insured to collect benefits from the backdated date"],a:1,
-   e:"Backdating (up to 6 months) is LEGAL in Florida. Its purpose is to use a younger age for premium calculation, resulting in a permanently lower premium. The insured pays retroactive premiums for the backdated period."},
-]},
-
-{concept:"Replacement Rules",area:"underwriting",variants:[
-  {q:"When a new life insurance policy REPLACES an existing policy, the replacing agent must notify the existing insurer within how many business days?",
-   o:["1 business day","3 business days","5 business days","10 business days"],a:1,
-   e:"Florida Replacement Rule = the replacing agent must notify the insurer being REPLACED within 3 BUSINESS DAYS. The purpose is to give the original insurer a chance to contact the client and potentially retain the policy."},
-  {q:"The primary purpose of the Florida Life Insurance Replacement Rule is to:",
-   o:["Increase commissions for agents","Protect consumers from Twisting and ensure replacements are in their best interest","Guarantee the new policy has better benefits","Require all replacements to be approved by the DFS"],a:1,
-   e:"The Replacement Rule protects consumers from TWISTING (using misrepresentation to replace policies). It requires documentation comparing both policies to ensure the replacement genuinely benefits the client."},
-  {q:"Under the Florida Replacement Rule, an agent who replaces an existing policy must provide the applicant with:",
-   o:["A copy of the MIB report","A comparison document showing differences between the old and new policies","A written guarantee that the new policy is superior","Approval from the Department of Financial Services"],a:1,
-   e:"The Replacement Rule requires the agent to provide a comparison document showing the differences between the existing and new policy. This ensures the client makes an informed decision about replacing their coverage."},
-]},
-
-{concept:"Classifications of Risk",area:"underwriting",variants:[
-  {q:"An applicant is accepted for life insurance but pays a higher-than-standard premium due to health history. This applicant is classified as:",
-   o:["Preferred risk","Standard risk","Substandard / Rated risk","Declined risk"],a:2,
-   e:"Substandard (Rated) = accepted for coverage but at a HIGHER premium to reflect the additional risk. Preferred = better than average risk, lower premium. Standard = average risk, standard premium. Declined = not insurable."},
-  {q:"Which underwriting classification results in an applicant being UNABLE to obtain life insurance coverage?",
-   o:["Substandard","Rated","Preferred","Declined"],a:3,
-   e:"Declined = the insurer REFUSES to issue any policy. This is not illegal discrimination — it is legitimate underwriting. Substandard/Rated applicants CAN get coverage, just at higher premiums. Declined applicants cannot get coverage from that insurer."},
-  {q:"A life insurance policy is issued with a rider that permanently excludes coverage for losses related to a specific pre-existing condition. This is an example of a(n):",
-   o:["Preferred risk policy","Standard policy with waiver","Substandard policy with impairment rider / exclusion rider","Declined application"],a:2,
-   e:"An EXCLUSION RIDER (impairment rider) permanently excludes a specific condition from coverage. It's a way to insure a substandard risk by removing the problematic condition. The insured is covered for everything EXCEPT that excluded condition."},
-]},
-
-// ═══════════════════════════════════════════════════════════
-// FLORIDA STATUTES, RULES & REGULATIONS — LIFE & ANNUITIES
-// ═══════════════════════════════════════════════════════════
-{concept:"Free Look Period",area:"florida",variants:[
-  {q:"In Florida, the Free Look period for a life insurance policy is ___ days, and for an annuity sold to a person age 65 or older it is ___ days.",
-   o:["10 / 21","21 / 30","10 / 30","14 / 21"],a:2,
-   e:"Florida Free Look: Life insurance = 10 days. Annuities = 21 days general. Annuities sold to persons 65+ = 30 days (extended protection for seniors). These numbers are tested frequently on the state exam."},
-  {q:"Rosa, age 67, purchases an annuity. She changes her mind 25 days later. Can she return it for a full refund?",
-   o:["No — the free look period for all annuities is 21 days","Yes — for persons 65 and older, the free look period for annuities is 30 days","Only if the agent agrees to waive the surrender charge","No — annuities cannot be returned after purchase"],a:1,
-   e:"Florida law provides a 30-day Free Look period for annuities purchased by persons age 65 or OLDER. Since Rosa is 67 and only 25 days have passed, she can return the annuity for a full refund. Standard annuity free look is 21 days."},
-  {q:"Which statement about Florida's Free Look provision is CORRECT?",
-   o:["All insurance products have a 10-day free look period","Life insurance has a 10-day period; annuities sold to seniors 65+ have 30 days","The free look period only applies to health insurance","Free look periods are optional for insurance companies to offer"],a:1,
-   e:"In Florida: Life = 10 days. Standard annuities = 21 days. Annuities for 65+ = 30 days. The Free Look period is MANDATORY — not optional. During this period the insured can return the policy for a full premium refund."},
-]},
-
-{concept:"Suitability for Annuities",area:"florida",variants:[
-  {q:"Florida's suitability requirements for annuity sales are especially strict for persons:",
-   o:["Under age 30","Age 65 or older","Who have prior annuity experience","Who earn over $100,000 per year"],a:1,
-   e:"Florida has enhanced suitability requirements specifically for annuity sales to persons age 65 and OLDER. Agents must document the client's financial situation, needs, objectives, and investment horizon before recommending an annuity to a senior."},
-  {q:"Before recommending an annuity to a client, an agent must determine that the annuity is SUITABLE based on all of the following EXCEPT:",
-   o:["The client's financial situation and needs","The client's investment objectives","The client's age and time horizon","The agent's commission rate on the product"],a:3,
-   e:"Suitability requires evaluating the CLIENT's financial situation, needs, objectives, age, and time horizon. The AGENT'S commission rate is NEVER a factor in determining suitability — in fact, recommending a product based on commissions rather than client need is an ethics violation."},
-  {q:"An agent sells a 10-year surrender period annuity to an 82-year-old client who needs liquidity within 2 years. This is an example of:",
-   o:["A suitable recommendation because annuities are always good for seniors","An unsuitable recommendation — the product does not match the client's needs and timeline","A legal sale because the client signed the application","Normal practice that all agents follow"],a:1,
-   e:"This is UNSUITABLE. The client needs liquidity in 2 years but the annuity has a 10-year surrender period with penalties for early withdrawal. Florida's suitability rules exist specifically to prevent this type of sale, especially to seniors."},
-]},
-
-{concept:"Florida Guarantee Association",area:"florida",variants:[
-  {q:"The Florida Life and Health Insurance Guaranty Association covers policyholders if an ADMITTED insurer becomes insolvent. What is the maximum coverage for life insurance death benefits?",
-   o:["$100,000","$200,000","$300,000","$500,000"],a:2,
-   e:"Florida Guarantee Association limits: Life insurance death benefits = $300,000. Annuity benefits = $300,000. Health insurance benefits = $500,000 (highest). This only applies to ADMITTED insurers — NOT surplus lines (non-admitted) companies."},
-  {q:"Which of the following is NOT covered by the Florida Life and Health Insurance Guaranty Association?",
-   o:["A life policy from an admitted insurer that becomes insolvent","An annuity from an admitted insurer that becomes insolvent","A health policy from an admitted insurer that becomes insolvent","A surplus lines policy from a non-admitted insurer"],a:3,
-   e:"The Guaranty Association only covers ADMITTED insurers. Surplus lines (non-admitted) insurers are NOT covered. This is a key distinction — when buying from a non-admitted insurer, there is no Guaranty Association protection."},
-  {q:"Carlos has a $500,000 life insurance policy with an admitted insurer that becomes insolvent. How much will the Florida Guaranty Association cover?",
-   o:["$500,000 — the full policy amount","$300,000 — the maximum for life insurance death benefits","$250,000 — 50% of the policy amount","$0 — the Guaranty Association only covers health insurance"],a:1,
-   e:"The Florida Guaranty Association covers up to $300,000 for life insurance death benefits. Carlos's $500,000 policy will only be covered up to $300,000. He would lose the remaining $200,000 due to the insurer's insolvency."},
-]},
-
-{concept:"Twisting and Churning",area:"florida",variants:[
-  {q:"An agent convinces a client to cancel a policy with Company A and buy a new one with Company B using false or misleading comparisons. This is:",
-   o:["Churning","Twisting","Rebating","Misrepresentation only"],a:1,
-   e:"TWISTING = using false or misleading information to induce a policyholder to DROP a policy with one company and replace it with a policy from a DIFFERENT company. It is illegal in Florida and can result in license revocation."},
-  {q:"An agent makes unnecessary policy changes WITHIN THE SAME COMPANY to generate additional commissions. This practice is called:",
-   o:["Twisting","Sliding","Churning","Defamation"],a:2,
-   e:"CHURNING = unnecessary policy changes within the SAME company to generate more commissions. TWISTING = switching to a DIFFERENT company. Both are illegal. The key distinction: same company = churning; different company = twisting."},
-  {q:"Which statement about Twisting in Florida is TRUE?",
-   o:["It is legal if the new policy has better benefits","It only applies to health insurance replacements","It is illegal and can result in license revocation and criminal penalties","It is only illegal if the client loses money"],a:2,
-   e:"Twisting is ALWAYS illegal in Florida regardless of whether the new policy is better. The illegality is in using FALSE or MISLEADING information to induce the replacement. Even if the new policy is genuinely better, using deception to sell it is twisting."},
-]},
-
-{concept:"Variable Products Licensing",area:"florida",variants:[
-  {q:"To sell Variable Life Insurance and Variable Annuities in Florida, an agent must hold:",
-   o:["Only the 2-15 license","The 2-15 license plus a securities license (FINRA Series 6 or 7)","Only a Series 7 license","The 2-14 license plus a health license"],a:1,
-   e:"Variable products (Variable Life, Variable Annuities) contain investment components (sub-accounts similar to mutual funds). This requires BOTH: 1) Florida insurance license (2-15) AND 2) Securities license (FINRA Series 6 or 7). Neither alone is sufficient."},
-  {q:"Why do variable products require a securities license in ADDITION to an insurance license?",
-   o:["Because they are sold only to wealthy clients","Because the cash value is invested in sub-accounts that fluctuate with market performance — making them securities","Because the government requires extra licensing for all senior products","Because variable products are only sold by large corporations"],a:1,
-   e:"Variable products invest in sub-accounts tied to market performance. The client assumes investment risk and the value fluctuates — these characteristics make variable products SECURITIES under federal law, requiring FINRA licensing in addition to the state insurance license."},
-]},
-
-// ═══════════════════════════════════════════════════════════
-// RETIREMENT AND OTHER INSURANCE CONCEPTS
-// ═══════════════════════════════════════════════════════════
-{concept:"Traditional vs Roth IRA",area:"retirement",variants:[
-  {q:"Which IRA allows tax-FREE withdrawals in retirement AND has NO required minimum distributions (RMDs) during the owner's lifetime?",
-   o:["Traditional IRA","SEP-IRA","Roth IRA","SIMPLE IRA"],a:2,
-   e:"Roth IRA = contributions made with AFTER-TAX dollars. Qualified withdrawals are TAX-FREE. No RMDs during the owner's lifetime. Best for those who expect to be in a HIGHER tax bracket in retirement."},
-  {q:"Carlos contributes $7,000 to his Traditional IRA this year. What is the IMMEDIATE tax benefit?",
-   o:["Withdrawals at retirement will be tax-free","The $7,000 contribution may be tax-deductible now, reducing current taxable income","He pays no taxes on gains within the IRA","He can withdraw the money anytime without penalty"],a:1,
-   e:"Traditional IRA = contributions may be TAX-DEDUCTIBLE now (reducing current taxable income). Growth is tax-deferred. Withdrawals in retirement are taxed as ordinary income. The immediate benefit is the CURRENT year deduction."},
-  {q:"An investor expects to be in a HIGHER tax bracket when she retires. Which IRA is most advantageous for her?",
-   o:["Traditional IRA — deduct contributions now when in a lower bracket","Roth IRA — pay taxes now at the lower rate; withdrawals tax-free in retirement","SEP-IRA — employer contributes on her behalf","SIMPLE IRA — requires employer matching"],a:1,
-   e:"If she'll be in a HIGHER bracket at retirement, it's better to PAY TAXES NOW (lower rate) on Roth contributions and receive TAX-FREE withdrawals later. Traditional IRA = deduct now, pay taxes later at higher rate. Roth IRA = pay now at lower rate, withdraw tax-free."},
-  {q:"Under the SECURE 2.0 Act, Required Minimum Distributions (RMDs) from a Traditional IRA must begin at age:",
-   o:["70½","72","73","75"],a:2,
-   e:"Under SECURE 2.0 Act (2022), RMDs must begin at age 73 (previously 70½, then 72). Roth IRAs have NO RMDs during the owner's lifetime. Failure to take RMDs results in a 25% penalty on the amount not withdrawn."},
-]},
-
-{concept:"401k and Qualified Plans",area:"retirement",variants:[
-  {q:"In a 401(k) plan, who assumes the INVESTMENT RISK if the market declines?",
-   o:["The employer","The federal government through PBGC","The employee / plan participant","The plan administrator"],a:2,
-   e:"401(k) is a Defined CONTRIBUTION plan. The employee directs investments and assumes ALL investment risk. If the market drops, the account value drops. This contrasts with Defined BENEFIT plans where the EMPLOYER guarantees the benefit and assumes investment risk."},
-  {q:"What is the key difference between a Defined Benefit plan and a Defined Contribution plan?",
-   o:["Defined Benefit allows higher contributions","In Defined Benefit the employer GUARANTEES the retirement benefit; in Defined Contribution only the contribution is defined — not the benefit","Defined Contribution is only for government employees","There is no practical difference between the two"],a:1,
-   e:"Defined BENEFIT = employer guarantees a specific retirement benefit (formula: salary × years of service). Employer assumes investment risk. Defined CONTRIBUTION (401k) = only the contribution amount is defined. The retirement benefit depends on investment performance. Employee assumes the risk."},
-  {q:"The 2024 maximum employee contribution limit for a 401(k) plan is $23,000. Employees age 50 and older can make additional 'catch-up' contributions of:",
-   o:["$3,000 additional","$7,500 additional","$10,000 additional","$23,000 additional (double)"],a:1,
-   e:"Catch-up contributions for employees age 50+ = $7,500 additional (2024). Total 401k limit for 50+ = $23,000 + $7,500 = $30,500. This allows older workers to accelerate retirement savings as they approach retirement."},
-]},
-
-{concept:"SEP and SIMPLE Plans",area:"retirement",variants:[
-  {q:"A self-employed physician wants to contribute up to 25% of her net self-employment income to a retirement plan. Which plan is most appropriate?",
-   o:["401(k)","SIMPLE IRA","SEP-IRA","403(b)"],a:2,
-   e:"SEP-IRA (Simplified Employee Pension) = ideal for self-employed individuals and small business owners. Allows contributions up to 25% of net self-employment income or $69,000 (2024), whichever is less. Simple to establish and maintain — no annual filing requirements."},
-  {q:"The SIMPLE IRA is specifically designed for businesses with no more than ___ employees.",
-   o:["25 employees","50 employees","100 employees","500 employees"],a:2,
-   e:"SIMPLE IRA = Savings Incentive Match Plan for Employees. Limited to businesses with 100 or FEWER employees. Requires employer contributions (either matching up to 3% of salary OR 2% non-elective). Both employee and employer contribute."},
-  {q:"Which retirement plan is ONLY funded by EMPLOYER contributions (no employee deferrals)?",
-   o:["401(k)","SIMPLE IRA","SEP-IRA","403(b)"],a:2,
-   e:"SEP-IRA = primarily funded by EMPLOYER contributions only. The employer contributes to IRAs established for each eligible employee. Employees do NOT make elective deferrals (unlike 401k or SIMPLE). The employer has flexibility — can contribute different amounts each year or skip a year."},
-]},
-
-{concept:"Vesting Schedules",area:"retirement",variants:[
-  {q:"An employee leaves the company after 2 years and 11 months. The plan has 3-year cliff vesting. How much of the EMPLOYER's contributions does the employee keep?",
-   o:["100% — worked almost 3 years","75% — proportional to time worked","50% — halfway to vesting","0% — did not complete 3 full years of cliff vesting"],a:3,
-   e:"3-Year CLIFF vesting = 0% until exactly year 3, then 100% immediately. The employee left ONE MONTH before completing 3 years — they receive ZERO employer contributions. This is the 'cliff' — you either make it or you don't."},
-  {q:"Graded vesting differs from cliff vesting in that graded vesting:",
-   o:["Requires the employee to stay longer to become fully vested","Provides gradual increasing ownership of employer contributions over time (e.g., 20% per year for 5 years)","Is only allowed in government plans","Does not apply to 401(k) plans"],a:1,
-   e:"GRADED vesting = gradual increase in ownership (e.g., 20% per year × 5 years = 100% at year 5). CLIFF vesting = 0% until a specific date, then 100% immediately. Graded is more favorable for employees who leave before full vesting — they keep some employer contributions."},
-]},
-
-{concept:"1035 Exchange",area:"retirement",variants:[
-  {q:"Which of the following 1035 exchanges is NOT permitted under the Internal Revenue Code?",
-   o:["Life insurance policy exchanged for another life insurance policy","Life insurance policy exchanged for an annuity","Annuity exchanged for another annuity","Annuity exchanged for a life insurance policy"],a:3,
-   e:"1035 PERMITTED: Life→Life ✓, Life→Annuity ✓, Annuity→Annuity ✓, Any→Long-Term Care ✓. NOT PERMITTED: Annuity→Life Insurance ✗. The rule is that exchanges must move TOWARD products with fewer or equal tax advantages — not back toward products with more advantages."},
-  {q:"The tax advantage of a Section 1035 exchange is that it allows:",
-   o:["The policyholder to receive cash without paying taxes","The transfer of accumulated cash value from one policy to another WITHOUT triggering a taxable event","The elimination of surrender charges on the old policy","The policyholder to change beneficiaries without restrictions"],a:1,
-   e:"1035 Exchange = transfers accumulated value between eligible insurance/annuity products WITHOUT creating a taxable event. Without the 1035 exchange, surrendering a policy with gains would trigger ordinary income tax on the gains. The exchange preserves the tax-deferred status."},
-]},
-
-// ═══════════════════════════════════════════════════════════
-// POLICY PROVISIONS, CLAUSES AND RIDERS
-// ═══════════════════════════════════════════════════════════
-{concept:"Grace Period",area:"provisions",variants:[
-  {q:"Maria's monthly life insurance premium was due March 1st. She forgot to pay. She dies on March 28th. What does the insurer pay?",
-   o:["Nothing — the policy lapsed for non-payment","The full death benefit minus the unpaid premium","Only the cash value of the policy","50% of the death benefit"],a:1,
-   e:"The Grace Period for life insurance is 31 DAYS. Maria died on day 28 — still within the grace period. The insurer pays the FULL DEATH BENEFIT minus the unpaid premium. The policy is still in force during the grace period."},
-  {q:"The purpose of the Grace Period provision in a life insurance policy is to:",
-   o:["Allow the insurer to cancel the policy for any reason","Prevent policy lapse due to a single missed payment by providing additional time to pay","Give the insured time to increase their coverage","Allow the insured to borrow against the cash value"],a:1,
-   e:"Grace Period = protects the insured from losing coverage due to a SINGLE missed payment. Provides 31 days (life insurance) after the due date during which the policy remains in force. If the insured dies during the grace period, the benefit is paid minus the unpaid premium."},
-  {q:"How does the Grace Period for health insurance with MONTHLY premiums differ from life insurance?",
-   o:["They are identical — both are 31 days","Health insurance monthly = 10 days; life insurance = 31 days","Health insurance = 31 days; life insurance = 10 days","Both are 7 days for monthly premiums"],a:1,
-   e:"KEY DIFFERENCE: Life insurance Grace Period = always 31 days. Health insurance Grace Period = 7 days (weekly premiums), 10 days (monthly premiums), 31 days (all other modes). Health monthly = 10 days, NOT 31 days. This distinction is frequently tested."},
-]},
-
-{concept:"Incontestability Clause",area:"provisions",variants:[
-  {q:"An insurer discovers that a policyholder misrepresented his health on the application — 3 years after the policy was issued. Can the insurer deny a death claim based on this misrepresentation?",
-   o:["Yes — misrepresentation always allows claim denial","No — the Incontestability Clause prevents contesting the policy after 2 years, except for intentional fraud","Only if the misrepresentation was about a pre-existing condition","Yes, but only during the first 5 years"],a:1,
-   e:"Incontestability Clause = after 2 YEARS, the insurer CANNOT contest the policy for misrepresentation. The only exception is INTENTIONAL FRAUD, which can be contested at any time. After 2 years, the policyholder has protection against policy rescission for honest mistakes."},
-  {q:"The Incontestability Clause PRIMARILY protects the:",
-   o:["Insurance company from fraudulent claims","Policyholder / beneficiary from having the policy rescinded after 2 years due to application errors","Agent from liability for errors in the application","State Insurance Department from litigation"],a:1,
-   e:"The Incontestability Clause primarily protects the POLICYHOLDER (and their beneficiary). After 2 years of the policy being in force, the insurer cannot use application misrepresentations (except intentional fraud) to void the policy or deny claims."},
-  {q:"Which of the following is the ONLY exception to the 2-year Incontestability Clause?",
-   o:["Non-payment of premiums","Age misstatement","Intentional fraud","Change of beneficiary"],a:2,
-   e:"Intentional FRAUD is the only exception — it can be contested at ANY time, even after 2 years. Non-payment of premiums is handled by the Grace Period and nonforfeiture provisions, not incontestability. Age misstatement results in benefit adjustment, not policy rescission."},
-]},
-
-{concept:"Suicide Clause",area:"provisions",variants:[
-  {q:"A life insurance policy is issued in January. The insured commits suicide in October of the following year. What does the insurer pay?",
-   o:["The full death benefit — suicide is covered","Only a return of premiums paid — suicide occurred within the 2-year exclusion period","Nothing at all — suicide is never covered","The cash value of the policy"],a:1,
-   e:"The Suicide Clause typically excludes suicide for the first 1-2 years (2 years is standard). The insured died approximately 21 months after issue — within the 2-year exclusion period. The insurer returns only the PREMIUMS PAID. After 2 years, suicide is covered like any other cause of death."},
-  {q:"After the suicide exclusion period expires, how does a death by suicide affect the life insurance benefit?",
-   o:["The benefit is reduced by 50%","The benefit is paid in full — same as any other cause of death","The benefit is paid only if the insured had a mental illness diagnosis","No benefit is ever paid for suicide"],a:1,
-   e:"After the suicide exclusion period (typically 2 years), suicide is treated like ANY other cause of death. The FULL death benefit is paid to the beneficiary. The exclusion only applies during the contestable period (usually 2 years from policy issue)."},
-]},
-
-{concept:"Nonforfeiture Options",area:"provisions",variants:[
-  {q:"Carlos stops paying premiums on his Whole Life policy which has accumulated significant cash value. Which nonforfeiture option keeps the ORIGINAL FACE AMOUNT but for a shorter period?",
-   o:["Reduced Paid-Up Insurance","Extended Term Insurance","Cash Surrender","Policy Loan"],a:1,
-   e:"Extended Term Insurance = uses the cash value as a single premium to purchase TERM insurance for the SAME face amount as the original policy, for as long as the cash value will support. The face amount stays the same but coverage ends when the term expires."},
-  {q:"Rosa has a Whole Life policy and stops paying premiums. She wants to maintain PERMANENT coverage (for life) but is willing to accept a LOWER face amount. Which nonforfeiture option should she choose?",
-   o:["Extended Term Insurance","Reduced Paid-Up Insurance","Cash Surrender Value","Policy Loan"],a:1,
-   e:"Reduced Paid-Up Insurance = uses the cash value to purchase a PAID-UP Whole Life policy for a SMALLER face amount. Coverage is PERMANENT (for life) but the death benefit is reduced. This is the option for those who want lifelong coverage at a lower amount with no more premium payments."},
-  {q:"Which nonforfeiture option provides the policyholder with CASH in hand upon surrendering the policy?",
-   o:["Extended Term Insurance","Reduced Paid-Up Insurance","Cash Surrender Value","Automatic Premium Loan"],a:2,
-   e:"Cash Surrender Value = the insured surrenders (cancels) the policy and receives the accumulated cash value in CASH. This terminates the coverage completely. It's NOT a nonforfeiture option that maintains coverage — it's the option to take the money and end the policy."},
-]},
-
-{concept:"Waiver of Premium Rider",area:"provisions",variants:[
-  {q:"The Waiver of Premium rider on a life insurance policy means that if the insured becomes totally disabled:",
-   o:["The death benefit increases automatically","Premium payments are WAIVED (excused) and the policy remains in force without premium payments","The insurer pays a monthly income to the insured","The policy converts to a term policy automatically"],a:1,
-   e:"Waiver of Premium = if the insured becomes TOTALLY DISABLED, premium payments are WAIVED (the insured doesn't have to pay) and the policy remains fully in force. The insurer essentially pays the premiums on behalf of the disabled insured. Usually activates after a 6-month elimination period."},
-  {q:"The Waiver of Premium rider typically has an ELIMINATION PERIOD of:",
-   o:["30 days","3 months","6 months","12 months"],a:2,
-   e":"Waiver of Premium elimination period = typically 6 MONTHS of continuous total disability before the waiver activates. During those first 6 months, the insured must still pay premiums. If disability continues beyond 6 months, premiums are waived retroactively from the start of disability."},
-]},
-
-{concept:"Accidental Death Benefit Rider",area:"provisions",variants:[
-  {q:"The Accidental Death Benefit (ADB) rider DOUBLES the death benefit if death results from an accident. This feature is also called:",
-   o:["Guaranteed insurability","Double indemnity","Accelerated death benefit","Return of premium"],a:1,
-   e":"ADB rider = also called DOUBLE INDEMNITY because it pays TWICE the face amount if death is caused by an accident. A $500,000 Whole Life policy with ADB pays $1,000,000 if death is accidental. If death is from illness or natural causes, only the base $500,000 is paid."},
-  {q:"Rosa has Whole Life of $300,000 with an ADB rider. She dies from cancer. Her beneficiary receives:",
-   o:["$600,000 — the ADB doubles the benefit for any death","$300,000 — the ADB only applies to accidental death; cancer is not an accident","$150,000 — the ADB reduces the benefit for illness","$0 — the ADB cancels the policy at death"],a:1,
-   e":"ADB = Accidental Death Benefit. Cancer is NOT an accident — it's an illness. Therefore only the BASE Whole Life benefit of $300,000 is paid. The $300,000 ADB rider only pays if death results from an ACCIDENT."},
-  {q:"Which of the following deaths would typically be EXCLUDED from an Accidental Death Benefit rider?",
-   o:["Death in a car accident","Death from a heart attack while driving (not caused by the accident itself)","Death from a fall down stairs","Death from a workplace accident"],a:1,
-   e":"If someone has a heart attack while driving and then crashes, the cause of death is the HEART ATTACK (a medical event), not the accident. The ADB requires death to result DIRECTLY from an accidental cause. Deaths from illness, disease, or medical conditions are excluded even if an accident is involved."},
-]},
-
-{concept:"Guaranteed Insurability Rider",area:"provisions",variants:[
-  {q:"The Guaranteed Insurability rider allows the insured to purchase additional life insurance at specified future dates WITHOUT:",
-   o:["Paying additional premiums","Proving insurability / evidence of good health","Notifying the beneficiary","Getting agent approval"],a:1,
-   e":"Guaranteed Insurability Rider = allows purchase of additional coverage at specified times (marriage, birth of child, policy anniversary) WITHOUT evidence of insurability. Even if the insured has developed serious health conditions since the original policy, they can buy more coverage at standard rates."},
-  {q:"Which rider is MOST valuable for a young, healthy person who anticipates needing more life insurance coverage in the future?",
-   o:["Waiver of Premium","Accidental Death Benefit","Guaranteed Insurability Rider","Cost of Living Adjustment (COLA)"],a:2,
-   e":"Guaranteed Insurability Rider = most valuable for YOUNG, HEALTHY people who may develop health conditions later. It LOCKS IN their right to buy more coverage at standard rates regardless of future health changes. Without this rider, future insurability is uncertain."},
-]},
-
-// ═══════════════════════════════════════════════════════════
-// TYPES OF HEALTH POLICIES
-// ═══════════════════════════════════════════════════════════
-{concept:"HMO vs PPO",area:"health",variants:[
-  {q:"In an HMO, the Primary Care Physician (PCP) acts as a 'gatekeeper.' This means the PCP:",
-   o:["Sets the premium rates for the insured","Controls access to specialists — the insured must get a referral before seeing a specialist","Pays the specialist's fees directly","Can cancel the insured's coverage"],a:1,
-   e":"In an HMO, the PCP is the GATEKEEPER — the insured must see the PCP FIRST, who then provides referrals to specialists. Without a referral, specialist visits may not be covered. This controls costs by preventing unnecessary specialist visits."},
-  {q:"Ana has a PPO plan. She wants to see a dermatologist. What does she need to do?",
-   o:["Get a referral from her PCP first","She can see the dermatologist directly — PPOs do NOT require PCP referrals","Call the insurance company for pre-authorization","Switch to an in-network dermatologist"],a:1,
-   e":"PPO = NO referral required. Ana can see any specialist DIRECTLY without going through a PCP. This is the key advantage of PPO over HMO. PPO does have in-network and out-of-network providers — in-network costs less, but out-of-network is still covered (at higher cost)."},
-  {q:"Which managed care plan combines HMO and PPO features — requiring a PCP referral like an HMO but allowing out-of-network care like a PPO?",
-   o:["EPO (Exclusive Provider Organization)","HDHP (High Deductible Health Plan)","POS (Point of Service) plan","Medicare Advantage"],a:2,
-   e":"POS (Point of Service) = HYBRID plan. Like HMO: requires PCP/gatekeeper and referrals for in-network care. Like PPO: allows out-of-network care at higher cost. It's the 'middle ground' between HMO restrictiveness and PPO flexibility."},
-  {q:"An EPO (Exclusive Provider Organization) differs from a PPO in that an EPO:",
-   o:["Requires PCP referrals like an HMO","Does NOT cover out-of-network providers except in emergencies","Has lower deductibles than a PPO","Is only available through employer groups"],a:1,
-   e":"EPO = Like PPO in that NO referral is needed. Unlike PPO in that there is NO out-of-network coverage (except emergencies). EPO members MUST use the network or pay everything out-of-pocket. It's stricter than PPO but more flexible than HMO regarding referrals."},
-]},
-
-{concept:"Medicare Parts",area:"health",variants:[
-  {q:"Medicare Part A covers hospitalizations. Medicare Part B covers medical services (physician visits). Which part covers PRESCRIPTION DRUGS?",
-   o:["Part A","Part B","Part C (Medicare Advantage)","Part D"],a:3,
-   e":"Medicare Part D = prescription drug coverage. It is OPTIONAL and requires enrollment in a separate private plan with a monthly premium. Failure to enroll when first eligible results in a late enrollment penalty. Part C (Medicare Advantage) plans often include Part D coverage."},
-  {q:"Medicare Part A is funded primarily through:",
-   o:["Monthly premiums paid by beneficiaries","FICA payroll taxes paid during working years","General federal tax revenues","Medicaid funds"],a:1,
-   e":"Medicare Part A (hospital insurance) is funded through FICA PAYROLL TAXES. Workers and employers pay into Medicare throughout their careers, which is why most people 65+ receive Part A with no monthly premium. Part B requires a monthly premium because it's voluntary."},
-  {q:"Medicare is the PRIMARY payer when a person age 65+ is covered by BOTH Medicare and an employer group health plan from a company with FEWER than 20 employees.",
-   o:["True — Medicare is always primary for persons 65+","True — small employer plans require Medicare to pay first","False — the employer plan is always primary regardless of company size","True only if the person has had Medicare for more than 2 years"],a:1,
-   e":"Medicare Secondary Payer rules: If employer has 20+ employees = employer plan is PRIMARY, Medicare is SECONDARY. If employer has FEWER than 20 employees = Medicare is PRIMARY, employer plan is secondary. Company size determines which payer goes first."},
-]},
-
-{concept:"Disability Income Insurance",area:"health",variants:[
-  {q:"The 'Own Occupation' definition of total disability is MORE FAVORABLE to the insured than 'Any Occupation' because:",
-   o:["It pays a higher benefit amount","The insured qualifies if unable to perform their SPECIFIC occupation — even if they could work in another field","It has no elimination period","It covers pre-existing conditions"],a:1,
-   e":"Own Occupation = disabled if unable to perform the duties of YOUR SPECIFIC occupation. A surgeon who loses fingers can collect disability benefits even if they could work as a medical advisor. Any Occupation = must be unable to do ANY job they're reasonably qualified for — much harder to qualify."},
-  {q:"The Elimination Period in a disability income policy functions like a:",
-   o:["Deductible in dollars","Deductible in TIME — a waiting period before benefits begin","Grace period for premium payment","Probationary period for pre-existing conditions"],a:1,
-   e":"Elimination Period = TIME-based deductible. The insured must be disabled for a specified period (30, 60, 90, or 180 days) BEFORE benefits begin. Longer elimination period = LOWER premium. The insured must fund their own expenses during the elimination period."},
-  {q:"If the EMPLOYER pays the disability insurance premiums, the disability benefits received by the employee are:",
-   o:["Tax-free because disability is a medical condition","Taxable as ordinary income — the employee never paid taxes on the premium","Taxable only on amounts exceeding 60% of salary","Deductible by the employee on their tax return"],a:1,
-   e":"Tax rule: EMPLOYER pays premium → benefits are TAXABLE to the employee. EMPLOYEE pays premium with after-tax dollars → benefits are TAX-FREE. Logic: if the employee never paid income tax on the premium (employer paid it), the IRS taxes the benefits instead."},
-]},
-
-{concept:"Long Term Care Insurance",area:"health",variants:[
-  {q:"A Long-Term Care (LTC) insurance policy typically pays benefits when the insured cannot perform ___ or more Activities of Daily Living (ADLs).",
-   o:["1","2","3","5"],a:1,
-   e":"LTC benefit trigger = inability to perform 2 OR MORE ADLs (bathing, dressing, eating, toileting, transferring, continence) OR cognitive impairment (Alzheimer's, dementia). Both triggers are required to be in every LTC policy per HIPAA. One ADL alone is NOT sufficient to trigger benefits."},
-  {q:"Medicare covers long-term custodial care in a nursing home:",
-   o:["For as long as medically necessary","Up to 365 days per year","Only for the first 100 days in a skilled nursing facility, and only after a qualifying hospital stay","Permanently for all nursing home residents over 65"],a:2,
-   e":"Medicare covers skilled nursing facility care for up to 100 DAYS per benefit period, BUT only after a qualifying 3-day inpatient hospital stay, and only for SKILLED NURSING care (not custodial). Days 1-20 = 100% covered. Days 21-100 = requires copayment. After 100 days = NO Medicare coverage."},
-  {q:"Which of the following is TRUE about the Inflation Protection feature in a Long-Term Care policy?",
-   o:["It is required by federal law in all LTC policies","It automatically increases the daily benefit to keep pace with rising care costs — especially important since LTC may not be needed for decades","It reduces the elimination period each year","It waives premiums after age 65"],a:1,
-   e":"Inflation Protection is CRUCIAL for LTC because the policy may be purchased at age 55 but not used until age 80 — a 25-year gap. Nursing home costs increase approximately 5% per year. Without inflation protection, a $200/day benefit today could cover only a fraction of actual costs in 25 years."},
-]},
-
-{concept:"COBRA",area:"health",variants:[
-  {q:"COBRA allows employees who lose their group health coverage to continue that coverage for up to ___ months, at their OWN expense (plus 2% administrative fee).",
-   o:["12 months","18 months","24 months","36 months"],a:1,
-   e":"COBRA standard continuation period = 18 MONTHS for most qualifying events (termination, reduction in hours). 36 months applies for special qualifying events (divorce, death of covered employee, loss of dependent status). The employee pays 100% of the premium PLUS up to 2% administrative fee."},
-  {q:"COBRA applies to employers with:",
-   o:["5 or more employees","10 or more employees","20 or more employees","50 or more employees"],a:2,
-   e":"COBRA applies to employers with 20 OR MORE employees. Small employers with fewer than 20 employees are NOT required to offer COBRA. Some states have 'mini-COBRA' laws that cover smaller employers, but the federal COBRA law requires 20+ employees."},
-  {q:"An employee is divorced. Their ex-spouse was covered under the employee's group health plan. How long can the ex-spouse continue coverage under COBRA?",
-   o:["18 months","24 months","36 months","Until the ex-spouse remarries"],a:2,
-   e":"Divorce or legal separation is a SPECIAL qualifying event under COBRA that entitles the ex-spouse to 36 MONTHS of continuation coverage (vs. the standard 18 months for employment termination). The ex-spouse pays 100% of the premium plus up to 2% administrative fee."},
-]},
-
-];
 
 // ============================================================
 // ENGINE
@@ -484,7 +175,7 @@ function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()
 function buildPool(mode, max){
   let concepts=[];
   if(mode==='weak'){
-    concepts=CONCEPTS.filter(c=>['underwriting','florida','retirement','provisions','health'].includes(c.area));
+    concepts=CONCEPTS.filter(c=>['suscripcion','florida','retiro','provisiones','salud'].includes(c.area));
   } else if(mode==='all'){
     concepts=[...CONCEPTS];
   } else {
