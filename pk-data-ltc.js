@@ -425,3 +425,7 @@ const PK_LTC = [
 ]; // fin PK_LTC
 
 if (typeof module !== 'undefined') module.exports = { PK_LTC };
+
+// Asignación explícita a window para garantizar disponibilidad
+// global sin importar el motor JS o el timing de ejecución del navegador
+if (typeof window !== 'undefined') window.PK_LTC = PK_LTC;
