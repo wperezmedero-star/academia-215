@@ -148,7 +148,7 @@ th{color:var(--muted);font-weight:600}
 // 9 módulos temáticos unificados: 47 conceptos, 235 variantes
 // ============================================================
 
-const AREAS = (typeof PK_AREAS_FULL !== 'undefined') ? PK_AREAS_FULL : {
+const AREAS = (window.PK_AREAS_FULL) ? window.PK_AREAS_FULL : {
   underwriting: "Field Underwriting Procedures",
   florida: "FL Statutes, Rules & Annuities",
   retirement: "Retirement & Other Concepts",
@@ -156,9 +156,14 @@ const AREAS = (typeof PK_AREAS_FULL !== 'undefined') ? PK_AREAS_FULL : {
   health: "Types of Health Policies"
 };
 
-const CONCEPTS = (typeof PK_CONCEPTOS_FULL !== 'undefined' && PK_CONCEPTOS_FULL.length > 0)
-  ? PK_CONCEPTOS_FULL
+const CONCEPTS = (window.PK_CONCEPTOS_FULL && window.PK_CONCEPTOS_FULL.length > 0)
+  ? window.PK_CONCEPTOS_FULL
   : [];
+
+// Aviso visible si el banco no cargó — ayuda a diagnosticar en producción
+if (CONCEPTS.length === 0) {
+  console.error('PEARSON KILLER: CONCEPTS está vacío. Revisa que los 9 módulos pk-data-*.js y pk-loader.js hayan cargado correctamente.');
+}
 
 // Banco anterior conservado como respaldo — ya no se usa activamente
 // (Banco anterior eliminado — ya no se usa. El banco activo es PK_CONCEPTOS_FULL)
@@ -184,7 +189,7 @@ function buildPool(mode, max){
   // Expand: for each concept, pick a RANDOM variant
   let questions=[];
   shuffle(concepts).forEach(c=>{
-    shuffle(c.variants).forEach(v=>{
+    shuffle(c.variantes || c.variants || []).forEach(v=>{
       questions.push({...v, concept:c.concept, area:c.area, areaLabel:AREAS[c.area]||c.area});
     });
   });
@@ -250,9 +255,10 @@ function pick(i,btn,q){
   // Feedback
   const fb=document.getElementById('q-feedback');
   fb.classList.remove('hidden');
+  const explicacion = q.e || q.correcto || '';
   fb.innerHTML=`<div class="feedback-box" style="border:1px solid ${ok?'var(--green)':'var(--red)'};background:${ok?'rgba(34,197,94,.08)':'rgba(239,68,68,.08)'}">
     <div style="font-weight:800;color:${ok?'var(--green)':'var(--red)'};margin-bottom:6px">${ok?'✅ Correct!':'❌ Incorrect'}</div>
-    <div style="color:#e2e8f0">${q.e}</div>
+    <div style="color:#e2e8f0">${explicacion}</div>
     ${!ok?`<div style="margin-top:8px;color:#86efac;font-size:.8rem">✓ Correct answer: ${String.fromCharCode(65+q.a)}) ${q.o[q.a]}</div>`:''}
   </div>`;
   document.getElementById('q-next').classList.remove('hidden');
