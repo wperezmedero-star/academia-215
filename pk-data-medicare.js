@@ -425,3 +425,7 @@ const PK_MEDICARE = [
 ]; // fin PK_MEDICARE
 
 if (typeof module !== 'undefined') module.exports = { PK_MEDICARE };
+
+// Asignación explícita a window para garantizar disponibilidad
+// global sin importar el motor JS o el timing de ejecución del navegador
+if (typeof window !== 'undefined') window.PK_MEDICARE = PK_MEDICARE;
