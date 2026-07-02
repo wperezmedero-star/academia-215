@@ -1004,3 +1004,5 @@ const PK_SINONIMOS = {
 // Exportar para uso del motor principal
 // ============================================================
 if (typeof module !== 'undefined') module.exports = { PK_SINONIMOS };
+
+if (typeof window !== 'undefined') window.PK_SINONIMOS = PK_SINONIMOS;
