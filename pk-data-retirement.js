@@ -631,3 +631,7 @@ const PK_RETIREMENT = [
 ]; // fin PK_RETIREMENT
 
 if (typeof module !== 'undefined') module.exports = { PK_RETIREMENT };
+
+// Asignación explícita a window para garantizar disponibilidad
+// global sin importar el motor JS o el timing de ejecución del navegador
+if (typeof window !== 'undefined') window.PK_RETIREMENT = PK_RETIREMENT;
