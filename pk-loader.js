@@ -53,7 +53,9 @@
     { nombre: "florida",      data: window.PK_FLORIDA || null },
     { nombre: "medicare",     data: window.PK_MEDICARE || null },
     { nombre: "ltc",          data: window.PK_LTC || null },
-    { nombre: "general",      data: window.PK_GENERAL || null }
+    { nombre: "general",      data: window.PK_GENERAL || null },
+    { nombre: "nivel1",       data: window.PK_NIVEL1 || null },
+    { nombre: "nivel2",       data: window.PK_NIVEL2 || null }
   ];
 
   // Combinar todos los módulos cargados en un único array
