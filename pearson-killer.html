@@ -51,6 +51,12 @@ th{color:var(--muted);font-weight:600}
     <p class="muted" style="font-size:.78rem">Cada concepto aparece con redacciones distintas,<br>sinónimos y distractores que parecen correctos</p>
   </div>
 
+  <div class="card" id="stats-panel" style="border-color:#334155">
+    <h2>📊 Tu Progreso</h2>
+    <div id="stats-summary" style="font-size:.85rem;color:var(--muted);margin-bottom:10px">Cargando...</div>
+    <button class="btn" style="background:linear-gradient(135deg,#7f1d1d,#991b1b);color:#fff" onclick="startErrorsMode()" id="btn-errors">🔁 Solo mis errores</button>
+  </div>
+
   <div class="card" style="border-color:#92400e">
     <h2 style="color:#fbbf24">🔥 Áreas débiles — Prioridad máxima</h2>
     <div style="margin-bottom:12px">
@@ -175,6 +181,132 @@ if (CONCEPTS.length === 0) {
 let mode='', maxQ=30, pool=[], idx=0, correct=0, mistakes=[], answered=false;
 let areaStats={};
 
+// ============================================================
+// CUADERNO DE ERRORES — Persistencia en localStorage
+// Guarda cada error con: concepto, pregunta, respuesta correcta,
+// respuesta elegida, tipo de trampa, explicación.
+// ============================================================
+const PK_STORAGE_KEY = 'pk_errors_v1';
+const PK_STATS_KEY = 'pk_stats_v1';
+
+function loadErrorBook(){
+  try{ return JSON.parse(localStorage.getItem(PK_STORAGE_KEY) || '[]'); }
+  catch(e){ return []; }
+}
+
+function saveErrorBook(errors){
+  try{ localStorage.setItem(PK_STORAGE_KEY, JSON.stringify(errors.slice(-300))); }
+  catch(e){}
+}
+
+function loadStats(){
+  try{ return JSON.parse(localStorage.getItem(PK_STATS_KEY) || '{}'); }
+  catch(e){ return {}; }
+}
+
+function saveStats(stats){
+  try{ localStorage.setItem(PK_STATS_KEY, JSON.stringify(stats)); }
+  catch(e){}
+}
+
+// Registra un error nuevo en el cuaderno (evita duplicados exactos recientes)
+function recordError(q, userAnswerIdx){
+  const errors = loadErrorBook();
+  errors.push({
+    ts: Date.now(),
+    concept: q.concept,
+    area: q.area,
+    areaLabel: q.areaLabel,
+    pregunta: q.q,
+    opciones: q.o,
+    respuestaCorrecta: q.a,
+    respuestaElegida: userAnswerIdx,
+    tipoTrampa: q.tipo_trampa || null,
+    explicacion: q.e || q.correcto || ''
+  });
+  saveErrorBook(errors);
+
+  // Actualizar estadísticas de trampas
+  const stats = loadStats();
+  if(!stats.trampas) stats.trampas={};
+  if(!stats.conceptos) stats.conceptos={};
+  if(!stats.sesiones) stats.sesiones=0;
+  if(q.tipo_trampa){
+    stats.trampas[q.tipo_trampa] = (stats.trampas[q.tipo_trampa]||0) + 1;
+  }
+  const ckey = q.area + '::' + q.concept;
+  if(!stats.conceptos[ckey]) stats.conceptos[ckey]={label:q.concept,area:q.areaLabel,errores:0,total:0};
+  stats.conceptos[ckey].errores++;
+  saveStats(stats);
+}
+
+// Registra una respuesta correcta (para estadísticas de concepto)
+function recordCorrect(q){
+  const stats = loadStats();
+  if(!stats.conceptos) stats.conceptos={};
+  const ckey = q.area + '::' + q.concept;
+  if(!stats.conceptos[ckey]) stats.conceptos[ckey]={label:q.concept,area:q.areaLabel,errores:0,total:0};
+  stats.conceptos[ckey].total++;
+  saveStats(stats);
+}
+
+// Nombre legible para cada tipo de trampa (fallback si pk-traps.js no cargó)
+const TRAMPA_NOMBRES = (window.PK_TRAMPAS_FULL && window.PK_TRAMPAS_FULL.TIPOS) ? 
+  Object.fromEntries(Object.entries(window.PK_TRAMPAS_FULL.TIPOS).map(([k,v])=>[k,v.nombre])) : {
+    EXCEPTO:'EXCEPTO / A menos que', CUAL_NO:'¿Cuál NO es?', SINONIMOS:'Sinónimos',
+    NUMEROS_FECHAS:'Números y Fechas', PRIMERO:'PRIMERO / Más apropiado',
+    CASI_IDENTICAS:'Respuestas casi idénticas', SIEMPRE_NUNCA:'SIEMPRE / NUNCA',
+    INVERSIONES:'Inversión de conceptos', EXCEPCION_LEGAL:'Excepción legal',
+    QUIEN_PAGA:'¿Quién paga / es beneficiario?', PROCEDIMIENTO:'Procedimiento',
+    MAS_MENOS:'MÁS / MENOS', ESCENARIO:'Escenario específico', VIOLACION:'¿Cuál es la violación?',
+    COMPARACION:'Comparación'
+  };
+
+function renderStatsSummary(){
+  const errors = loadErrorBook();
+  const stats = loadStats();
+  const panel = document.getElementById('stats-summary');
+  const btnErrors = document.getElementById('btn-errors');
+  if(!panel) return;
+
+  if(errors.length===0){
+    panel.innerHTML = 'Aún no tienes historial. Completa un quiz para ver tus estadísticas aquí.';
+    if(btnErrors) btnErrors.style.display='none';
+    return;
+  }
+  if(btnErrors) btnErrors.style.display='block';
+
+  // Top 3 trampas que más confunden
+  const trampaEntries = Object.entries(stats.trampas||{}).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  let trampaHtml = trampaEntries.length ? trampaEntries.map(([k,v])=>
+    `<span class="concept-tag" style="background:#7f1d1d;color:#fecaca">${TRAMPA_NOMBRES[k]||k} (${v}x)</span>`
+  ).join(' ') : '<span class="muted">Sin datos aún</span>';
+
+  panel.innerHTML = `
+    <div style="margin-bottom:8px"><b style="color:#f87171">${errors.length}</b> errores guardados en tu cuaderno</div>
+    <div style="margin-bottom:4px;font-size:.78rem;color:var(--muted)">🎯 Trampas que más te confunden:</div>
+    <div>${trampaHtml}</div>
+  `;
+}
+
+function startErrorsMode(){
+  const errors = loadErrorBook();
+  if(errors.length===0){ alert('Todavía no tienes errores guardados. ¡Completa un quiz primero!'); return; }
+  // Convertir errores guardados al formato de pregunta del motor
+  pool = shuffle([...errors]).slice(0,50).map(e=>({
+    q: e.pregunta, o: e.opciones, a: e.respuestaCorrecta,
+    e: e.explicacion, concept: e.concept, area: e.area, areaLabel: e.areaLabel,
+    tipo_trampa: e.tipoTrampa
+  }));
+  mode='errors'; maxQ=pool.length;
+  idx=0; correct=0; mistakes=[]; answered=false;
+  areaStats={};
+  document.getElementById('home').classList.add('hidden');
+  document.getElementById('result').classList.add('hidden');
+  document.getElementById('quiz').classList.remove('hidden');
+  renderQ();
+}
+
 function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
 function buildPool(mode, max){
@@ -190,7 +322,7 @@ function buildPool(mode, max){
   let questions=[];
   shuffle(concepts).forEach(c=>{
     shuffle(c.variantes || c.variants || []).forEach(v=>{
-      questions.push({...v, concept:c.concept, area:c.area, areaLabel:AREAS[c.area]||c.area});
+      questions.push({...v, concept:c.concepto || c.concept, area:c.area, areaLabel:AREAS[c.area]||c.area});
     });
   });
   shuffle(questions);
@@ -239,8 +371,8 @@ function pick(i,btn,q){
   if(answered)return;
   answered=true;
   const ok=i===q.a;
-  if(ok)correct++;
-  else mistakes.push({...q,userAnswer:i});
+  if(ok){correct++; recordCorrect(q);}
+  else {mistakes.push({...q,userAnswer:i}); recordError(q, i);}
   // Track area stats
   if(!areaStats[q.area])areaStats[q.area]={label:q.areaLabel,correct:0,total:0};
   areaStats[q.area].total++;
@@ -300,6 +432,21 @@ function showResult(){
   });
   aHtml+='</table>';
   document.getElementById('r-areas').innerHTML=aHtml;
+
+  // Desglose por tipo de trampa (esta sesión)
+  const trampaCount={};
+  mistakes.forEach(q=>{
+    if(q.tipo_trampa){ trampaCount[q.tipo_trampa]=(trampaCount[q.tipo_trampa]||0)+1; }
+  });
+  const trampaEntries=Object.entries(trampaCount).sort((a,b)=>b[1]-a[1]);
+  if(trampaEntries.length>0){
+    let tHtml='<h2 style="margin:14px 0 10px">🎯 Trampas que te confundieron</h2>';
+    trampaEntries.forEach(([k,v])=>{
+      tHtml+=`<span class="concept-tag" style="background:#7f1d1d;color:#fecaca;margin-right:6px">${TRAMPA_NOMBRES[k]||k} (${v}x)</span>`;
+    });
+    document.getElementById('r-areas').innerHTML += tHtml;
+  }
+
   // Mistakes
   if(mistakes.length>0){
     let mHtml=`<h2 style="margin-bottom:10px">❌ Questions to review (${mistakes.length})</h2>`;
@@ -330,7 +477,11 @@ function retryWeak(){
 function goHome(){
   ['quiz','result'].forEach(id=>document.getElementById(id).classList.add('hidden'));
   document.getElementById('home').classList.remove('hidden');
+  renderStatsSummary();
 }
+
+// Render stats on initial page load
+renderStatsSummary();
 </script>
 </body>
 </html>
