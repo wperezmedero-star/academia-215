@@ -55,7 +55,10 @@
     { nombre: "ltc",          data: window.PK_LTC || null },
     { nombre: "general",      data: window.PK_GENERAL || null },
     { nombre: "nivel1",       data: window.PK_NIVEL1 || null },
-    { nombre: "nivel2",       data: window.PK_NIVEL2 || null }
+    { nombre: "nivel2",       data: window.PK_NIVEL2 || null },
+    { nombre: "nivel3",       data: window.PK_NIVEL3 || null },
+    { nombre: "nivel4",       data: window.PK_NIVEL4 || null },
+    { nombre: "nivel5",       data: window.PK_NIVEL5 || null }
   ];
 
   // Combinar todos los módulos cargados en un único array
