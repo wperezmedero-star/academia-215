@@ -186,6 +186,7 @@ h1.title-gold{background:linear-gradient(180deg,var(--gold-light),var(--gold-dee
     </div>
     <button class="btn btn-red" onclick="startMode('weak',30)">🔥 Atacar mis áreas débiles (30 preguntas)</button>
     <button class="btn btn-gold" onclick="startMode('weak',60)">💀 Modo intensivo áreas débiles (60 preguntas)</button>
+    <button class="btn btn-purple" onclick="startMode('refuerzo',40)">🎯 Refuerzo: números y conceptos que confundo (40 preguntas)</button>
   </div>
 
   <div class="card">
@@ -269,6 +270,7 @@ h1.title-gold{background:linear-gradient(180deg,var(--gold-light),var(--gold-dee
 <script src="pk-data-nivel3.js"></script>
 <script src="pk-data-nivel4.js"></script>
 <script src="pk-data-nivel5.js"></script>
+<script src="pk-data-refuerzo.js"></script>
 <script src="pk-loader.js"></script>
 
 <script>
@@ -438,6 +440,8 @@ function buildPool(mode, max){
     concepts=CONCEPTS.filter(c=>['suscripcion','florida','retiro','provisiones','salud'].includes(c.area));
   } else if(mode==='all'){
     concepts=[...CONCEPTS];
+  } else if(mode==='refuerzo'){
+    concepts=CONCEPTS.filter(c=>c.id && c.id.indexOf('refuerzo_')===0);
   } else {
     concepts=CONCEPTS.filter(c=>c.area===mode);
   }
