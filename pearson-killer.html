@@ -72,6 +72,21 @@ body{
   100%{background-position:-80% 0;opacity:0}
 }
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+#splash-start{
+  margin-top:34px;padding:12px 26px;border:1px solid rgba(245,207,107,.5);
+  border-radius:999px;cursor:pointer;
+  background:linear-gradient(180deg,rgba(245,207,107,.16),rgba(201,154,52,.08));
+  color:#ffe9a8;font-weight:700;font-size:.92rem;letter-spacing:.03em;
+  display:inline-flex;align-items:center;
+  box-shadow:0 4px 16px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.12);
+  animation:startPulse 2.2s ease-in-out infinite, fadeUp .8s ease .7s both;
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+}
+#splash-start:active{transform:scale(.96)}
+@keyframes startPulse{
+  0%,100%{box-shadow:0 4px 16px rgba(0,0,0,.35),0 0 0 0 rgba(245,207,107,.0),inset 0 1px 0 rgba(255,255,255,.12)}
+  50%{box-shadow:0 4px 20px rgba(0,0,0,.4),0 0 22px 2px rgba(245,207,107,.25),inset 0 1px 0 rgba(255,255,255,.15)}
+}
 
 /* ===== ENTRADA DEL CONTENIDO ===== */
 .wrap>*{animation:contentIn .5s ease both}
@@ -209,6 +224,10 @@ h2 .ic{width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.18em}
     <div class="splash-glow"></div>
   </div>
   <div class="splash-title">Academia 2-15 Florida</div>
+  <button id="splash-start" aria-label="Comenzar">
+    <svg width="16" height="16" viewBox="0 0 24 24" style="vertical-align:-.15em;margin-right:.3em"><path fill="currentColor" d="M4 3v18l15-9z"/></svg>
+    Toca para comenzar
+  </button>
 </div>
 
 <div class="wrap">
@@ -665,14 +684,70 @@ function goHome(){
 // Render stats on initial page load
 renderStatsSummary();
 
-// ===== Ocultar pantalla de inicio tras la animación (~1.5s) =====
+// ===== Pantalla de inicio: melodía suave + animación al tocar =====
 (function(){
   var splash = document.getElementById('splash');
-  if(!splash) return;
-  // Espera a que termine la animación del escudo + brillo, luego desvanece
-  setTimeout(function(){ splash.classList.add('hide'); }, 1600);
-  // Retira del DOM tras la transición para no bloquear toques
-  setTimeout(function(){ if(splash && splash.parentNode) splash.parentNode.removeChild(splash); }, 2300);
+  var startBtn = document.getElementById('splash-start');
+  if(!splash || !startBtn) return;
+
+  // Melodía suave: campanas/arpa cristalinas ascendentes con reverberación
+  function playChime(){
+    try{
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return;
+      var ctx = new AC();
+      // Reverb suave mediante convolución sencilla (cola de decaimiento)
+      var master = ctx.createGain();
+      master.gain.value = 0.0;
+      master.connect(ctx.destination);
+
+      // Notas (frecuencias) de un arpegio suave y elegante: E5, G#5, B5, E6
+      var notas = [659.25, 830.61, 987.77, 1318.51];
+      var t0 = ctx.currentTime + 0.05;
+
+      notas.forEach(function(freq, i){
+        var start = t0 + i*0.28;
+        // Dos osciladores por nota (senoidal + suave armónico) para calidez tipo campana
+        [ [freq, 0.16, 'sine'], [freq*2, 0.05, 'sine'] ].forEach(function(cfg){
+          var osc = ctx.createOscillator();
+          var g = ctx.createGain();
+          osc.type = cfg[2];
+          osc.frequency.value = cfg[0];
+          g.gain.setValueAtTime(0.0001, start);
+          g.gain.exponentialRampToValueAtTime(cfg[1], start+0.04); // ataque suave
+          g.gain.exponentialRampToValueAtTime(0.0001, start+2.2);  // decaimiento largo (reverberación)
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(start);
+          osc.stop(start+2.3);
+        });
+      });
+
+      // Acorde final suave que sostiene la última nota
+      var end = t0 + notas.length*0.28;
+      [659.25, 987.77].forEach(function(freq){
+        var osc = ctx.createOscillator();
+        var g = ctx.createGain();
+        osc.type='sine'; osc.frequency.value=freq;
+        g.gain.setValueAtTime(0.0001, end);
+        g.gain.exponentialRampToValueAtTime(0.09, end+0.08);
+        g.gain.exponentialRampToValueAtTime(0.0001, end+2.6);
+        osc.connect(g); g.connect(ctx.destination);
+        osc.start(end); osc.stop(end+2.7);
+      });
+    }catch(e){ /* si el audio falla, no interrumpe la app */ }
+  }
+
+  function comenzar(){
+    playChime();
+    startBtn.style.transition='opacity .4s ease';
+    startBtn.style.opacity='0';
+    startBtn.style.pointerEvents='none';
+    // Deja que la animación del escudo respire, luego desvanece
+    setTimeout(function(){ splash.classList.add('hide'); }, 1500);
+    setTimeout(function(){ if(splash && splash.parentNode) splash.parentNode.removeChild(splash); }, 2200);
+  }
+
+  startBtn.addEventListener('click', comenzar);
 })();
 </script>
 </body>
