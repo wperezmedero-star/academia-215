@@ -73,13 +73,13 @@ body{
 }
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 #splash-start{
-  margin-top:34px;padding:12px 26px;border:1px solid rgba(245,207,107,.5);
+  margin-top:34px;padding:15px 32px;border:1.5px solid rgba(245,207,107,.7);
   border-radius:999px;cursor:pointer;
-  background:linear-gradient(180deg,rgba(245,207,107,.16),rgba(201,154,52,.08));
-  color:#ffe9a8;font-weight:700;font-size:.92rem;letter-spacing:.03em;
+  background:linear-gradient(180deg,rgba(245,207,107,.28),rgba(201,154,52,.16));
+  color:#ffe9a8;font-weight:800;font-size:1.02rem;letter-spacing:.03em;
   display:inline-flex;align-items:center;
-  box-shadow:0 4px 16px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.12);
-  animation:startPulse 2.2s ease-in-out infinite, fadeUp .8s ease .7s both;
+  box-shadow:0 4px 20px rgba(0,0,0,.4),0 0 22px 2px rgba(245,207,107,.2),inset 0 1px 0 rgba(255,255,255,.15);
+  animation:startPulse 2s ease-in-out infinite;
   -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
 }
 #splash-start:active{transform:scale(.96)}
@@ -737,8 +737,11 @@ renderStatsSummary();
     }catch(e){ /* si el audio falla, no interrumpe la app */ }
   }
 
-  function comenzar(){
-    playChime();
+  var iniciado = false;
+  function comenzar(conSonido){
+    if(iniciado) return;
+    iniciado = true;
+    if(conSonido) playChime();
     startBtn.style.transition='opacity .4s ease';
     startBtn.style.opacity='0';
     startBtn.style.pointerEvents='none';
@@ -747,7 +750,12 @@ renderStatsSummary();
     setTimeout(function(){ if(splash && splash.parentNode) splash.parentNode.removeChild(splash); }, 2200);
   }
 
-  startBtn.addEventListener('click', comenzar);
+  // Tocar el botón inicia con sonido
+  startBtn.addEventListener('click', function(e){ e.stopPropagation(); comenzar(true); });
+  // Tocar cualquier parte del splash también inicia con sonido (por si el botón no se ve)
+  splash.addEventListener('click', function(){ comenzar(true); });
+  // Red de seguridad: si no se toca nada en 6s, entra solo (sin sonido, el navegador lo bloquea)
+  setTimeout(function(){ comenzar(false); }, 6000);
 })();
 </script>
 </body>
