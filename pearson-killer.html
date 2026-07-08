@@ -149,6 +149,59 @@ h1.title-gold{background:linear-gradient(180deg,var(--gold-light),var(--gold-dee
 </head>
 <body>
 
+<!-- ===== SPRITE DE ICONOS SVG DORADOS ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffe9a8"/>
+      <stop offset="55%" stop-color="#f5cf6b"/>
+      <stop offset="100%" stop-color="#c99a34"/>
+    </linearGradient>
+    <!-- Repetir (errores) -->
+    <symbol id="ic-repeat" viewBox="0 0 24 24"><g fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></g></symbol>
+    <!-- Fuego (áreas débiles) -->
+    <symbol id="ic-fire" viewBox="0 0 24 24"><path fill="url(#goldGrad)" d="M12 2s5 4 5 9a5 5 0 0 1-10 0c0-1.5.6-2.7 1.2-3.6C8 9 9 8.5 9 8.5s.2 1.5 1 2c0-2 2-5 2-8.5z"/></symbol>
+    <!-- Calavera (intensivo) -->
+    <symbol id="ic-skull" viewBox="0 0 24 24"><g fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a8 8 0 0 0-5 14v3h10v-3a8 8 0 0 0-5-14z"/><circle cx="9" cy="12" r="1.5" fill="url(#goldGrad)"/><circle cx="15" cy="12" r="1.5" fill="url(#goldGrad)"/><path d="M12 16v2"/></g></symbol>
+    <!-- Diana (refuerzo) -->
+    <symbol id="ic-target" viewBox="0 0 24 24"><g fill="none" stroke="url(#goldGrad)" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="url(#goldGrad)"/></g></symbol>
+    <!-- Rayo (examen rápido) -->
+    <symbol id="ic-bolt" viewBox="0 0 24 24"><path fill="url(#goldGrad)" d="M13 2 4 14h6l-1 8 9-12h-6z"/></symbol>
+    <!-- Trofeo (examen completo) -->
+    <symbol id="ic-trophy" viewBox="0 0 24 24"><g fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/><path d="M12 14v3M9 21h6M10 21l.5-4h3l.5 4"/></g></symbol>
+    <!-- Portapapeles (suscripción) -->
+    <symbol id="ic-clipboard" viewBox="0 0 24 24"><g fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h4"/></g></symbol>
+    <!-- Corazón latido (vida) -->
+    <symbol id="ic-heart" viewBox="0 0 24 24"><g fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 6.6a5 5 0 0 0-8.8-1.6A5 5 0 0 0 3.2 6.6C1.8 9.5 3.5 13 12 19c8.5-6 10.2-9.5 8.8-12.4z"/><path d="M7 12h2l1.5-2.5L13 15l1.5-3H17"/></g></symbol>
+    <!-- Gráfico creciente (anualidades) -->
+    <symbol id="ic-chart" viewBox="0 0 24 24"><g fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5M4 19h16"/><path d="M7 15l4-4 3 3 5-6"/><path d="M19 8V5h-3" opacity=".9"/></g></symbol>
+    <!-- Cruz médica (salud) -->
+    <symbol id="ic-health" viewBox="0 0 24 24"><g fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></g></symbol>
+    <!-- Alcancía (retiro) -->
+    <symbol id="ic-savings" viewBox="0 0 24 24"><g fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a6 5 0 0 1 6-5h4a6 5 0 0 1 6 5 6 5 0 0 1-3 4.3V19h-2.5l-.5-1h-3l-.5 1H8v-2.7A6 5 0 0 1 4 12z"/><path d="M4 11H3M15 9h2"/><circle cx="15.5" cy="11" r="1" fill="url(#goldGrad)" stroke="none"/></g></symbol>
+    <!-- Palmera (Florida) -->
+    <symbol id="ic-palm" viewBox="0 0 24 24"><g fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V9"/><path d="M12 9c-3-3-7-2-8 0 2-1 5 0 8 0zM12 9c3-3 7-2 8 0-2-1-5 0-8 0zM12 9c-1-4-4-6-6-6 3 0 5 3 6 6zM12 9c1-4 4-6 6-6-3 0-5 3-6 6z"/></g></symbol>
+    <!-- Columnas (Medicare/gobierno) -->
+    <symbol id="ic-bank" viewBox="0 0 24 24"><g fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6z"/><path d="M5 10v8M10 10v8M14 10v8M19 10v8"/><path d="M3 21h18"/></g></symbol>
+    <!-- Cama (LTC) -->
+    <symbol id="ic-bed" viewBox="0 0 24 24"><g fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8v11M3 13h18v6M21 19v-4a3 3 0 0 0-3-3h-7v3"/><circle cx="7" cy="11" r="1.5"/></g></symbol>
+    <!-- Documento (provisiones) -->
+    <symbol id="ic-scroll" viewBox="0 0 24 24"><g fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h6M9 16h6M9 8h2"/></g></symbol>
+    <!-- Balanza (generales) -->
+    <symbol id="ic-scale" viewBox="0 0 24 24"><g fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M8 21h8M6 6h12M6 6 3 12h6zM18 6l-3 6h6z"/><path d="M3 12a3 3 0 0 0 6 0M15 12a3 3 0 0 0 6 0"/></g></symbol>
+    <!-- Casa (inicio) -->
+    <symbol id="ic-home" viewBox="0 0 24 24"><g fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></g></symbol>
+    <!-- Gráfico progreso (panel) -->
+    <symbol id="ic-progress" viewBox="0 0 24 24"><g fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 16v-3M12 16v-6M16 16v-4"/></g></symbol>
+  </defs>
+</svg>
+
+<style>
+.ic{width:1.15em;height:1.15em;vertical-align:-.2em;margin-right:.15em;flex-shrink:0}
+.btn .ic{width:1.25em;height:1.25em;margin-right:.4em;vertical-align:-.25em;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+h2 .ic{width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.18em}
+</style>
+
 <!-- PANTALLA DE INICIO -->
 <div id="splash">
   <div style="position:relative;display:flex;align-items:center;justify-content:center">
@@ -170,13 +223,13 @@ h1.title-gold{background:linear-gradient(180deg,var(--gold-light),var(--gold-dee
   </div>
 
   <div class="card" id="stats-panel" style="border-color:#334155">
-    <h2>📊 Tu Progreso</h2>
+    <h2><svg class="ic"><use href="#ic-progress"/></svg>Tu Progreso</h2>
     <div id="stats-summary" style="font-size:.85rem;color:var(--muted);margin-bottom:10px">Cargando...</div>
-    <button class="btn" style="background:linear-gradient(135deg,#7f1d1d,#991b1b);color:#fff" onclick="startErrorsMode()" id="btn-errors">🔁 Solo mis errores</button>
+    <button class="btn" style="background:linear-gradient(135deg,#7f1d1d,#991b1b);color:#fff" onclick="startErrorsMode()" id="btn-errors"><svg class="ic"><use href="#ic-repeat"/></svg>Solo mis errores</button>
   </div>
 
   <div class="card" style="border-color:#92400e">
-    <h2 style="color:#fbbf24">🔥 Áreas débiles — Prioridad máxima</h2>
+    <h2 style="color:#fbbf24"><svg class="ic"><use href="#ic-fire"/></svg>Áreas débiles — Prioridad máxima</h2>
     <div style="margin-bottom:12px">
       <span class="concept-tag">Field Underwriting</span>
       <span class="concept-tag">FL Statutes & Annuities</span>
@@ -184,30 +237,30 @@ h1.title-gold{background:linear-gradient(180deg,var(--gold-light),var(--gold-dee
       <span class="concept-tag">Policy Provisions</span>
       <span class="concept-tag">Health Policy Types</span>
     </div>
-    <button class="btn btn-red" onclick="startMode('weak',30)">🔥 Atacar mis áreas débiles (30 preguntas)</button>
-    <button class="btn btn-gold" onclick="startMode('weak',60)">💀 Modo intensivo áreas débiles (60 preguntas)</button>
-    <button class="btn btn-purple" onclick="startMode('refuerzo',40)">🎯 Refuerzo: números y conceptos que confundo (40 preguntas)</button>
+    <button class="btn btn-red" onclick="startMode('weak',30)"><svg class="ic"><use href="#ic-fire"/></svg>Atacar mis áreas débiles (30 preguntas)</button>
+    <button class="btn btn-gold" onclick="startMode('weak',60)"><svg class="ic"><use href="#ic-skull"/></svg>Modo intensivo áreas débiles (60 preguntas)</button>
+    <button class="btn btn-purple" onclick="startMode('refuerzo',40)"><svg class="ic"><use href="#ic-target"/></svg>Refuerzo: números y conceptos que confundo (40 preguntas)</button>
   </div>
 
   <div class="card">
-    <h2>⚡ Modo Examen Real</h2>
+    <h2><svg class="ic"><use href="#ic-bolt"/></svg>Modo Examen Real</h2>
     <p class="muted" style="margin-bottom:12px">Mezcla todos los temas como el Pearson VUE real</p>
-    <button class="btn btn-blue" onclick="startMode('all',50)">⚡ Examen rápido (50 preguntas)</button>
-    <button class="btn btn-purple" onclick="startMode('all',100)">🏆 Examen completo (100 preguntas)</button>
+    <button class="btn btn-blue" onclick="startMode('all',50)"><svg class="ic"><use href="#ic-bolt"/></svg>Examen rápido (50 preguntas)</button>
+    <button class="btn btn-purple" onclick="startMode('all',100)"><svg class="ic"><use href="#ic-trophy"/></svg>Examen completo (100 preguntas)</button>
   </div>
 
   <div class="card">
-    <h2>📚 Por área específica</h2>
-    <button class="btn btn-sec" onclick="startMode('suscripcion',25)">📋 Suscripción en Campo</button>
-    <button class="btn btn-sec" onclick="startMode('vida',35)">❤️ Seguros de Vida</button>
-    <button class="btn btn-sec" onclick="startMode('anualidades',30)">📈 Anualidades</button>
-    <button class="btn btn-sec" onclick="startMode('salud',30)">🏥 Tipos de Pólizas de Salud</button>
-    <button class="btn btn-sec" onclick="startMode('retiro',30)">💰 Planes de Retiro y Seguro Social</button>
-    <button class="btn btn-sec" onclick="startMode('florida',25)">🌴 Leyes y Regulaciones de Florida</button>
-    <button class="btn btn-sec" onclick="startMode('medicare',20)">🏛️ Medicare y Medicaid</button>
-    <button class="btn btn-sec" onclick="startMode('ltc',20)">🛏️ Cuidado a Largo Plazo</button>
-    <button class="btn btn-sec" onclick="startMode('provisiones',20)">📜 Provisiones, Cláusulas y Anexos</button>
-    <button class="btn btn-sec" onclick="startMode('generales',20)">⚖️ Conceptos Generales</button>
+    <h2><svg class="ic"><use href="#ic-scroll"/></svg>Por área específica</h2>
+    <button class="btn btn-sec" onclick="startMode('suscripcion',25)"><svg class="ic"><use href="#ic-clipboard"/></svg>Suscripción en Campo</button>
+    <button class="btn btn-sec" onclick="startMode('vida',35)"><svg class="ic"><use href="#ic-heart"/></svg>Seguros de Vida</button>
+    <button class="btn btn-sec" onclick="startMode('anualidades',30)"><svg class="ic"><use href="#ic-chart"/></svg>Anualidades</button>
+    <button class="btn btn-sec" onclick="startMode('salud',30)"><svg class="ic"><use href="#ic-health"/></svg>Tipos de Pólizas de Salud</button>
+    <button class="btn btn-sec" onclick="startMode('retiro',30)"><svg class="ic"><use href="#ic-savings"/></svg>Planes de Retiro y Seguro Social</button>
+    <button class="btn btn-sec" onclick="startMode('florida',25)"><svg class="ic"><use href="#ic-palm"/></svg>Leyes y Regulaciones de Florida</button>
+    <button class="btn btn-sec" onclick="startMode('medicare',20)"><svg class="ic"><use href="#ic-bank"/></svg>Medicare y Medicaid</button>
+    <button class="btn btn-sec" onclick="startMode('ltc',20)"><svg class="ic"><use href="#ic-bed"/></svg>Cuidado a Largo Plazo</button>
+    <button class="btn btn-sec" onclick="startMode('provisiones',20)"><svg class="ic"><use href="#ic-scroll"/></svg>Provisiones, Cláusulas y Anexos</button>
+    <button class="btn btn-sec" onclick="startMode('generales',20)"><svg class="ic"><use href="#ic-scale"/></svg>Conceptos Generales</button>
   </div>
 
   <div style="text-align:center;margin-top:10px">
@@ -243,8 +296,8 @@ h1.title-gold{background:linear-gradient(180deg,var(--gold-light),var(--gold-dee
   <div id="r-areas" class="card"></div>
   <div id="r-mistakes" class="card hidden"></div>
   <div style="display:flex;gap:8px;margin-top:4px">
-    <button class="btn btn-blue" onclick="goHome()">🏠 Inicio</button>
-    <button class="btn btn-red" onclick="retryWeak()" id="retry-btn">🔥 Repetir errores</button>
+    <button class="btn btn-blue" onclick="goHome()"><svg class="ic"><use href="#ic-home"/></svg>Inicio</button>
+    <button class="btn btn-red" onclick="retryWeak()" id="retry-btn"><svg class="ic"><use href="#ic-fire"/></svg>Repetir errores</button>
   </div>
 </div>
 
