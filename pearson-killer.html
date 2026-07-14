@@ -261,6 +261,12 @@ h2 .ic{width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.18em}
     <button class="btn btn-purple" onclick="startMode('refuerzo',40)"><svg class="ic"><use href="#ic-target"/></svg>Refuerzo: números y conceptos que confundo (40 preguntas)</button>
   </div>
 
+  <div class="card" style="border-color:#059669;background:linear-gradient(180deg,rgba(5,150,105,.08),transparent)">
+    <h2 style="color:#34d399"><svg class="ic"><use href="#ic-target"/></svg>🧪 Killer Pilot — Lote nuevo (piloto)</h2>
+    <p class="muted" style="margin-bottom:12px">15 preguntas completamente nuevas de Tipos de Pólizas de Salud (HMO, PPO, EPO, POS, HDHP, HSA, FSA, HRA), aisladas del banco de 545 — pendientes de tu revisión humana final antes de pasar a examen.</p>
+    <button class="btn" style="background:linear-gradient(135deg,#059669,#047857);color:#fff" onclick="startMode('killer_pilot',15)"><svg class="ic"><use href="#ic-target"/></svg>Probar las 15 (Killer Pilot)</button>
+  </div>
+
   <div class="card">
     <h2><svg class="ic"><use href="#ic-bolt"/></svg>Modo Examen Real</h2>
     <p class="muted" style="margin-bottom:12px">Mezcla todos los temas como el Pearson VUE real</p>
@@ -351,6 +357,10 @@ h2 .ic{width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.18em}
 <script src="pk-data-campo.js"></script>
 <!-- CICLO 1 — Desarrollo incremental: HMO/PPO/EPO/POS estilo Killer -->
 <script src="pk-data-killer-hmoppo.js"></script>
+<!-- FASE 2 — Lote piloto Killer (15 preguntas, aisladas a propósito del
+     banco viejo: NO se agrega al arreglo MODULOS de pk-loader.js, para
+     que nunca se mezcle automáticamente con las 545 preguntas existentes) -->
+<script src="pk-data-killer-pilot.js"></script>
 <script src="pk-loader.js"></script>
 
 <script>
@@ -518,7 +528,13 @@ function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()
 
 function buildPool(mode, max){
   let concepts=[];
-  if(mode==='weak'){
+  if(mode==='killer_pilot'){
+    // FASE 2 — Fuente SEPARADA a propósito: nunca se mezcla con CONCEPTS
+    // (el banco viejo de 545 preguntas). Si el archivo no cargó, el
+    // arreglo queda vacío y el usuario ve 0 preguntas en vez de que
+    // se rellene silenciosamente con preguntas del banco viejo.
+    concepts=(window.PK_KILLER_PILOT || []);
+  } else if(mode==='weak'){
     concepts=CONCEPTS.filter(c=>['suscripcion','florida','retiro','provisiones','salud'].includes(c.area));
   } else if(mode==='all'){
     concepts=[...CONCEPTS];
