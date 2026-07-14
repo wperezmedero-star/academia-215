@@ -75,7 +75,8 @@ const PK_PALABRAS_DECISIVAS = [
   "primero", "principalmente", "normalmente", "excepto", "except",
   "mejor", "más apropiada", "más correcta", "menos correcta",
   "menos apropiada", "generalmente", "usualmente", "siempre", "nunca",
-  "único", "solo si", "únicamente"
+  "único", "solo si", "únicamente", "más probable", "menos probable",
+  "mayor probabilidad", "más razonable"
 ];
 
 // ---- Modelo normalizado de UNA variante de pregunta ----

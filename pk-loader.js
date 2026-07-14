@@ -61,7 +61,8 @@
     { nombre: "nivel5",       data: window.PK_NIVEL5 || null },
     { nombre: "refuerzo",     data: window.PK_REFUERZO || null },
     { nombre: "disposiciones",data: window.PK_DISPOSICIONES || null },
-    { nombre: "campo",        data: window.PK_CAMPO || null }
+    { nombre: "campo",        data: window.PK_CAMPO || null },
+    { nombre: "killer_hmoppo",data: window.PK_KILLER_HMOPPO || null }
   ];
 
   // Combinar todos los módulos cargados en un único array
