@@ -1,28 +1,34 @@
 // ============================================================
 // PEARSON KILLER — pk-schema.js
 // FASE 1: Infraestructura — Modelo de Datos Normalizado
+// v1.1 — Corregido según instrucciones de William (14/07/2026):
+//   1) 'intermediate' NUNCA entra a modo exam automáticamente.
+//   2) 'killer_ready' solo es CANDIDATA a killer/exam; el modo
+//      exam exige además human_review_status === 'approved'.
+//   3) Se agrega human_review_status: pending | approved | rejected.
+//   4) puedeEntrarAExamen() es la única fuente de verdad para el
+//      gate de examen — no basta con leer 'category'.
+//   5) Se agrega tipo_cognitivo: memoria_directa | comparacion_
+//      conceptual | escenario_aplicado | escenario_avanzado.
+//   6) El auditor NO declara killer_ready "verificado" solo por
+//      longitud + palabra decisiva + explicaciones completas.
+//      Esos 6 checks solo producen una CANDIDATURA MECÁNICA.
+//      Los 8 criterios cualitativos de verdad (principio oculto,
+//      dos distractores tentadores, etc.) quedan marcados como
+//      NO AUTOMATIZABLES y exigen revisión humana antes de que
+//      cualquier pregunta se considere killer_ready en firme.
 //
-// Este archivo define CÓMO debe lucir una pregunta de calidad
-// "Killer Pearson" y provee herramientas para:
-//   1) Validar preguntas nuevas contra el checklist de calidad.
-//   2) Adaptar (sin destruir) las preguntas del banco actual al
-//      nuevo modelo, agregando los campos de clasificación que
-//      pide la auditoría de Fase 1.5, SIN romper compatibilidad
-//      con pearson-killer.html ni con pk-loader.js.
-//
-// IMPORTANTE: este archivo NO borra ni reescribe preguntas.
-// Solo añade metadatos. El motor de quiz sigue leyendo los
-// campos antiguos (q, o, a, correcto, incorrectos, trampa,
-// tipo_trampa, nivel) exactamente como siempre.
+// Este archivo sigue sin borrar ni reescribir preguntas. Solo
+// añade metadatos y funciones de clasificación/consulta.
 // ============================================================
 
 // ---- Categorías de calidad (auditoría Fase 1.5) ----
 const PK_CATEGORIAS = {
   BASIC_ONLY:        "basic_only",        // reconocimiento directo, tema revelado
   INTERMEDIATE:       "intermediate",      // cumple algunos criterios killer, no todos
-  KILLER_READY:        "killer_ready",      // cumple el checklist completo
+  KILLER_READY:        "killer_ready",      // CANDIDATA mecánica — requiere revisión humana para ser definitiva
   REWRITE_REQUIRED:  "rewrite_required",  // tiene datos útiles pero necesita reescritura
-  RETIRED:            "retired"             // obsoleta / duplicada / incorrecta
+  RETIRED:            "retired"             // obsoleta / duplicada / incorrecta / huérfana
 };
 
 // ---- Modos permitidos por pregunta ----
@@ -33,6 +39,37 @@ const PK_MODOS = {
   EXAM:                  "exam"
 };
 
+// ---- Estado de revisión humana (regla 3) ----
+const PK_HUMAN_REVIEW_STATUS = {
+  PENDING:  "pending",
+  APPROVED: "approved",
+  REJECTED: "rejected"
+};
+
+// ---- Tipo cognitivo de la pregunta (regla 5) ----
+const PK_TIPO_COGNITIVO = {
+  MEMORIA_DIRECTA:        "memoria_directa",         // ¿Qué es X? / definición pura
+  COMPARACION_CONCEPTUAL: "comparacion_conceptual",  // X vs Y / diferencia entre...
+  ESCENARIO_APLICADO:     "escenario_aplicado",      // caso corto, un solo dato a aplicar
+  ESCENARIO_AVANZADO:     "escenario_avanzado"       // caso largo, EXCEPTO/varias afirmaciones, info irrelevante
+};
+
+// ---- Los 8 criterios cualitativos reales de "killer_ready" (regla 6) ----
+// 'automatizable:false' significa que el heurístico NO puede
+// verificarlo con confianza — siempre se marca pendiente de
+// revisión humana, sin importar qué tan bien puntúe la pregunta
+// en los checks mecánicos.
+const PK_CRITERIOS_CUALITATIVOS = [
+  { id: "principio_oculto",              label: "El principio realmente está oculto (no reconocimiento directo)", automatizable: false },
+  { id: "dos_respuestas_tentadoras",     label: "Existen al menos dos respuestas tentadoras",                     automatizable: false },
+  { id: "una_sola_mejor_respuesta",      label: "Hay una sola mejor respuesta defendible",                        automatizable: false },
+  { id: "info_relevante_e_irrelevante",  label: "El escenario mezcla información relevante e irrelevante",        automatizable: false },
+  { id: "distractor_condicional",        label: "Al menos un distractor sería correcto si cambiara un dato",      automatizable: false },
+  { id: "ausencia_ambiguedad",           label: "La pregunta no es ambigua",                                      automatizable: false },
+  { id: "escenario_profesional_real",    label: "El escenario es profesional y realista (no forzado)",            automatizable: false },
+  { id: "explicacion_individual_4",      label: "Cada una de las 4 opciones tiene explicación individual",        automatizable: true  }
+];
+
 // ---- Palabras decisivas reconocidas (español, estilo Pearson) ----
 const PK_PALABRAS_DECISIVAS = [
   "primero", "principalmente", "normalmente", "excepto", "except",
@@ -42,17 +79,16 @@ const PK_PALABRAS_DECISIVAS = [
 ];
 
 // ---- Modelo normalizado de UNA variante de pregunta ----
-// (Documentación viva — no es una clase forzada, es la forma
-// que debe tener el objeto final una vez enriquecido.)
 function crearPreguntaNormalizada(datos) {
   return {
-    id: datos.id,                                   // heredado del concepto + índice de variante
-    area_blueprint: datos.area_blueprint || null,    // id de PK_BLUEPRINT.areas
-    subtema: datos.subtema || null,                  // uno de los subtemas del área
+    id: datos.id,
+    area_blueprint: datos.area_blueprint || null,
+    subtema: datos.subtema || null,
     principio_principal: datos.principio_principal || datos.concepto || "",
     conceptos_secundarios: datos.conceptos_secundarios || [],
-    dificultad: datos.nivel || datos.dificultad || 1, // 1-5, reusa 'nivel' ya existente
+    dificultad: datos.nivel || datos.dificultad || 1,
     tipo_pregunta: datos.tipo_pregunta || inferirTipoPregunta(datos.q || ""),
+    tipo_cognitivo: datos.tipo_cognitivo || null,
     palabra_decisiva: datos.palabra_decisiva || detectarPalabraDecisiva(datos.q || ""),
     dato_relevante: datos.dato_relevante || null,
     pregunta: datos.q,
@@ -65,14 +101,14 @@ function crearPreguntaNormalizada(datos) {
     sinonimos: datos.sinonimos || [],
     error_comun: datos.error_comun || datos.trampa || "",
     fecha_creacion: datos.fecha_creacion || null,
-    // --- Campos de uso/telemetría (los llena pk-storage.js en vivo) ---
     veces_usada: 0,
     aciertos: 0,
     intentos: 0,
     tiempo_promedio_ms: 0,
-    // --- Campos de la auditoría de calidad (Fase 1.5) ---
+    // --- Auditoría de calidad ---
     category: datos.category || null,
-    allowed_modes: datos.allowed_modes || []
+    human_review_status: PK_HUMAN_REVIEW_STATUS.PENDING, // regla 3 — SIEMPRE arranca pendiente
+    allowed_modes: []  // se calcula con calcularAllowedModes(), nunca a mano
   };
 }
 
@@ -95,12 +131,80 @@ function detectarPalabraDecisiva(textoPregunta) {
 }
 
 // ============================================================
-// VALIDADOR DE CALIDAD — Checklist automatizable de William
-// Devuelve { category, allowed_modes, checks, score }
-// Los 10 puntos de control que NO son automatizables al 100%
-// (ej. "¿hay dos respuestas igualmente defendibles?") se
-// aproximan con heurísticas y quedan marcadas como 'revisar'
-// cuando el heurístico no puede decidir con confianza.
+// REGLA 5 — Clasificador de tipo cognitivo
+// Distingue memoria_directa / comparacion_conceptual /
+// escenario_aplicado / escenario_avanzado. Es heurístico, igual
+// que el resto del auditor — sirve para orientar la reescritura,
+// no como verdad absoluta.
+// ============================================================
+function clasificarTipoCognitivo(variante) {
+  const q = variante.q || "";
+  const qLower = q.toLowerCase();
+  const tieneSujetoEscenario = /\b[A-ZÁÉÍÓÚÑ][a-záéíóúñ]{0,15}\s+(tiene|es|queda|compra|decide|solicita|firma|recibe|paga|cambia|sufre|fallece|pregunta|dice|le dice|contrata|renuncia)\b/.test(q);
+  const marcadoresComparacion = ["diferencia entre", " vs ", " vs.", "a diferencia de", "mientras que",
+    "por otro lado", "en cambio", "se diferencia de"];
+  const esComparacion = marcadoresComparacion.some(m => qLower.includes(m));
+  const esExcepto = qLower.includes("excepto");
+  const tieneListaNumerada = /\b[1-5]\.\s|\bI\.\s|\bII\.\s/.test(q);
+  const esLarga = q.length >= 220;
+  const tienePalabraDecisiva = !!detectarPalabraDecisiva(q);
+
+  if (tieneSujetoEscenario && (esExcepto || tieneListaNumerada || (esLarga && tienePalabraDecisiva))) {
+    return PK_TIPO_COGNITIVO.ESCENARIO_AVANZADO;
+  }
+  if (tieneSujetoEscenario) {
+    return PK_TIPO_COGNITIVO.ESCENARIO_APLICADO;
+  }
+  if (esComparacion) {
+    return PK_TIPO_COGNITIVO.COMPARACION_CONCEPTUAL;
+  }
+  return PK_TIPO_COGNITIVO.MEMORIA_DIRECTA;
+}
+
+// ============================================================
+// REGLA 4 — Única fuente de verdad para el gate de examen
+// ============================================================
+function puedeEntrarAExamen(category, human_review_status) {
+  return category === PK_CATEGORIAS.KILLER_READY
+      && human_review_status === PK_HUMAN_REVIEW_STATUS.APPROVED;
+}
+
+// ============================================================
+// REGLAS 1 y 2 — allowed_modes se CALCULA, nunca se asigna a mano
+// 'intermediate' jamás incluye 'exam'. 'killer_ready' incluye
+// 'killer' de forma automática (modo de entrenamiento intensivo),
+// pero 'exam' solo se añade si ya fue aprobada por un humano.
+// ============================================================
+function calcularAllowedModes(category, human_review_status) {
+  const M = PK_MODOS;
+  switch (category) {
+    case PK_CATEGORIAS.RETIRED:
+      return [];
+    case PK_CATEGORIAS.BASIC_ONLY:
+      return [M.TRAINING_BASIC];
+    case PK_CATEGORIAS.REWRITE_REQUIRED:
+      return [M.TRAINING_BASIC];
+    case PK_CATEGORIAS.INTERMEDIATE:
+      // Regla 1 — nunca 'exam' aquí, pase lo que pase con human_review_status
+      return [M.TRAINING_BASIC, M.TRAINING_INTERMEDIATE];
+    case PK_CATEGORIAS.KILLER_READY: {
+      const modos = [M.TRAINING_BASIC, M.TRAINING_INTERMEDIATE, M.KILLER];
+      if (puedeEntrarAExamen(category, human_review_status)) modos.push(M.EXAM);
+      return modos;
+    }
+    default:
+      return [M.TRAINING_BASIC];
+  }
+}
+
+// ============================================================
+// VALIDADOR DE CALIDAD — checklist MECÁNICO (regla 6)
+// Estos 6 checks son los ÚNICOS que el software puede verificar
+// con confianza razonable. Producen, cuando mucho, una CANDIDATURA
+// a killer_ready — nunca una confirmación. La confirmación real
+// depende de los 8 criterios cualitativos de PK_CRITERIOS_CUALITATIVOS,
+// que siempre quedan marcados 'requiere_revision_humana: true'
+// (salvo el único automatizable: explicación individual de las 4 opciones).
 // ============================================================
 function auditarPregunta(variante, conceptoNombre) {
   const q = variante.q || "";
@@ -110,75 +214,83 @@ function auditarPregunta(variante, conceptoNombre) {
 
   const checks = {};
 
-  // 1) ¿El título/encabezado revela el tema? -> aproximamos viendo si
-  //    el nombre exacto del concepto aparece dentro del texto de la pregunta.
   const conceptoLimpio = (conceptoNombre || "").split("(")[0].split("—")[0].trim().toLowerCase();
   checks.titulo_no_revela = conceptoLimpio.length > 6
     ? !q.toLowerCase().includes(conceptoLimpio)
     : true;
 
-  // 2) Longitud/complejidad como proxy de "escenario profesional"
-  //    (un escenario real casi siempre pasa de 140 caracteres y
-  //    suele tener un sujeto con inicial mayúscula seguido de verbo,
-  //    convención que hemos usado: "R tiene...", "M queda...", etc.)
   const tieneSujetoEscenario = /\b[A-ZÁÉÍÓÚÑ][a-záéíóúñ]{0,15}\s+(tiene|es|queda|compra|decide|solicita|firma|recibe|paga|cambia|sufre|fallece|pregunta|dice|le dice)\b/.test(q);
   checks.tiene_escenario = q.length >= 140 && tieneSujetoEscenario;
 
-  // 3) Palabra decisiva presente
   checks.tiene_palabra_decisiva = !!detectarPalabraDecisiva(q);
 
-  // 4) Cuatro opciones con plausibilidad razonable (ninguna opción
-  //    de una sola palabra, que delataría reconocimiento directo)
   const opcionesPlausibles = o.length === 4 && o.every(op => (op || "").split(" ").length >= 3);
   checks.opciones_plausibles = opcionesPlausibles;
 
-  // 5) Explicación completa: existe explicación de la correcta Y
-  //    de las 3 incorrectas, con contenido sustancial
   checks.explicacion_completa = correcto.length >= 60 && incorrectos.length === 3
     && incorrectos.every(i => (i || "").length >= 20);
 
-  // 6) Trampa/distractor principal identificado explícitamente
   checks.distractor_identificado = !!(variante.trampa && variante.trampa.length >= 20);
 
-  // ---- Puntaje y categoría resultante ----
   const puntos = Object.values(checks).filter(Boolean).length;
   const total = Object.keys(checks).length; // 6
 
+  // --- Categoría mecánica (candidatura, no verdad final) ---
   let category;
-  let allowed_modes;
-
   if (puntos === total) {
-    category = PK_CATEGORIAS.KILLER_READY;
-    allowed_modes = [PK_MODOS.TRAINING_BASIC, PK_MODOS.TRAINING_INTERMEDIATE, PK_MODOS.KILLER, PK_MODOS.EXAM];
+    category = PK_CATEGORIAS.KILLER_READY; // CANDIDATA — ver criterios cualitativos abajo
   } else if (puntos >= 4) {
     category = PK_CATEGORIAS.INTERMEDIATE;
-    allowed_modes = [PK_MODOS.TRAINING_BASIC, PK_MODOS.TRAINING_INTERMEDIATE, PK_MODOS.EXAM];
   } else if (checks.explicacion_completa && checks.opciones_plausibles) {
-    // Tiene la base correcta (explicación + opciones) pero le falta
-    // el envoltorio de escenario/palabra decisiva -> se puede arreglar
     category = PK_CATEGORIAS.REWRITE_REQUIRED;
-    allowed_modes = [PK_MODOS.TRAINING_BASIC];
   } else if (!checks.explicacion_completa) {
-    // Sin explicación sustancial -> solo sirve como recall básico
     category = PK_CATEGORIAS.BASIC_ONLY;
-    allowed_modes = [PK_MODOS.TRAINING_BASIC];
   } else {
     category = PK_CATEGORIAS.REWRITE_REQUIRED;
-    allowed_modes = [PK_MODOS.TRAINING_BASIC];
   }
 
-  return { category, allowed_modes, checks, score: puntos + "/" + total };
+  // human_review_status SIEMPRE arranca pendiente — el auditor
+  // automático no tiene autoridad para aprobar nada (regla 2 y 6).
+  const human_review_status = PK_HUMAN_REVIEW_STATUS.PENDING;
+  const allowed_modes = calcularAllowedModes(category, human_review_status);
+  const tipo_cognitivo = clasificarTipoCognitivo(variante);
+
+  // --- Criterios cualitativos: estado de verificación ---
+  const criterios_cualitativos = PK_CRITERIOS_CUALITATIVOS.map(c => {
+    if (c.id === "explicacion_individual_4") {
+      // Único automatizable: ¿hay 3 incorrectos con texto sustancial
+      // además de la explicación de la correcta?
+      const cumplido = checks.explicacion_completa;
+      return { ...c, requiere_revision_humana: false, valor_automatico: cumplido };
+    }
+    return { ...c, requiere_revision_humana: true, valor_automatico: null };
+  });
+
+  return {
+    category,                 // candidatura mecánica, NO confirmación
+    tipo_cognitivo,            // regla 5
+    human_review_status,       // regla 3 — siempre 'pending' desde el auditor
+    allowed_modes,             // reglas 1, 2 y 4 aplicadas
+    puede_entrar_a_examen: puedeEntrarAExamen(category, human_review_status), // siempre false hasta revisión humana
+    checks,                    // los 6 checks mecánicos
+    criterios_cualitativos,    // los 8 criterios reales — 7 pendientes de humano por diseño
+    score: puntos + "/" + total
+  };
 }
 
 if (typeof module !== 'undefined') {
   module.exports = {
-    PK_CATEGORIAS, PK_MODOS, PK_PALABRAS_DECISIVAS,
-    crearPreguntaNormalizada, auditarPregunta, detectarPalabraDecisiva, inferirTipoPregunta
+    PK_CATEGORIAS, PK_MODOS, PK_HUMAN_REVIEW_STATUS, PK_TIPO_COGNITIVO,
+    PK_CRITERIOS_CUALITATIVOS, PK_PALABRAS_DECISIVAS,
+    crearPreguntaNormalizada, auditarPregunta, detectarPalabraDecisiva,
+    inferirTipoPregunta, clasificarTipoCognitivo, calcularAllowedModes, puedeEntrarAExamen
   };
 }
 if (typeof window !== 'undefined') {
   window.PK_SCHEMA = {
-    PK_CATEGORIAS, PK_MODOS, PK_PALABRAS_DECISIVAS,
-    crearPreguntaNormalizada, auditarPregunta, detectarPalabraDecisiva, inferirTipoPregunta
+    PK_CATEGORIAS, PK_MODOS, PK_HUMAN_REVIEW_STATUS, PK_TIPO_COGNITIVO,
+    PK_CRITERIOS_CUALITATIVOS, PK_PALABRAS_DECISIVAS,
+    crearPreguntaNormalizada, auditarPregunta, detectarPalabraDecisiva,
+    inferirTipoPregunta, clasificarTipoCognitivo, calcularAllowedModes, puedeEntrarAExamen
   };
 }
