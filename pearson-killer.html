@@ -328,6 +328,10 @@ h2 .ic{width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.18em}
      ============================================================ -->
 <script src="pk-synonyms.js"></script>
 <script src="pk-traps.js"></script>
+<!-- FASE 1 — Infraestructura adaptativa (no altera el motor de quiz existente) -->
+<script src="pk-blueprint.js"></script>
+<script src="pk-schema.js"></script>
+<script src="pk-storage.js"></script>
 <script src="pk-data-underwriting.js"></script>
 <script src="pk-data-life.js"></script>
 <script src="pk-data-annuities.js"></script>
@@ -379,6 +383,7 @@ if (CONCEPTS.length === 0) {
 // ============================================================
 let mode='', maxQ=30, pool=[], idx=0, correct=0, mistakes=[], answered=false;
 let areaStats={};
+let questionShownAt=0; // FASE 1 — timestamp para medir tiempo por pregunta (pk-storage.js)
 
 // ============================================================
 // CUADERNO DE ERRORES — Persistencia en localStorage
@@ -436,6 +441,7 @@ function recordError(q, userAnswerIdx){
   const ckey = q.area + '::' + q.concept;
   if(!stats.conceptos[ckey]) stats.conceptos[ckey]={label:q.concept,area:q.areaLabel,errores:0,total:0};
   stats.conceptos[ckey].errores++;
+  stats.conceptos[ckey].total++; // FASE 1 — BUG FIX: antes 'total' solo subía en recordCorrect()
   saveStats(stats);
 }
 
@@ -544,6 +550,7 @@ function startMode(m, max){
 function renderQ(){
   const q=pool[idx];
   answered=false;
+  questionShownAt=Date.now(); // FASE 1
   const total=pool.length;
   document.getElementById('q-count').textContent=`${idx+1}/${total}`;
   document.getElementById('q-score').textContent=`✓${correct} ✗${idx-correct>0?idx-correct:0}`;
@@ -574,6 +581,14 @@ function pick(i,btn,q){
   const ok=i===q.a;
   if(ok){correct++; recordCorrect(q);}
   else {mistakes.push({...q,userAnswer:i}); recordError(q, i);}
+  // FASE 1 — registro paralelo en el nuevo motor (pk_stats_v2), no reemplaza lo anterior todavía
+  if(window.PK_STORAGE){
+    window.PK_STORAGE.recordAttempt({
+      q, correcta:ok, userAnswerIdx:i,
+      tiempoMs: questionShownAt ? (Date.now()-questionShownAt) : null,
+      cambioRespuesta:false
+    });
+  }
   // Track area stats
   if(!areaStats[q.area])areaStats[q.area]={label:q.areaLabel,correct:0,total:0};
   areaStats[q.area].total++;
