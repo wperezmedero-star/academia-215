@@ -26,8 +26,9 @@
     {name:'sim_batch_050_4',path:'pk-simulacro-batch-050-04.js',global_name:'PK_SIM_BATCH_050_4'},
     {name:'sim_batch_050_5',path:'pk-simulacro-batch-050-05.js',global_name:'PK_SIM_BATCH_050_5'},
     {name:'sim_batch_050_6',path:'pk-simulacro-batch-050-06.js',global_name:'PK_SIM_BATCH_050_6'},
-    {name:'simulacro_b4_011_060',path:'pk-simulacro-b4-import-011-060.js',global_name:'PK_SIMULACRO_B4_011_060'}
+    {name:'simulacro_b4_011_060',path:'pk-simulacro-b4-import-011-060.js',global_name:'PK_SIMULACRO_B4_011_060'},
+    {name:'simulacro_b5_001_050',path:'pk-simulacro-b5-import-001-050.js',global_name:'PK_SIMULACRO_B5_001_050'}
   ];
-  global.PK_APPROVED_SOURCE_INDEX={version:'2026-07-15.12',sources:sources,total_sources:sources.length,policy:'single_manifest_for_approved_runs_and_verified_imports'};
+  global.PK_APPROVED_SOURCE_INDEX={version:'2026-07-15.13',sources:sources,total_sources:sources.length,policy:'single_manifest_for_approved_runs_and_verified_imports'};
   if(typeof document!=='undefined'&&document.readyState==='loading') sources.forEach(function(source){document.write('<script src="'+source.path+'"><\/script>');});
 })(typeof window!=='undefined'?window:globalThis);
