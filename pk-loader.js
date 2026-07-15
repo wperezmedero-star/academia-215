@@ -1,7 +1,7 @@
 // ============================================================
 // PEARSON KILLER — pk-loader.js
 // Cargador central del banco + integración automática de preguntas aprobadas.
-// v1.8 — 15/07/2026
+// v1.9 — 15/07/2026
 // ============================================================
 
 // Carga síncrona de fuentes Nueva Generación auditadas.
@@ -15,6 +15,7 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
   document.write('<script src="pk-migration-manual40-run-013-rewrites-02.js"><\/script>');
   document.write('<script src="pk-migration-manual40-run-014-candidates-01.js"><\/script>');
   document.write('<script src="pk-migration-manual40-run-014-rewrites-01.js"><\/script>');
+  document.write('<script src="pk-migration-manual40-run-014-candidates-02.js"><\/script>');
   document.write('<script src="pk-approved-registry.js"><\/script>');
 }
 
@@ -55,11 +56,6 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
     }
   });
 
-  // ------------------------------------------------------------
-  // NUEVA GENERACIÓN — integración automática por auditoría.
-  // Solo entra lo incluido explícitamente en PK_APPROVED_REGISTRY.
-  // Las fuentes pueden permanecer pending; el registro es la autorización.
-  // ------------------------------------------------------------
   const approvedRegistry = window.PK_APPROVED_REGISTRY || { approved_ids: [] };
   const approvedSet = approvedRegistry.approved_set instanceof Set
     ? approvedRegistry.approved_set
@@ -73,17 +69,14 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
     { name: 'run_013_rewrites_01', data: window.PK_MIGRATION_MANUAL40_RUN_013_REWRITES_01 },
     { name: 'run_013_rewrites_02', data: window.PK_MIGRATION_MANUAL40_RUN_013_REWRITES_02 },
     { name: 'run_014_01', data: window.PK_MIGRATION_MANUAL40_RUN_014_01 },
-    { name: 'run_014_rewrites_01', data: window.PK_MIGRATION_MANUAL40_RUN_014_REWRITES_01 }
+    { name: 'run_014_rewrites_01', data: window.PK_MIGRATION_MANUAL40_RUN_014_REWRITES_01 },
+    { name: 'run_014_02', data: window.PK_MIGRATION_MANUAL40_RUN_014_02 }
   ].filter(function(src){ return Array.isArray(src.data); });
 
-  // Un ID aprobado produce una sola pregunta. Si hubiera una versión reescrita
-  // con el mismo ID en una fuente posterior, esa versión sustituye a la anterior.
   const approvedById = new Map();
-
   migrationSources.forEach(function(source) {
     source.data.forEach(function(item) {
       if (!item || !approvedSet.has(item.id)) return;
-
       const variants = (item.variantes || item.variants || []).filter(function(v) {
         return v && typeof v.q === 'string' && v.q.trim() &&
           Array.isArray(v.o) && v.o.length === 4 &&
@@ -95,9 +88,7 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
         if (!copy.e) copy.e = copy.correcto || '';
         return copy;
       });
-
       if (!variants.length) return;
-
       approvedById.set(item.id, {
         id: item.id,
         area: item.area,
@@ -113,11 +104,9 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
   const approvedMigrationConcepts = Array.from(approvedById.values());
   conceptosUnificados = conceptosUnificados.concat(approvedMigrationConcepts);
 
-  // Killer Pilot permanece aislado.
   const killerPilot = Array.isArray(window.PK_KILLER_PILOT) ? window.PK_KILLER_PILOT : [];
   const erroresKillerPilot = [];
   let totalPreguntasKillerPilot = 0;
-
   killerPilot.forEach(function(concepto, conceptoIdx) {
     const conceptoId = concepto.id || ('concepto_' + (conceptoIdx + 1));
     const variantes = concepto.variantes || concepto.variants || [];
@@ -128,23 +117,12 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
     variantes.forEach(function(pregunta, varianteIdx) {
       totalPreguntasKillerPilot++;
       const etiqueta = conceptoId + '#' + (varianteIdx + 1);
-      if (!pregunta || typeof pregunta.q !== 'string' || pregunta.q.trim().length === 0) {
-        erroresKillerPilot.push(etiqueta + ': falta texto de pregunta');
-      }
-      if (!Array.isArray(pregunta.o) || pregunta.o.length !== 4 || pregunta.o.some(function(opcion) {
-        return typeof opcion !== 'string' || opcion.trim().length === 0;
-      })) {
-        erroresKillerPilot.push(etiqueta + ': debe tener exactamente 4 opciones no vacías');
-      }
-      if (!Number.isInteger(pregunta.a) || pregunta.a < 0 || pregunta.a > 3) {
-        erroresKillerPilot.push(etiqueta + ': índice de respuesta correcta inválido');
-      }
+      if (!pregunta || typeof pregunta.q !== 'string' || pregunta.q.trim().length === 0) erroresKillerPilot.push(etiqueta + ': falta texto de pregunta');
+      if (!Array.isArray(pregunta.o) || pregunta.o.length !== 4 || pregunta.o.some(function(opcion) { return typeof opcion !== 'string' || opcion.trim().length === 0; })) erroresKillerPilot.push(etiqueta + ': debe tener exactamente 4 opciones no vacías');
+      if (!Number.isInteger(pregunta.a) || pregunta.a < 0 || pregunta.a > 3) erroresKillerPilot.push(etiqueta + ': índice de respuesta correcta inválido');
       const explicacion = pregunta.e || pregunta.correcto || '';
-      if (typeof explicacion !== 'string' || explicacion.trim().length === 0) {
-        erroresKillerPilot.push(etiqueta + ': falta explicación de la respuesta correcta');
-      } else if (!pregunta.e) {
-        pregunta.e = explicacion;
-      }
+      if (typeof explicacion !== 'string' || explicacion.trim().length === 0) erroresKillerPilot.push(etiqueta + ': falta explicación de la respuesta correcta');
+      else if (!pregunta.e) pregunta.e = explicacion;
     });
   });
 
@@ -161,19 +139,7 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
   };
 
   const AREAS_UNIFICADAS = {
-    suscripcion: 'Procedimientos de Suscripción en Campo',
-    vida: 'Tipos de Seguros de Vida',
-    anualidades: 'Anualidades',
-    salud: 'Tipos de Pólizas de Salud',
-    medicare: 'Medicare y Medicaid',
-    ltc: 'Seguro de Cuidado a Largo Plazo',
-    cobra: 'COBRA, ERISA e HIPAA',
-    cuentas: 'HSA, HRA y FSA',
-    ss: 'Seguro Social',
-    retiro: 'Planes de Retiro',
-    florida: 'Leyes y Regulaciones de Florida',
-    provisiones: 'Provisiones, Cláusulas y Anexos',
-    generales: 'Conceptos Generales de Seguros'
+    suscripcion: 'Procedimientos de Suscripción en Campo', vida: 'Tipos de Seguros de Vida', anualidades: 'Anualidades', salud: 'Tipos de Pólizas de Salud', medicare: 'Medicare y Medicaid', ltc: 'Seguro de Cuidado a Largo Plazo', cobra: 'COBRA, ERISA e HIPAA', cuentas: 'HSA, HRA y FSA', ss: 'Seguro Social', retiro: 'Planes de Retiro', florida: 'Leyes y Regulaciones de Florida', provisiones: 'Provisiones, Cláusulas y Anexos', generales: 'Conceptos Generales de Seguros'
   };
 
   window.PK_CONCEPTOS_FULL = conceptosUnificados;
@@ -183,9 +149,7 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
   window.PK_APPROVED_EXAM_CONCEPTS = approvedMigrationConcepts;
 
   let totalVariantes = 0;
-  conceptosUnificados.forEach(function(c) {
-    if (c.variantes) totalVariantes += c.variantes.length;
-  });
+  conceptosUnificados.forEach(function(c) { if (c.variantes) totalVariantes += c.variantes.length; });
 
   window.PK_LOADER_STATUS = {
     modulosOK: modulosOK,
@@ -198,13 +162,12 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
     approvedRegistryVersion: approvedRegistry.version || null,
     autoIntegrationPolicy: approvedRegistry.policy || null,
     killerPilot: window.PK_KILLER_PILOT_STATUS,
-    version: '1.8'
+    version: '1.9'
   };
 
   window.addEventListener('DOMContentLoaded', function() {
     window.PK_RUNTIME_MODE = '';
     window.PK_LAST_POOL_SIZE = null;
-
     if (typeof window.buildPool === 'function') {
       const buildPoolOriginal = window.buildPool;
       window.buildPool = function(m, max) {
@@ -213,7 +176,6 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
         return resultado;
       };
     }
-
     if (typeof window.startMode === 'function') {
       const startModeOriginal = window.startMode;
       window.startMode = function(m, max) {
@@ -225,7 +187,6 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
         startModeOriginal(m, max);
       };
     }
-
     if (typeof window.renderQ === 'function') {
       const renderQOriginal = window.renderQ;
       window.renderQ = function() {
