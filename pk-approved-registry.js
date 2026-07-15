@@ -1,0 +1,19 @@
+// PEARSON KILLER — Registro machine-readable de preguntas aprobadas/importadas
+(function(global){
+  'use strict';
+  function range(prefix,a,b,skip){const out=[];skip=skip||[];for(let i=a;i<=b;i++){if(!skip.includes(i))out.push(prefix+String(i).padStart(3,'0'));}return out;}
+  const approvedIds=[];
+  approvedIds.push(...range('manual20_r010_',1,20));
+  approvedIds.push('manual40_r013_004','manual40_r013_005','manual40_r013_006','manual40_r013_007','manual40_r013_008','manual40_r013_009','manual40_r013_015','manual40_r013_018','manual40_r013_019','manual40_r013_022','manual40_r013_024','manual40_r013_026','manual40_r013_032','manual40_r013_033','manual40_r013_034','manual40_r013_035','manual40_r013_036','manual40_r013_037','manual40_r013_038','manual40_r013_039','manual40_r013_040','manual40_r013_001','manual40_r013_002','manual40_r013_003','manual40_r013_010','manual40_r013_011','manual40_r013_012','manual40_r013_014','manual40_r013_016','manual40_r013_017','manual40_r013_020','manual40_r013_021_rw','manual40_r013_023_rw','manual40_r013_027_rw','manual40_r013_028_rw','manual40_r013_029_rw','manual40_r013_030_rw');
+  approvedIds.push(...range('manual40_r014_',1,20), 'manual40_r014_022','manual40_r014_024','manual40_r014_025','manual40_r014_026','manual40_r014_027','manual40_r014_028','manual40_r014_029','manual40_r014_031','manual40_r014_032','manual40_r014_033','manual40_r014_034','manual40_r014_037','manual40_r014_038','manual40_r014_039','manual40_r014_021_rw','manual40_r014_023_rw','manual40_r014_030_rw','manual40_r014_035_rw','manual40_r014_036_rw','manual40_r014_040_rw');
+  approvedIds.push('manual40_r015_001','manual40_r015_003','manual40_r015_004','manual40_r015_005','manual40_r015_009','manual40_r015_011','manual40_r015_012','manual40_r015_013','manual40_r015_015','manual40_r015_016','manual40_r015_018','manual40_r015_020','manual40_r015_002_rw','manual40_r015_006_rw','manual40_r015_007_rw','manual40_r015_008_rw','manual40_r015_010_rw','manual40_r015_014_rw','manual40_r015_017_rw','manual40_r015_019_rw','manual40_r015_021','manual40_r015_022','manual40_r015_023','manual40_r015_024','manual40_r015_026','manual40_r015_029','manual40_r015_030','manual40_r015_032','manual40_r015_034','manual40_r015_036','manual40_r015_037','manual40_r015_039','manual40_r015_040','manual40_r015_025_rw','manual40_r015_027_rw','manual40_r015_028_rw','manual40_r015_031_rw','manual40_r015_033_rw','manual40_r015_035_rw','manual40_r015_038_rw');
+  approvedIds.push(...range('sim_b1_',1,55,[10,52]));
+  approvedIds.push(...range('sim_b2_',1,70));
+  approvedIds.push(...range('sim_b3_',1,70,[39,44,45,46,47,48]));
+  approvedIds.push(...range('sim_b4_',1,60));
+  approvedIds.push(...range('sim_b5_',1,50));
+  approvedIds.push(...range('sim_b5_',55,70));
+  approvedIds.push(...range('sim_b6_',1,34,[18,21]));
+  approvedIds.push(...range('sim_adapt_08_',1,50));
+  global.PK_APPROVED_REGISTRY={version:'2026-07-15.20',approved_ids:approvedIds,approved_set:new Set(approvedIds),total:approvedIds.length,runs:{run_010:20,run_013:37,run_014:40,run_015:40,simulacro_b1_imported:53,simulacro_b1_held_for_current_fact_check:2,simulacro_b2_imported:70,simulacro_b3_imported:64,simulacro_b3_held_for_check:6,simulacro_b4_imported:60,simulacro_b5_imported:66,simulacro_b6_imported:32,simulacro_b6_held_for_current_fact_check:2,simulacro_adaptado_lote_08:50},status:'approved_and_accelerated_imports_for_branch_exam_integration',policy:'audit_pass_or_verified_import_auto_register; current_fact_or_incomplete_items_can_be_held'};
+})(typeof window!=='undefined'?window:globalThis);

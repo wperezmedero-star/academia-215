@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PK Migration Runner</title>
+<style>
+body{font-family:system-ui,-apple-system,sans-serif;background:#0b1220;color:#e5e7eb;margin:0;padding:24px}
+main{max-width:900px;margin:auto}.card{background:#111827;border:1px solid #334155;border-radius:16px;padding:20px;margin-bottom:16px}
+button{padding:12px 16px;border:0;border-radius:10px;font-weight:700;cursor:pointer;margin-right:8px;margin-bottom:8px}
+pre{white-space:pre-wrap;word-break:break-word;background:#020617;padding:16px;border-radius:12px;max-height:480px;overflow:auto}
+.ok{color:#86efac}.warn{color:#fde68a}.bad{color:#fca5a5}
+</style>
+</head>
+<body>
+<main>
+  <h1>PK Migration Runner</h1>
+  <div class="card">
+    <p>Entorno separado para migrar el banco viejo en lotes de 50. No modifica el modo examen ni autoaprueba preguntas.</p>
+    <button id="check">Verificar dependencias</button>
+    <button id="next">Ejecutar siguiente lote</button>
+    <button id="all">Ejecutar todos los lotes</button>
+  </div>
+  <div class="card"><strong>Estado</strong><pre id="status">Sin ejecutar.</pre></div>
+  <div class="card"><strong>Registro</strong><pre id="log"></pre></div>
+</main>
+
+<!-- Arquitectura base -->
+<script src="pk-schema.js"></script>
+<script src="pk-synonyms.js"></script>
+<script src="pk-traps.js"></script>
+
+<!-- Banco viejo completo: debe cargarse ANTES de pk-loader.js -->
+<script src="pk-data-underwriting.js"></script>
+<script src="pk-data-life.js"></script>
+<script src="pk-data-annuities.js"></script>
+<script src="pk-data-health.js"></script>
+<script src="pk-data-retirement.js"></script>
+<script src="pk-data-florida.js"></script>
+<script src="pk-data-medicare.js"></script>
+<script src="pk-data-ltc.js"></script>
+<script src="pk-data-general.js"></script>
+<script src="pk-data-nivel1.js"></script>
+<script src="pk-data-nivel2.js"></script>
+<script src="pk-data-nivel3.js"></script>
+<script src="pk-data-nivel4.js"></script>
+<script src="pk-data-nivel5.js"></script>
+<script src="pk-data-refuerzo.js"></script>
+<script src="pk-data-disposiciones.js"></script>
+<script src="pk-data-campo.js"></script>
+<script src="pk-data-killer-hmoppo.js"></script>
+<script src="pk-loader.js"></script>
+
+<!-- Fábrica de migración -->
+<script src="pk-migration-pipeline.js"></script>
+<script src="pk-strict-preauditor.js"></script>
+<script src="pk-migration-producer-adapter.js"></script>
+<script src="pk-migration-producer-bridge.js"></script>
+<script src="pk-migration-auto-cycle.js"></script>
+<script src="pk-migration-bootstrap.js"></script>
+<script src="pk-model-provider-openai.js"></script>
+
+<script>
+(function(){
+  'use strict';
+  const statusEl=document.getElementById('status');
+  const logEl=document.getElementById('log');
+  let runtime=null;
+
+  function log(msg,obj){
+    logEl.textContent += `[${new Date().toISOString()}] ${msg}${obj?'\n'+JSON.stringify(obj,null,2):''}\n\n`;
+  }
+  function renderState(){ statusEl.textContent=JSON.stringify(runtime?runtime.state:{},null,2); }
+
+  function requireBootstrap(){
+    if(!window.PK_MIGRATION_BOOTSTRAP) throw new Error('PK_MIGRATION_BOOTSTRAP no está cargado');
+    return window.PK_MIGRATION_BOOTSTRAP;
+  }
+
+  function getProvider(){
+    if(typeof window.PK_MODEL_PROVIDER !== 'function'){
+      throw new Error('Falta PK_MODEL_PROVIDER. Verifica pk-model-provider-openai.js y el endpoint /api/pk-produce.');
+    }
+    return window.PK_MODEL_PROVIDER;
+  }
+
+  function getRuntime(){
+    if(runtime) return runtime;
+    const concepts=window.PK_CONCEPTOS_FULL||[];
+    if(!concepts.length) throw new Error('PK_CONCEPTOS_FULL está vacío: el banco viejo no se cargó');
+    const bootstrap=requireBootstrap();
+    runtime=bootstrap.createRuntime({
+      transport:getProvider(),
+      provider_name:'openai_responses_serverless',
+      concepts,
+      onBatchComplete:function(r){ renderState(); log('Lote completado',r.batch); }
+    });
+    return runtime;
+  }
+
+  document.getElementById('check').onclick=function(){
+    try{
+      const report=requireBootstrap().assertReady();
+      const providerReady=typeof window.PK_MODEL_PROVIDER==='function';
+      const concepts=window.PK_CONCEPTOS_FULL||[];
+      const full={...report,provider_ready:providerReady,endpoint:'/api/pk-produce',legacy_concepts_loaded:concepts.length};
+      log('Dependencias verificadas',full);
+      statusEl.textContent=JSON.stringify(full,null,2);
+    }catch(err){ log('ERROR de dependencias',{message:err.message}); }
+  };
+
+  document.getElementById('next').onclick=async function(){
+    try{
+      const result=await getRuntime().runNextBatch();
+      renderState();
+      log('Lote finalizado',result.batch||{status:getRuntime().state.status});
+    }catch(err){ log('ERROR al ejecutar siguiente lote',{message:err.message,validation:err.validation||null}); }
+  };
+
+  document.getElementById('all').onclick=async function(){
+    try{
+      const result=await getRuntime().runAll();
+      renderState();
+      log('Recorrido finalizado',{status:result.state.status,totals:result.state.totals});
+    }catch(err){ log('ERROR al ejecutar recorrido',{message:err.message,validation:err.validation||null}); }
+  };
+})();
+</script>
+</body>
+</html>

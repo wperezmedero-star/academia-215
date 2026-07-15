@@ -1,0 +1,60 @@
+// PEARSON KILLER — Simulacro Bloque 5 · preguntas 1–50
+(function(global){
+  'use strict';
+  const rows = [
+    ['generales','¿Cuál de estas NO constituye una práctica injusta de liquidación de reclamaciones?',['Obligar al asegurado a demandar ofreciendo mucho menos de lo reclamado','Solicitar documentación razonable para verificar una reclamación dudosa','No aceptar ni negar una reclamación dentro de un tiempo razonable tras la prueba de pérdida','Tergiversar los hechos o los términos de la póliza para evitar pagar'],1],
+    ['retiro','A los 45 años, una persona retira $50,000 de un plan calificado de reparto de utilidades y los deposita en su cuenta personal. ¿Cuál es el resultado general?',['Ninguna consecuencia fiscal','Impuesto sobre la renta más penalidad del 10%','Solo penalidad del 10%','Solo impuesto sobre la renta'],1],
+    ['salud','Héctor enferma y no puede trabajar durante tres meses. ¿Qué póliza cubriría su pérdida de ingresos?',['Medigap','Gastos médicos mayores','Ingresos por incapacidad','Vida a término'],2],
+    ['provisiones','Según la provisión de tiempo de pago de reclamaciones, los beneficios periódicos por incapacidad deben pagarse con una frecuencia no menor a:',['Al terminar la incapacidad','Mensual','Anual','Semestral'],1],
+    ['vida','Dos hijos son beneficiarios coprimarios de una póliza AD&D y la madre es contingente. Uno de los hijos muere antes que el asegurado. Al fallecer luego el asegurado, ¿quién recibe generalmente el beneficio?',['El coprimario sobreviviente recibe el beneficio completo','El sobreviviente y la contingente reciben la mitad cada uno','Se divide en tres partes','La contingente recibe todo'],0],
+    ['vida','Una póliza paga el valor nominal si el asegurado vive hasta los 65 o al beneficiario si muere antes. ¿Qué producto es?',['Dotación a los 65','Término a los 65','Vida entera','Vida universal'],0],
+    ['vida','¿Qué producto puede cubrir a los hijos bajo la póliza de vida del padre o madre?',['Rider de hijos','Disposición de cesión','Beneficio del pagador','Cláusula de guerra'],0],
+    ['suscripcion','Si el productor descubre información relevante que no aparece en la solicitud, debe:',['Cancelar la solicitud','Ignorarla','Anotarla sin informar al cliente','Informarla a la aseguradora'],3],
+    ['salud','La provisión de derechos de examen del asegurador permite una autopsia:',['Nunca','Solo a solicitud del beneficiario','Cuando la ley no la prohíba y a costo de la aseguradora','Siempre y a costo de la familia'],2],
+    ['anualidades','El valor de rescate de una anualidad diferida durante la acumulación equivale generalmente a:',['El doble del valor acumulado','El valor acumulado menos cargos de rescate','El total de primas sin descuento','Cero'],1],
+    ['vida','El costo del seguro en vida universal se basa principalmente en:',['La comisión','El deducible','La diferencia entre beneficio de muerte y valor en efectivo','El valor total de la póliza'],2],
+    ['vida','Si el valor en efectivo de una vida universal se agota y no se pagan primas suficientes:',['La aseguradora paga','La póliza continúa gratis','El beneficio se duplica','La póliza puede caducar'],3],
+    ['salud','La coordinación con Medicare en un plan de grupo determina:',['Que Medicare siempre paga primero','Que nunca se coordinan','Que el asegurado elige','Qué plan paga primero según las reglas aplicables'],3],
+    ['generales','Un reasegurador asume riesgo de:',['El gobierno','Otra aseguradora cedente','Asegurados individuales directamente','Los agentes'],1],
+    ['vida','El índice de costo de una póliza sirve para:',['Determinar beneficiario','Calcular comisión','Fijar deducible','Comparar costos reales de pólizas similares'],3],
+    ['salud','En un plan autoasegurado del empleador:',['El empleado paga todo','Una aseguradora asume todo el riesgo','No hay cobertura','El empleador asume el riesgo financiero de reclamaciones'],3],
+    ['salud','La cobertura stop-loss de un empleador autoasegurado sirve para:',['Limitar su exposición máxima','Aumentar reclamaciones','Reducir salarios','Eliminar el plan'],0],
+    ['generales','Un Administrador Tercero (TPA) en un plan de salud:',['Asume el riesgo','Administra reclamaciones sin asumir el riesgo','Regula el mercado','Vende pólizas'],1],
+    ['vida','El beneficio por fallecimiento acelerado suele activarse por:',['Cumplir 65 años','Enfermedad terminal o condición calificada','Cambiar de trabajo','Mudarse de estado'],1],
+    ['vida','Al usar un beneficio acelerado, el beneficio de muerte restante:',['Se reduce por el adelanto y cargos aplicables','Se duplica','Desaparece siempre','Permanece igual'],0],
+    ['anualidades','El período de acumulación de una anualidad diferida termina cuando:',['Se anualiza y comienzan los pagos','Se paga la primera prima','Se firma la solicitud','Fallece el beneficiario'],0],
+    ['anualidades','Una vez anualizado un contrato bajo una opción de vida:',['Puede revertirse libremente','Generalmente la decisión es irreversible','Puede cambiarse el rentista libremente','Puede rescatarse sin cargo'],1],
+    ['retiro','La regla de cinco años de la Roth IRA exige generalmente que:',['Se aporte cinco años seguidos','Se cierre la cuenta','Se espere cinco años para aportar','Hayan pasado cinco años desde la primera contribución para calificar ganancias'],3],
+    ['retiro','Una conversión de IRA tradicional a Roth genera generalmente:',['Pérdida de fondos','Ninguna consecuencia fiscal','Impuesto sobre montos no gravados previamente','Penalidad del 50%'],2],
+    ['salud','Un plan POS combina:',['Solo HMO','Solo indemnización','Características HMO y PPO','Ninguna de las anteriores'],2],
+    ['salud','El gatekeeper en una HMO es:',['El administrador','El médico primario que coordina referencias','El agente','El empleador'],1],
+    ['salud','La capitación significa que el proveedor recibe:',['Pago por cada servicio','Monto fijo por paciente y período','Pago total del paciente','Ningún pago'],1],
+    ['medicare','Un Período de Inscripción Especial de Medicare se activa por:',['Mudarse dentro de la misma ciudad','Cualquier motivo','Circunstancias calificadas como perder cobertura de grupo','Cumplir 70 años'],2],
+    ['medicare','Cobertura acreditable para Parte D significa:',['Solo cobertura de grupo','Cobertura gratuita','Cualquier cobertura','Cobertura de medicamentos al menos tan buena como Parte D'],3],
+    ['florida','El profesional que atiende al cliente y realiza la venta de seguro es el:',['Productor','Actuario','Ajustador','Suscriptor'],0],
+    ['florida','Un ajustador se ocupa de:',['Vender pólizas','Otorgar licencias','Calcular reservas','Investigar y liquidar reclamaciones'],3],
+    ['generales','El actuario de una aseguradora:',['Otorga licencias','Ajusta reclamaciones','Vende pólizas','Calcula tarifas y reservas mediante matemáticas y estadísticas'],3],
+    ['vida','En vida entera de pago limitado, las primas:',['No se pagan','Se pagan de por vida','Se pagan durante un período y la cobertura continúa de por vida','Aumentan cada año'],2],
+    ['vida','Comparada con vida entera ordinaria, una vida entera de 20 pagos suele tener:',['Cobertura temporal','Prima más baja','Menor valor en efectivo','Prima más alta y acumulación más rápida'],3],
+    ['anualidades','Un período cierto puro paga:',['Un pago único','Durante un número determinado de años','De por vida','Nada'],1],
+    ['suscripcion','El límite de retención de una aseguradora es:',['La comisión','El deducible','El máximo de riesgo que conserva sin reasegurar','El máximo que paga por póliza'],2],
+    ['vida','El valor de conversión de una póliza a término se relaciona con:',['La comisión','El deducible','El precio de venta','El derecho de convertir y la base de cálculo de la nueva prima'],3],
+    ['salud','Renovabilidad no cancelable significa que la aseguradora:',['Puede subir la prima libremente','Puede cancelar cuando quiera','Renueva solo si quiere','No puede cancelar ni cambiar la prima mientras se pague, hasta la edad indicada'],3],
+    ['salud','Una póliza accident only cubre:',['Solo enfermedades','Solo pérdidas por accidentes','Cirugía estética','Enfermedades y accidentes'],1],
+    ['generales','El propósito principal de las reservas de pólizas es:',['Pagar comisiones','Garantizar capacidad de pagar beneficios futuros','Financiar publicidad','Reducir impuestos'],1],
+    ['vida','La tabla CSO se usa principalmente para:',['Determinar comisiones','Elegir beneficiarios','Establecer mortalidad mínima para reservas y valores garantizados','Fijar deducibles'],2],
+    ['vida','La tabla de valores garantizados muestra:',['Dividendos futuros','Comisiones','Valor en efectivo mínimo garantizado por año','Beneficio accidental'],2],
+    ['vida','Una ilustración de póliza presenta:',['Solo valores garantizados','Solo valores proyectados','Valores garantizados y no garantizados','Solo la prima inicial'],2],
+    ['vida','Presentar valores no garantizados como seguros constituye:',['Reaseguro','Tergiversación','Subrogación','Cesión'],1],
+    ['suscripcion','La firma del cliente en una ilustración documenta que:',['Recibió y comprendió los valores mostrados','Aceptó una reclamación','Renunció al free look','Autorizó al agente a cambiar la póliza'],0],
+    ['anualidades','Un bono inicial en una anualidad suele:',['Ser dinero gratis sin condiciones','Eliminar cargos','Compensarse con rescates más largos o límites menores','Convertirla en valor variable'],2],
+    ['anualidades','El cap de una anualidad indexada representa:',['La comisión','El mínimo garantizado','El máximo interés acreditable en un período','El cargo por mortalidad'],2],
+    ['anualidades','Con participación de 70% y aumento del índice de 10%, antes de cap o spread se acredita:',['7%','10%','3%','0%'],0],
+    ['retiro','Una RMD es:',['Un aporte obligatorio','Una distribución mínima requerida de ciertas cuentas de retiro','Un préstamo libre de impuestos','Una transferencia 1035'],1],
+    ['retiro','La penalidad por no tomar una RMD se aplica sobre:',['Todo el saldo de la cuenta','La comisión del agente','La porción que debió retirarse y no se retiró','Las ganancias del mercado únicamente'],2]
+  ];
+  global.PK_SIMULACRO_B5_001_050 = rows.map(function(r,i){
+    const n=i+1;
+    return {id:'sim_b5_'+String(n).padStart(3,'0'),area:r[0],concepto:'Simulacro Bloque 5 · Pregunta '+n,source:'simulacro_bloque5',source_question:n,category:'practice_imported',human_review_status:'approved',variantes:[{nivel:3,tipo_trampa:'SIMULACRO_IMPORTADO',q:r[1],o:r[2],a:r[3],e:'Respuesta correcta: '+r[2][r[3]]+'.'}]};
+  });
+})(typeof window!=='undefined'?window:globalThis);
