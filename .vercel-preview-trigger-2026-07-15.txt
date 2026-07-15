@@ -1,0 +1,3 @@
+Preview deployment trigger for branch agent/fase-1-arquitectura-adaptativa.
+Timestamp: 2026-07-15T16:29:07Z
+Purpose: trigger branch preview without touching main.
