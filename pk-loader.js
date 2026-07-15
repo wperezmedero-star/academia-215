@@ -170,8 +170,59 @@
     totalConceptos: conceptosUnificados.length,
     totalVariantes: totalVariantes,
     killerPilot: window.PK_KILLER_PILOT_STATUS,
-    version: "1.2"
+    version: "1.3"
   };
+
+  // Parche de seguridad de ejecución para pearson-killer.html.
+  // Se instala al terminar de cargar la página, cuando las funciones del motor
+  // ya existen. Evita tocar el archivo HTML grande con un reemplazo completo.
+  window.addEventListener('DOMContentLoaded', function() {
+    // 1) Si el banco seleccionado no produjo preguntas, no intentar renderizar undefined.
+    if (typeof window.startMode === 'function') {
+      const startModeOriginal = window.startMode;
+      window.startMode = function(m, max) {
+        if (m === 'killer_pilot' && (!window.PK_KILLER_PILOT_STATUS || !window.PK_KILLER_PILOT_STATUS.valido)) {
+          alert('El Killer Pilot no está listo: deben cargarse exactamente 15 preguntas válidas.');
+          return;
+        }
+        startModeOriginal(m, max);
+        if (!Array.isArray(window.pool) || window.pool.length === 0) {
+          const quiz = document.getElementById('quiz');
+          const home = document.getElementById('home');
+          if (quiz) quiz.classList.add('hidden');
+          if (home) home.classList.remove('hidden');
+          alert('No se encontraron preguntas para este modo. Revisa que el banco correspondiente haya cargado correctamente.');
+        }
+      };
+    }
+
+    // 2) Sustituir la etiqueta aleatoria "Variante 1–99" por una identificación real del piloto.
+    if (typeof window.renderQ === 'function') {
+      const renderQOriginal = window.renderQ;
+      window.renderQ = function() {
+        renderQOriginal();
+        const label = document.getElementById('q-variant');
+        if (!label) return;
+        if (window.mode === 'killer_pilot' && Array.isArray(window.pool) && window.pool.length > 0) {
+          label.textContent = 'Killer Pilot · Pregunta ' + (window.idx + 1) + ' de ' + window.pool.length;
+        }
+      };
+    }
+
+    // 3) Normalizar la explicación para que el resumen de errores nunca falle
+    // cuando una pregunta nueva usa "correcto" en vez de la propiedad antigua "e".
+    if (typeof window.showResult === 'function') {
+      const showResultOriginal = window.showResult;
+      window.showResult = function() {
+        if (Array.isArray(window.mistakes)) {
+          window.mistakes.forEach(function(q) {
+            if (!q.e) q.e = q.correcto || '';
+          });
+        }
+        showResultOriginal();
+      };
+    }
+  });
 
   // Log silencioso para debugging (no interfiere con la UI)
   if (typeof console !== 'undefined' && console.log) {
