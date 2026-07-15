@@ -25,7 +25,6 @@ pre{white-space:pre-wrap;word-break:break-word;background:#020617;padding:16px;b
   <div class="card"><strong>Registro</strong><pre id="log"></pre></div>
 </main>
 
-<!-- Banco y arquitectura base -->
 <script src="pk-schema.js"></script>
 <script src="pk-migration-pipeline.js"></script>
 <script src="pk-strict-preauditor.js"></script>
@@ -40,21 +39,18 @@ pre{white-space:pre-wrap;word-break:break-word;background:#020617;padding:16px;b
   'use strict';
   const statusEl=document.getElementById('status');
   const logEl=document.getElementById('log');
-  let state=null;
+  let runtime=null;
 
   function log(msg,obj){
     logEl.textContent += `[${new Date().toISOString()}] ${msg}${obj?'\n'+JSON.stringify(obj,null,2):''}\n\n`;
   }
-  function renderState(){ statusEl.textContent=JSON.stringify(state||{},null,2); }
+  function renderState(){ statusEl.textContent=JSON.stringify(runtime?runtime.state:{},null,2); }
 
   function requireBootstrap(){
     if(!window.PK_MIGRATION_BOOTSTRAP) throw new Error('PK_MIGRATION_BOOTSTRAP no está cargado');
     return window.PK_MIGRATION_BOOTSTRAP;
   }
 
-  // Punto de conexión del proveedor real.
-  // Debe existir antes de ejecutar lotes:
-  // window.PK_MODEL_PROVIDER = async function(payload){ return [50 candidatas...]; }
   function getProvider(){
     if(typeof window.PK_MODEL_PROVIDER !== 'function'){
       throw new Error('Falta window.PK_MODEL_PROVIDER. Conecta aquí el backend/API del modelo productor.');
@@ -62,10 +58,25 @@ pre{white-space:pre-wrap;word-break:break-word;background:#020617;padding:16px;b
     return window.PK_MODEL_PROVIDER;
   }
 
+  function getRuntime(){
+    if(runtime) return runtime;
+    const bootstrap=requireBootstrap();
+    runtime=bootstrap.createRuntime({
+      transport:getProvider(),
+      provider_name:'pk_model_provider',
+      concepts:window.PK_CONCEPTOS_FULL||[],
+      onBatchComplete:function(result){
+        renderState();
+        log('Lote completado',result.batch);
+      }
+    });
+    renderState();
+    return runtime;
+  }
+
   document.getElementById('check').onclick=function(){
     try{
-      const bootstrap=requireBootstrap();
-      const report=bootstrap.checkDependencies ? bootstrap.checkDependencies() : {ok:true,note:'bootstrap cargado'};
+      const report=requireBootstrap().assertReady();
       log('Dependencias verificadas',report);
       statusEl.textContent=JSON.stringify(report,null,2);
     }catch(err){ log('ERROR de dependencias',{message:err.message}); }
@@ -73,25 +84,17 @@ pre{white-space:pre-wrap;word-break:break-word;background:#020617;padding:16px;b
 
   document.getElementById('next').onclick=async function(){
     try{
-      const bootstrap=requireBootstrap();
-      const provider=getProvider();
-      const result=await bootstrap.runNext({provider,state,concepts:window.PK_CONCEPTOS_FULL||[]});
-      state=result.state;
+      const result=await getRuntime().runNextBatch();
       renderState();
-      log('Lote completado',result.batch||{status:state.status});
+      log('Siguiente lote finalizado',result.batch||{status:runtime.state.status});
     }catch(err){ log('ERROR al ejecutar siguiente lote',{message:err.message,validation:err.validation||null}); }
   };
 
   document.getElementById('all').onclick=async function(){
     try{
-      const bootstrap=requireBootstrap();
-      const provider=getProvider();
-      const result=await bootstrap.runAll({provider,state,concepts:window.PK_CONCEPTOS_FULL||[],onBatchComplete:function(r){
-        state=r.state; renderState(); log('Lote completado',r.batch);
-      }});
-      state=result.state;
+      const result=await getRuntime().runAll();
       renderState();
-      log('Recorrido finalizado',{status:state.status,totals:state.totals});
+      log('Recorrido finalizado',{status:runtime.state.status,totals:runtime.state.totals,lot_count:result.results.length});
     }catch(err){ log('ERROR al ejecutar recorrido',{message:err.message,validation:err.validation||null}); }
   };
 })();
