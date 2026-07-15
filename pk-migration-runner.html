@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PK Migration Runner</title>
+<style>
+body{font-family:system-ui,-apple-system,sans-serif;background:#0b1220;color:#e5e7eb;margin:0;padding:24px}
+main{max-width:900px;margin:auto}.card{background:#111827;border:1px solid #334155;border-radius:16px;padding:20px;margin-bottom:16px}
+button{padding:12px 16px;border:0;border-radius:10px;font-weight:700;cursor:pointer;margin-right:8px;margin-bottom:8px}
+pre{white-space:pre-wrap;word-break:break-word;background:#020617;padding:16px;border-radius:12px;max-height:480px;overflow:auto}
+.ok{color:#86efac}.warn{color:#fde68a}.bad{color:#fca5a5}
+</style>
+</head>
+<body>
+<main>
+  <h1>PK Migration Runner</h1>
+  <div class="card">
+    <p>Entorno separado para migrar el banco viejo en lotes de 50. No modifica el modo examen ni autoaprueba preguntas.</p>
+    <button id="check">Verificar dependencias</button>
+    <button id="next">Ejecutar siguiente lote</button>
+    <button id="all">Ejecutar todos los lotes</button>
+  </div>
+  <div class="card"><strong>Estado</strong><pre id="status">Sin ejecutar.</pre></div>
+  <div class="card"><strong>Registro</strong><pre id="log"></pre></div>
+</main>
+
+<!-- Banco y arquitectura base -->
+<script src="pk-schema.js"></script>
+<script src="pk-migration-pipeline.js"></script>
+<script src="pk-strict-preauditor.js"></script>
+<script src="pk-migration-producer-adapter.js"></script>
+<script src="pk-migration-producer-bridge.js"></script>
+<script src="pk-migration-auto-cycle.js"></script>
+<script src="pk-migration-bootstrap.js"></script>
+<script src="pk-loader.js"></script>
+
+<script>
+(function(){
+  'use strict';
+  const statusEl=document.getElementById('status');
+  const logEl=document.getElementById('log');
+  let state=null;
+
+  function log(msg,obj){
+    logEl.textContent += `[${new Date().toISOString()}] ${msg}${obj?'\n'+JSON.stringify(obj,null,2):''}\n\n`;
+  }
+  function renderState(){ statusEl.textContent=JSON.stringify(state||{},null,2); }
+
+  function requireBootstrap(){
+    if(!window.PK_MIGRATION_BOOTSTRAP) throw new Error('PK_MIGRATION_BOOTSTRAP no está cargado');
+    return window.PK_MIGRATION_BOOTSTRAP;
+  }
+
+  // Punto de conexión del proveedor real.
+  // Debe existir antes de ejecutar lotes:
+  // window.PK_MODEL_PROVIDER = async function(payload){ return [50 candidatas...]; }
+  function getProvider(){
+    if(typeof window.PK_MODEL_PROVIDER !== 'function'){
+      throw new Error('Falta window.PK_MODEL_PROVIDER. Conecta aquí el backend/API del modelo productor.');
+    }
+    return window.PK_MODEL_PROVIDER;
+  }
+
+  document.getElementById('check').onclick=function(){
+    try{
+      const bootstrap=requireBootstrap();
+      const report=bootstrap.checkDependencies ? bootstrap.checkDependencies() : {ok:true,note:'bootstrap cargado'};
+      log('Dependencias verificadas',report);
+      statusEl.textContent=JSON.stringify(report,null,2);
+    }catch(err){ log('ERROR de dependencias',{message:err.message}); }
+  };
+
+  document.getElementById('next').onclick=async function(){
+    try{
+      const bootstrap=requireBootstrap();
+      const provider=getProvider();
+      const result=await bootstrap.runNext({provider,state,concepts:window.PK_CONCEPTOS_FULL||[]});
+      state=result.state;
+      renderState();
+      log('Lote completado',result.batch||{status:state.status});
+    }catch(err){ log('ERROR al ejecutar siguiente lote',{message:err.message,validation:err.validation||null}); }
+  };
+
+  document.getElementById('all').onclick=async function(){
+    try{
+      const bootstrap=requireBootstrap();
+      const provider=getProvider();
+      const result=await bootstrap.runAll({provider,state,concepts:window.PK_CONCEPTOS_FULL||[],onBatchComplete:function(r){
+        state=r.state; renderState(); log('Lote completado',r.batch);
+      }});
+      state=result.state;
+      renderState();
+      log('Recorrido finalizado',{status:state.status,totals:state.totals});
+    }catch(err){ log('ERROR al ejecutar recorrido',{message:err.message,validation:err.validation||null}); }
+  };
+})();
+</script>
+</body>
+</html>
