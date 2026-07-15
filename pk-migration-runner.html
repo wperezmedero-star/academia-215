@@ -25,15 +25,39 @@ pre{white-space:pre-wrap;word-break:break-word;background:#020617;padding:16px;b
   <div class="card"><strong>Registro</strong><pre id="log"></pre></div>
 </main>
 
-<!-- Banco y arquitectura base -->
+<!-- Arquitectura base -->
 <script src="pk-schema.js"></script>
+<script src="pk-synonyms.js"></script>
+<script src="pk-traps.js"></script>
+
+<!-- Banco viejo completo: debe cargarse ANTES de pk-loader.js -->
+<script src="pk-data-underwriting.js"></script>
+<script src="pk-data-life.js"></script>
+<script src="pk-data-annuities.js"></script>
+<script src="pk-data-health.js"></script>
+<script src="pk-data-retirement.js"></script>
+<script src="pk-data-florida.js"></script>
+<script src="pk-data-medicare.js"></script>
+<script src="pk-data-ltc.js"></script>
+<script src="pk-data-general.js"></script>
+<script src="pk-data-nivel1.js"></script>
+<script src="pk-data-nivel2.js"></script>
+<script src="pk-data-nivel3.js"></script>
+<script src="pk-data-nivel4.js"></script>
+<script src="pk-data-nivel5.js"></script>
+<script src="pk-data-refuerzo.js"></script>
+<script src="pk-data-disposiciones.js"></script>
+<script src="pk-data-campo.js"></script>
+<script src="pk-data-killer-hmoppo.js"></script>
+<script src="pk-loader.js"></script>
+
+<!-- Fábrica de migración -->
 <script src="pk-migration-pipeline.js"></script>
 <script src="pk-strict-preauditor.js"></script>
 <script src="pk-migration-producer-adapter.js"></script>
 <script src="pk-migration-producer-bridge.js"></script>
 <script src="pk-migration-auto-cycle.js"></script>
 <script src="pk-migration-bootstrap.js"></script>
-<script src="pk-loader.js"></script>
 <script src="pk-model-provider-openai.js"></script>
 
 <script>
@@ -62,11 +86,13 @@ pre{white-space:pre-wrap;word-break:break-word;background:#020617;padding:16px;b
 
   function getRuntime(){
     if(runtime) return runtime;
+    const concepts=window.PK_CONCEPTOS_FULL||[];
+    if(!concepts.length) throw new Error('PK_CONCEPTOS_FULL está vacío: el banco viejo no se cargó');
     const bootstrap=requireBootstrap();
     runtime=bootstrap.createRuntime({
       transport:getProvider(),
       provider_name:'openai_responses_serverless',
-      concepts:window.PK_CONCEPTOS_FULL||[],
+      concepts,
       onBatchComplete:function(r){ renderState(); log('Lote completado',r.batch); }
     });
     return runtime;
@@ -76,7 +102,8 @@ pre{white-space:pre-wrap;word-break:break-word;background:#020617;padding:16px;b
     try{
       const report=requireBootstrap().assertReady();
       const providerReady=typeof window.PK_MODEL_PROVIDER==='function';
-      const full={...report,provider_ready:providerReady,endpoint:'/api/pk-produce'};
+      const concepts=window.PK_CONCEPTOS_FULL||[];
+      const full={...report,provider_ready:providerReady,endpoint:'/api/pk-produce',legacy_concepts_loaded:concepts.length};
       log('Dependencias verificadas',full);
       statusEl.textContent=JSON.stringify(full,null,2);
     }catch(err){ log('ERROR de dependencias',{message:err.message}); }
