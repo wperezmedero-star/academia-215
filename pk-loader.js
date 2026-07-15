@@ -1,20 +1,13 @@
 // ============================================================
 // PEARSON KILLER — pk-loader.js
-// Cargador central del banco + integración automática de preguntas aprobadas.
-// v2.1 — 15/07/2026
+// Cargador central del banco + integración automática por auditoría.
+// v3.0 — 15/07/2026
 // ============================================================
 
+// El loader ya no enumera cada Run. El manifiesto único carga las fuentes
+// registradas y el registro de aprobadas decide qué preguntas entran.
 if (typeof document !== 'undefined' && document.readyState === 'loading') {
-  document.write('<script src="pk-migration-manual20-run-010-candidates-01.js"><\/script>');
-  document.write('<script src="pk-migration-manual20-run-010-candidates-02.js"><\/script>');
-  document.write('<script src="pk-migration-manual40-run-013-candidates-01.js"><\/script>');
-  document.write('<script src="pk-migration-manual40-run-013-candidates-02.js"><\/script>');
-  document.write('<script src="pk-migration-manual40-run-013-rewrites-01.js"><\/script>');
-  document.write('<script src="pk-migration-manual40-run-013-rewrites-02.js"><\/script>');
-  document.write('<script src="pk-migration-manual40-run-014-candidates-01.js"><\/script>');
-  document.write('<script src="pk-migration-manual40-run-014-rewrites-01.js"><\/script>');
-  document.write('<script src="pk-migration-manual40-run-014-candidates-02.js"><\/script>');
-  document.write('<script src="pk-migration-manual40-run-014-rewrites-02.js"><\/script>');
+  document.write('<script src="pk-approved-sources.js"><\/script>');
   document.write('<script src="pk-approved-registry.js"><\/script>');
 }
 
@@ -47,7 +40,7 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
   const modulosFaltantes = [];
 
   MODULOS.forEach(function(mod) {
-    if (mod.data && Array.isArray(mod.data)) {
+    if (Array.isArray(mod.data)) {
       conceptosUnificados = conceptosUnificados.concat(mod.data);
       modulosOK.push(mod.nombre + ' (' + mod.data.length + ' conceptos)');
     } else {
@@ -60,26 +53,27 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
     ? approvedRegistry.approved_set
     : new Set(approvedRegistry.approved_ids || []);
 
-  const migrationSources = [
-    { name: 'run_010_01', data: window.PK_MIGRATION_MANUAL20_RUN_010_01 },
-    { name: 'run_010_02', data: window.PK_MIGRATION_MANUAL20_RUN_010_02 },
-    { name: 'run_013_01', data: window.PK_MIGRATION_MANUAL40_RUN_013_01 },
-    { name: 'run_013_02', data: window.PK_MIGRATION_MANUAL40_RUN_013_02 },
-    { name: 'run_013_rewrites_01', data: window.PK_MIGRATION_MANUAL40_RUN_013_REWRITES_01 },
-    { name: 'run_013_rewrites_02', data: window.PK_MIGRATION_MANUAL40_RUN_013_REWRITES_02 },
-    { name: 'run_014_01', data: window.PK_MIGRATION_MANUAL40_RUN_014_01 },
-    { name: 'run_014_rewrites_01', data: window.PK_MIGRATION_MANUAL40_RUN_014_REWRITES_01 },
-    { name: 'run_014_02', data: window.PK_MIGRATION_MANUAL40_RUN_014_02 },
-    { name: 'run_014_rewrites_02', data: window.PK_MIGRATION_MANUAL40_RUN_014_REWRITES_02 }
-  ].filter(function(src){ return Array.isArray(src.data); });
+  const sourceIndex = window.PK_APPROVED_SOURCE_INDEX || { sources: [] };
+  const migrationSources = (sourceIndex.sources || []).map(function(source) {
+    return {
+      name: source.name,
+      path: source.path,
+      global_name: source.global_name,
+      data: window[source.global_name]
+    };
+  }).filter(function(source) {
+    return Array.isArray(source.data);
+  });
 
   const approvedById = new Map();
   migrationSources.forEach(function(source) {
     source.data.forEach(function(item) {
       if (!item || !approvedSet.has(item.id)) return;
+
       const variants = (item.variantes || item.variants || []).filter(function(v) {
         return v && typeof v.q === 'string' && v.q.trim() &&
           Array.isArray(v.o) && v.o.length === 4 &&
+          v.o.every(function(o){ return typeof o === 'string' && o.trim(); }) &&
           Number.isInteger(v.a) && v.a >= 0 && v.a <= 3;
       }).map(function(v) {
         const copy = Object.assign({}, v);
@@ -88,6 +82,7 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
         if (!copy.e) copy.e = copy.correcto || '';
         return copy;
       });
+
       if (!variants.length) return;
       approvedById.set(item.id, {
         id: item.id,
@@ -107,6 +102,7 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
   const killerPilot = Array.isArray(window.PK_KILLER_PILOT) ? window.PK_KILLER_PILOT : [];
   const erroresKillerPilot = [];
   let totalPreguntasKillerPilot = 0;
+
   killerPilot.forEach(function(concepto, conceptoIdx) {
     const conceptoId = concepto.id || ('concepto_' + (conceptoIdx + 1));
     const variantes = concepto.variantes || concepto.variants || [];
@@ -117,16 +113,15 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
     variantes.forEach(function(pregunta, varianteIdx) {
       totalPreguntasKillerPilot++;
       const etiqueta = conceptoId + '#' + (varianteIdx + 1);
-      if (!pregunta || typeof pregunta.q !== 'string' || pregunta.q.trim().length === 0) erroresKillerPilot.push(etiqueta + ': falta texto de pregunta');
-      if (!Array.isArray(pregunta.o) || pregunta.o.length !== 4 || pregunta.o.some(function(opcion) { return typeof opcion !== 'string' || opcion.trim().length === 0; })) erroresKillerPilot.push(etiqueta + ': debe tener exactamente 4 opciones no vacías');
-      if (!Number.isInteger(pregunta.a) || pregunta.a < 0 || pregunta.a > 3) erroresKillerPilot.push(etiqueta + ': índice de respuesta correcta inválido');
+      if (!pregunta || typeof pregunta.q !== 'string' || !pregunta.q.trim()) erroresKillerPilot.push(etiqueta + ': falta texto');
+      if (!Array.isArray(pregunta.o) || pregunta.o.length !== 4) erroresKillerPilot.push(etiqueta + ': opciones inválidas');
+      if (!Number.isInteger(pregunta.a) || pregunta.a < 0 || pregunta.a > 3) erroresKillerPilot.push(etiqueta + ': respuesta inválida');
       const explicacion = pregunta.e || pregunta.correcto || '';
-      if (typeof explicacion !== 'string' || explicacion.trim().length === 0) erroresKillerPilot.push(etiqueta + ': falta explicación de la respuesta correcta');
+      if (!explicacion) erroresKillerPilot.push(etiqueta + ': falta explicación');
       else if (!pregunta.e) pregunta.e = explicacion;
     });
   });
 
-  const killerPilotOK = totalPreguntasKillerPilot === 15 && erroresKillerPilot.length === 0;
   window.PK_KILLER_PILOT_STATUS = {
     cargado: killerPilot.length > 0,
     totalConceptos: killerPilot.length,
@@ -134,12 +129,25 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
     esperado: 15,
     errores: erroresKillerPilot,
     totalErrores: erroresKillerPilot.length,
-    valido: killerPilotOK,
+    valido: totalPreguntasKillerPilot === 15 && erroresKillerPilot.length === 0,
     aisladoDelBancoPrincipal: true
   };
 
   const AREAS_UNIFICADAS = {
-    suscripcion: 'Procedimientos de Suscripción en Campo', vida: 'Tipos de Seguros de Vida', anualidades: 'Anualidades', salud: 'Tipos de Pólizas de Salud', medicare: 'Medicare y Medicaid', ltc: 'Seguro de Cuidado a Largo Plazo', cobra: 'COBRA, ERISA e HIPAA', cuentas: 'HSA, HRA y FSA', ss: 'Seguro Social', retiro: 'Planes de Retiro', florida: 'Leyes y Regulaciones de Florida', provisiones: 'Provisiones, Cláusulas y Anexos', generales: 'Conceptos Generales de Seguros'
+    suscripcion: 'Procedimientos de Suscripción en Campo',
+    vida: 'Tipos de Seguros de Vida',
+    anualidades: 'Anualidades',
+    salud: 'Tipos de Pólizas de Salud',
+    medicare: 'Medicare y Medicaid',
+    medicaid: 'Medicare y Medicaid',
+    ltc: 'Seguro de Cuidado a Largo Plazo',
+    cobra: 'COBRA, ERISA e HIPAA',
+    cuentas: 'HSA, HRA y FSA',
+    ss: 'Seguro Social',
+    retiro: 'Planes de Retiro',
+    florida: 'Leyes y Regulaciones de Florida',
+    provisiones: 'Provisiones, Cláusulas y Anexos',
+    generales: 'Conceptos Generales de Seguros'
   };
 
   window.PK_CONCEPTOS_FULL = conceptosUnificados;
@@ -149,8 +157,9 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
   window.PK_APPROVED_EXAM_CONCEPTS = approvedMigrationConcepts;
 
   let totalVariantes = 0;
-  conceptosUnificados.forEach(function(c) { if (c.variantes) totalVariantes += c.variantes.length; });
-  const approvedQuestionCount = approvedMigrationConcepts.reduce(function(n,c){return n+(c.variantes||[]).length;},0);
+  conceptosUnificados.forEach(function(c) {
+    totalVariantes += Array.isArray(c.variantes) ? c.variantes.length : 0;
+  });
 
   window.PK_LOADER_STATUS = {
     modulosOK: modulosOK,
@@ -158,100 +167,59 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
     totalConceptos: conceptosUnificados.length,
     totalVariantes: totalVariantes,
     approvedMigrationConcepts: approvedMigrationConcepts.length,
-    approvedMigrationQuestions: approvedQuestionCount,
+    approvedMigrationQuestions: approvedMigrationConcepts.reduce(function(n,c){ return n + (c.variantes || []).length; },0),
     approvedRegistryTotal: approvedRegistry.total || (approvedRegistry.approved_ids || []).length,
     approvedRegistryVersion: approvedRegistry.version || null,
+    sourceManifestVersion: sourceIndex.version || null,
+    registeredSources: (sourceIndex.sources || []).length,
+    loadedSources: migrationSources.length,
+    missingSources: (sourceIndex.sources || []).filter(function(s){ return !Array.isArray(window[s.global_name]); }).map(function(s){ return s.name; }),
     autoIntegrationPolicy: approvedRegistry.policy || null,
     killerPilot: window.PK_KILLER_PILOT_STATUS,
-    version: '2.1'
+    version: '3.0'
   };
-
-  function shuffleLocal(a){
-    for(let i=a.length-1;i>0;i--){
-      const j=Math.floor(Math.random()*(i+1));
-      const t=a[i];a[i]=a[j];a[j]=t;
-    }
-    return a;
-  }
-
-  function buildApprovedPool(max){
-    const questions=[];
-    shuffleLocal(approvedMigrationConcepts.slice()).forEach(function(c){
-      shuffleLocal((c.variantes || c.variants || []).slice()).forEach(function(v){
-        questions.push(Object.assign({}, v, {
-          concept: c.concepto || c.concept || c.id,
-          area: c.area,
-          areaLabel: AREAS_UNIFICADAS[c.area] || c.area
-        }));
-      });
-    });
-    shuffleLocal(questions);
-    return questions.slice(0, Math.min(max || questions.length, questions.length));
-  }
 
   window.addEventListener('DOMContentLoaded', function() {
     window.PK_RUNTIME_MODE = '';
     window.PK_LAST_POOL_SIZE = null;
 
-    const home = document.getElementById('home');
-    if (home && approvedQuestionCount > 0 && !document.getElementById('pk-approved-bank-card')) {
-      const card = document.createElement('div');
-      card.id = 'pk-approved-bank-card';
-      card.className = 'card';
-      card.style.borderColor = '#f5cf6b';
-      card.style.background = 'linear-gradient(180deg,rgba(245,207,107,.12),rgba(12,28,56,.95))';
-      card.innerHTML = '<h2 style="color:#ffe9a8">🏆 Banco Nueva Generación</h2>' +
-        '<p class="muted" style="margin-bottom:12px"><b style="color:#34d399;font-size:1.05rem">' + approvedQuestionCount +
-        ' preguntas aprobadas</b><br>Preguntas auditadas e integradas para entrenamiento Pearson.</p>' +
-        '<button class="btn btn-gold" onclick="startMode(\'approved\',' + approvedQuestionCount + ')">Entrenar las ' + approvedQuestionCount + ' aprobadas</button>';
-      const realCard = Array.from(home.querySelectorAll('.card')).find(function(el){
-        return el.textContent && el.textContent.indexOf('Modo Examen Real') !== -1;
-      });
-      if (realCard) home.insertBefore(card, realCard);
-      else home.appendChild(card);
-    }
-
     if (typeof window.buildPool === 'function') {
       const buildPoolOriginal = window.buildPool;
       window.buildPool = function(m, max) {
-        const resultado = m === 'approved' ? buildApprovedPool(max) : buildPoolOriginal(m, max);
+        const resultado = buildPoolOriginal(m, max);
         window.PK_LAST_POOL_SIZE = Array.isArray(resultado) ? resultado.length : 0;
         return resultado;
       };
     }
+
     if (typeof window.startMode === 'function') {
       const startModeOriginal = window.startMode;
       window.startMode = function(m, max) {
-        if (m === 'killer_pilot' && (!window.PK_KILLER_PILOT_STATUS || !window.PK_KILLER_PILOT_STATUS.valido)) {
+        if (m === 'killer_pilot' && !window.PK_KILLER_PILOT_STATUS.valido) {
           alert('El Killer Pilot no está listo: deben cargarse exactamente 15 preguntas válidas.');
-          return;
-        }
-        if (m === 'approved' && approvedQuestionCount === 0) {
-          alert('Todavía no hay preguntas Nueva Generación aprobadas disponibles.');
           return;
         }
         window.PK_RUNTIME_MODE = m;
         startModeOriginal(m, max);
       };
     }
+
     if (typeof window.renderQ === 'function') {
       const renderQOriginal = window.renderQ;
       window.renderQ = function() {
         if (window.PK_LAST_POOL_SIZE === 0) {
           const quiz = document.getElementById('quiz');
-          const homeEl = document.getElementById('home');
+          const home = document.getElementById('home');
           if (quiz) quiz.classList.add('hidden');
-          if (homeEl) homeEl.classList.remove('hidden');
-          alert('No se encontraron preguntas para este modo. Revisa que el banco correspondiente haya cargado correctamente.');
+          if (home) home.classList.remove('hidden');
+          alert('No se encontraron preguntas para este modo. Revisa el estado del banco.');
           return;
         }
         renderQOriginal();
-        const label = document.getElementById('q-variant');
-        const count = document.getElementById('q-count');
-        if (window.PK_RUNTIME_MODE === 'killer_pilot' && label && count) {
-          label.textContent = 'Killer Pilot · Pregunta ' + count.textContent;
-        } else if (window.PK_RUNTIME_MODE === 'approved' && label && count) {
-          label.textContent = 'Nueva Generación aprobada · Pregunta ' + count.textContent;
+        if (window.PK_RUNTIME_MODE === 'killer_pilot') {
+          const label = document.getElementById('q-variant');
+          const count = document.getElementById('q-count');
+          if (label && count) label.textContent = 'Killer Pilot · Pregunta ' + count.textContent;
         }
       };
     }
