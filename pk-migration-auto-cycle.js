@@ -1,6 +1,6 @@
 // ============================================================
 // PEARSON KILLER — pk-migration-auto-cycle.js
-// Ciclo automático por lotes de 50: seleccionar -> producir -> filtrar -> avanzar.
+// Ciclo automático por lotes de 20: seleccionar -> producir -> filtrar -> avanzar.
 // Requiere un producerAdapter externo para generar las reescrituras.
 // NO autoaprueba preguntas y NO toca main.
 // ============================================================
@@ -8,8 +8,8 @@
 (function(global){
   'use strict';
 
-  const VERSION = '1.0.0';
-  const DEFAULT_BATCH_SIZE = 50;
+  const VERSION = '1.1.0';
+  const DEFAULT_BATCH_SIZE = 20;
 
   function requireDependency(name, value){
     if(!value) throw new Error(`${name} no está cargado`);
@@ -169,5 +169,4 @@
   const API = { VERSION, DEFAULT_BATCH_SIZE, createState, runNextBatch, runAll };
   if(typeof module !== 'undefined') module.exports = API;
   global.PK_MIGRATION_AUTO_CYCLE = API;
-
 })(typeof window !== 'undefined' ? window : globalThis);
