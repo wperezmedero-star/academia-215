@@ -114,6 +114,10 @@
       const explicacion = pregunta.e || pregunta.correcto || "";
       if (typeof explicacion !== "string" || explicacion.trim().length === 0) {
         erroresKillerPilot.push(etiqueta + ": falta explicación de la respuesta correcta");
+      } else if (!pregunta.e) {
+        // Compatibilidad con el motor antiguo: showResult() espera q.e.
+        // Las preguntas Killer usan "correcto", así que normalizamos una sola vez al cargar.
+        pregunta.e = explicacion;
       }
     });
   });
@@ -170,14 +174,27 @@
     totalConceptos: conceptosUnificados.length,
     totalVariantes: totalVariantes,
     killerPilot: window.PK_KILLER_PILOT_STATUS,
-    version: "1.3"
+    version: "1.4"
   };
 
   // Parche de seguridad de ejecución para pearson-killer.html.
   // Se instala al terminar de cargar la página, cuando las funciones del motor
-  // ya existen. Evita tocar el archivo HTML grande con un reemplazo completo.
+  // ya existen. No intenta leer variables internas declaradas con "let".
   window.addEventListener('DOMContentLoaded', function() {
-    // 1) Si el banco seleccionado no produjo preguntas, no intentar renderizar undefined.
+    window.PK_RUNTIME_MODE = '';
+    window.PK_LAST_POOL_SIZE = null;
+
+    // 1) Observar el tamaño real que devuelve buildPool().
+    if (typeof window.buildPool === 'function') {
+      const buildPoolOriginal = window.buildPool;
+      window.buildPool = function(m, max) {
+        const resultado = buildPoolOriginal(m, max);
+        window.PK_LAST_POOL_SIZE = Array.isArray(resultado) ? resultado.length : 0;
+        return resultado;
+      };
+    }
+
+    // 2) Recordar el modo solicitado y bloquear un piloto estructuralmente inválido.
     if (typeof window.startMode === 'function') {
       const startModeOriginal = window.startMode;
       window.startMode = function(m, max) {
@@ -185,41 +202,34 @@
           alert('El Killer Pilot no está listo: deben cargarse exactamente 15 preguntas válidas.');
           return;
         }
+        window.PK_RUNTIME_MODE = m;
         startModeOriginal(m, max);
-        if (!Array.isArray(window.pool) || window.pool.length === 0) {
+      };
+    }
+
+    // 3) Evitar renderizar una pregunta inexistente y reemplazar la variante aleatoria
+    // por una identificación real cuando se usa el Killer Pilot.
+    if (typeof window.renderQ === 'function') {
+      const renderQOriginal = window.renderQ;
+      window.renderQ = function() {
+        if (window.PK_LAST_POOL_SIZE === 0) {
           const quiz = document.getElementById('quiz');
           const home = document.getElementById('home');
           if (quiz) quiz.classList.add('hidden');
           if (home) home.classList.remove('hidden');
           alert('No se encontraron preguntas para este modo. Revisa que el banco correspondiente haya cargado correctamente.');
+          return;
         }
-      };
-    }
 
-    // 2) Sustituir la etiqueta aleatoria "Variante 1–99" por una identificación real del piloto.
-    if (typeof window.renderQ === 'function') {
-      const renderQOriginal = window.renderQ;
-      window.renderQ = function() {
         renderQOriginal();
-        const label = document.getElementById('q-variant');
-        if (!label) return;
-        if (window.mode === 'killer_pilot' && Array.isArray(window.pool) && window.pool.length > 0) {
-          label.textContent = 'Killer Pilot · Pregunta ' + (window.idx + 1) + ' de ' + window.pool.length;
-        }
-      };
-    }
 
-    // 3) Normalizar la explicación para que el resumen de errores nunca falle
-    // cuando una pregunta nueva usa "correcto" en vez de la propiedad antigua "e".
-    if (typeof window.showResult === 'function') {
-      const showResultOriginal = window.showResult;
-      window.showResult = function() {
-        if (Array.isArray(window.mistakes)) {
-          window.mistakes.forEach(function(q) {
-            if (!q.e) q.e = q.correcto || '';
-          });
+        if (window.PK_RUNTIME_MODE === 'killer_pilot') {
+          const label = document.getElementById('q-variant');
+          const count = document.getElementById('q-count');
+          if (label && count) {
+            label.textContent = 'Killer Pilot · Pregunta ' + count.textContent;
+          }
         }
-        showResultOriginal();
       };
     }
   });
