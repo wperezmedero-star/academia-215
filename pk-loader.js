@@ -1,7 +1,7 @@
 // ============================================================
 // PEARSON KILLER — pk-loader.js
 // Cargador central del banco + integración automática de preguntas aprobadas.
-// v1.6 — 15/07/2026
+// v1.7 — 15/07/2026
 // ============================================================
 
 // Carga síncrona de fuentes Nueva Generación auditadas.
@@ -13,6 +13,7 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
   document.write('<script src="pk-migration-manual40-run-013-candidates-02.js"><\/script>');
   document.write('<script src="pk-migration-manual40-run-013-rewrites-01.js"><\/script>');
   document.write('<script src="pk-migration-manual40-run-013-rewrites-02.js"><\/script>');
+  document.write('<script src="pk-migration-manual40-run-014-candidates-01.js"><\/script>');
   document.write('<script src="pk-approved-registry.js"><\/script>');
 }
 
@@ -69,7 +70,8 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
     { name: 'run_013_01', data: window.PK_MIGRATION_MANUAL40_RUN_013_01 },
     { name: 'run_013_02', data: window.PK_MIGRATION_MANUAL40_RUN_013_02 },
     { name: 'run_013_rewrites_01', data: window.PK_MIGRATION_MANUAL40_RUN_013_REWRITES_01 },
-    { name: 'run_013_rewrites_02', data: window.PK_MIGRATION_MANUAL40_RUN_013_REWRITES_02 }
+    { name: 'run_013_rewrites_02', data: window.PK_MIGRATION_MANUAL40_RUN_013_REWRITES_02 },
+    { name: 'run_014_01', data: window.PK_MIGRATION_MANUAL40_RUN_014_01 }
   ].filter(function(src){ return Array.isArray(src.data); });
 
   // Un ID aprobado produce una sola pregunta. Si hubiera una versión reescrita
@@ -194,7 +196,7 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
     approvedRegistryVersion: approvedRegistry.version || null,
     autoIntegrationPolicy: approvedRegistry.policy || null,
     killerPilot: window.PK_KILLER_PILOT_STATUS,
-    version: '1.6'
+    version: '1.7'
   };
 
   window.addEventListener('DOMContentLoaded', function() {
