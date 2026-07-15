@@ -11,5 +11,6 @@
   approvedIds.push(...range('sim_b2_',1,70));
   approvedIds.push(...range('sim_b3_',1,70,[39,44,45,46,47,48]));
   approvedIds.push(...range('sim_b4_',1,60));
-  global.PK_APPROVED_REGISTRY={version:'2026-07-15.17',approved_ids:approvedIds,approved_set:new Set(approvedIds),total:approvedIds.length,runs:{run_010:20,run_013:37,run_014:40,run_015:40,simulacro_b1_imported:53,simulacro_b1_held_for_current_fact_check:2,simulacro_b2_imported:70,simulacro_b3_imported:64,simulacro_b3_held_for_check:6,simulacro_b4_imported:60},status:'approved_and_accelerated_imports_for_branch_exam_integration',policy:'audit_pass_or_verified_import_auto_register; current_fact_or_incomplete_items_can_be_held'};
+  approvedIds.push(...range('sim_b5_',1,50));
+  global.PK_APPROVED_REGISTRY={version:'2026-07-15.18',approved_ids:approvedIds,approved_set:new Set(approvedIds),total:approvedIds.length,runs:{run_010:20,run_013:37,run_014:40,run_015:40,simulacro_b1_imported:53,simulacro_b1_held_for_current_fact_check:2,simulacro_b2_imported:70,simulacro_b3_imported:64,simulacro_b3_held_for_check:6,simulacro_b4_imported:60,simulacro_b5_imported:50},status:'approved_and_accelerated_imports_for_branch_exam_integration',policy:'audit_pass_or_verified_import_auto_register; current_fact_or_incomplete_items_can_be_held'};
 })(typeof window!=='undefined'?window:globalThis);
