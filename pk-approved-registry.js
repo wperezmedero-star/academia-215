@@ -40,11 +40,16 @@
     'manual40_r015_009','manual40_r015_011','manual40_r015_012','manual40_r015_013',
     'manual40_r015_015','manual40_r015_016','manual40_r015_018','manual40_r015_020',
     'manual40_r015_002_rw','manual40_r015_006_rw','manual40_r015_007_rw','manual40_r015_008_rw',
-    'manual40_r015_010_rw','manual40_r015_014_rw','manual40_r015_017_rw','manual40_r015_019_rw'
+    'manual40_r015_010_rw','manual40_r015_014_rw','manual40_r015_017_rw','manual40_r015_019_rw',
+
+    // Run 015 — 13 aprobadas en auditoría 21-40
+    'manual40_r015_021','manual40_r015_022','manual40_r015_023','manual40_r015_024',
+    'manual40_r015_026','manual40_r015_029','manual40_r015_030','manual40_r015_032',
+    'manual40_r015_034','manual40_r015_036','manual40_r015_037','manual40_r015_039','manual40_r015_040'
   ];
 
   global.PK_APPROVED_REGISTRY = {
-    version: '2026-07-15.8',
+    version: '2026-07-15.9',
     approved_ids: approvedIds,
     approved_set: new Set(approvedIds),
     total: approvedIds.length,
@@ -52,7 +57,7 @@
       run_010: 20,
       run_013: 37,
       run_014: 40,
-      run_015: 20
+      run_015: 33
     },
     status: 'approved_for_branch_exam_integration',
     policy: 'audit_pass_auto_register'
