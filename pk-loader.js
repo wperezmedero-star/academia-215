@@ -81,19 +81,52 @@
 
   // El Killer Pilot permanece deliberadamente AISLADO del banco unificado.
   // pearson-killer.html lo consume solo cuando mode === 'killer_pilot'.
-  // Esta validación evita que un archivo incompleto pase silenciosamente a producción.
+  // Esta validación evita que un archivo incompleto o mal formado pase
+  // silenciosamente a producción.
   const killerPilot = Array.isArray(window.PK_KILLER_PILOT) ? window.PK_KILLER_PILOT : [];
-  const totalPreguntasKillerPilot = killerPilot.reduce(function(total, concepto) {
+  const erroresKillerPilot = [];
+  let totalPreguntasKillerPilot = 0;
+
+  killerPilot.forEach(function(concepto, conceptoIdx) {
+    const conceptoId = concepto.id || ("concepto_" + (conceptoIdx + 1));
     const variantes = concepto.variantes || concepto.variants || [];
-    return total + (Array.isArray(variantes) ? variantes.length : 0);
-  }, 0);
-  const killerPilotOK = totalPreguntasKillerPilot === 15;
+
+    if (!Array.isArray(variantes) || variantes.length === 0) {
+      erroresKillerPilot.push(conceptoId + ": sin variantes válidas");
+      return;
+    }
+
+    variantes.forEach(function(pregunta, varianteIdx) {
+      totalPreguntasKillerPilot++;
+      const etiqueta = conceptoId + "#" + (varianteIdx + 1);
+
+      if (!pregunta || typeof pregunta.q !== "string" || pregunta.q.trim().length === 0) {
+        erroresKillerPilot.push(etiqueta + ": falta texto de pregunta");
+      }
+      if (!Array.isArray(pregunta.o) || pregunta.o.length !== 4 || pregunta.o.some(function(opcion) {
+        return typeof opcion !== "string" || opcion.trim().length === 0;
+      })) {
+        erroresKillerPilot.push(etiqueta + ": debe tener exactamente 4 opciones no vacías");
+      }
+      if (!Number.isInteger(pregunta.a) || pregunta.a < 0 || pregunta.a > 3) {
+        erroresKillerPilot.push(etiqueta + ": índice de respuesta correcta inválido");
+      }
+      const explicacion = pregunta.e || pregunta.correcto || "";
+      if (typeof explicacion !== "string" || explicacion.trim().length === 0) {
+        erroresKillerPilot.push(etiqueta + ": falta explicación de la respuesta correcta");
+      }
+    });
+  });
+
+  const killerPilotOK = totalPreguntasKillerPilot === 15 && erroresKillerPilot.length === 0;
 
   window.PK_KILLER_PILOT_STATUS = {
     cargado: killerPilot.length > 0,
     totalConceptos: killerPilot.length,
     totalPreguntas: totalPreguntasKillerPilot,
     esperado: 15,
+    errores: erroresKillerPilot,
+    totalErrores: erroresKillerPilot.length,
     valido: killerPilotOK,
     aisladoDelBancoPrincipal: true
   };
@@ -137,7 +170,7 @@
     totalConceptos: conceptosUnificados.length,
     totalVariantes: totalVariantes,
     killerPilot: window.PK_KILLER_PILOT_STATUS,
-    version: "1.1"
+    version: "1.2"
   };
 
   // Log silencioso para debugging (no interfiere con la UI)
@@ -146,9 +179,9 @@
     console.log("Módulos activos: " + modulosOK.length + "/" + MODULOS.length);
     console.log("Total conceptos: " + conceptosUnificados.length);
     console.log("Total variantes: " + totalVariantes);
-    console.log("Killer Pilot: " + totalPreguntasKillerPilot + "/15 preguntas; aislado=" + true);
+    console.log("Killer Pilot: " + totalPreguntasKillerPilot + "/15 preguntas; errores=" + erroresKillerPilot.length + "; aislado=" + true);
     if (!killerPilotOK) {
-      console.error("KILLER PILOT INVÁLIDO: se esperaban exactamente 15 preguntas y se cargaron " + totalPreguntasKillerPilot + ".");
+      console.error("KILLER PILOT INVÁLIDO: revisar PK_KILLER_PILOT_STATUS.", window.PK_KILLER_PILOT_STATUS);
     }
     if (modulosFaltantes.length > 0) {
       console.warn("Módulos NO cargados (revisar orden de <script> tags): " + modulosFaltantes.join(", "));
