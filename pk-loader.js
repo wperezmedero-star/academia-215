@@ -1,11 +1,9 @@
 // ============================================================
 // PEARSON KILLER — pk-loader.js
 // Cargador central del banco + integración automática de preguntas aprobadas.
-// v2.0 — 15/07/2026
+// v2.1 — 15/07/2026
 // ============================================================
 
-// Carga síncrona de fuentes Nueva Generación auditadas.
-// El registro machine-readable decide cuáles entran realmente al examen.
 if (typeof document !== 'undefined' && document.readyState === 'loading') {
   document.write('<script src="pk-migration-manual20-run-010-candidates-01.js"><\/script>');
   document.write('<script src="pk-migration-manual20-run-010-candidates-02.js"><\/script>');
@@ -152,6 +150,7 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
 
   let totalVariantes = 0;
   conceptosUnificados.forEach(function(c) { if (c.variantes) totalVariantes += c.variantes.length; });
+  const approvedQuestionCount = approvedMigrationConcepts.reduce(function(n,c){return n+(c.variantes||[]).length;},0);
 
   window.PK_LOADER_STATUS = {
     modulosOK: modulosOK,
@@ -159,21 +158,63 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
     totalConceptos: conceptosUnificados.length,
     totalVariantes: totalVariantes,
     approvedMigrationConcepts: approvedMigrationConcepts.length,
-    approvedMigrationQuestions: approvedMigrationConcepts.reduce(function(n,c){return n+(c.variantes||[]).length;},0),
+    approvedMigrationQuestions: approvedQuestionCount,
     approvedRegistryTotal: approvedRegistry.total || (approvedRegistry.approved_ids || []).length,
     approvedRegistryVersion: approvedRegistry.version || null,
     autoIntegrationPolicy: approvedRegistry.policy || null,
     killerPilot: window.PK_KILLER_PILOT_STATUS,
-    version: '2.0'
+    version: '2.1'
   };
+
+  function shuffleLocal(a){
+    for(let i=a.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      const t=a[i];a[i]=a[j];a[j]=t;
+    }
+    return a;
+  }
+
+  function buildApprovedPool(max){
+    const questions=[];
+    shuffleLocal(approvedMigrationConcepts.slice()).forEach(function(c){
+      shuffleLocal((c.variantes || c.variants || []).slice()).forEach(function(v){
+        questions.push(Object.assign({}, v, {
+          concept: c.concepto || c.concept || c.id,
+          area: c.area,
+          areaLabel: AREAS_UNIFICADAS[c.area] || c.area
+        }));
+      });
+    });
+    shuffleLocal(questions);
+    return questions.slice(0, Math.min(max || questions.length, questions.length));
+  }
 
   window.addEventListener('DOMContentLoaded', function() {
     window.PK_RUNTIME_MODE = '';
     window.PK_LAST_POOL_SIZE = null;
+
+    const home = document.getElementById('home');
+    if (home && approvedQuestionCount > 0 && !document.getElementById('pk-approved-bank-card')) {
+      const card = document.createElement('div');
+      card.id = 'pk-approved-bank-card';
+      card.className = 'card';
+      card.style.borderColor = '#f5cf6b';
+      card.style.background = 'linear-gradient(180deg,rgba(245,207,107,.12),rgba(12,28,56,.95))';
+      card.innerHTML = '<h2 style="color:#ffe9a8">🏆 Banco Nueva Generación</h2>' +
+        '<p class="muted" style="margin-bottom:12px"><b style="color:#34d399;font-size:1.05rem">' + approvedQuestionCount +
+        ' preguntas aprobadas</b><br>Preguntas auditadas e integradas para entrenamiento Pearson.</p>' +
+        '<button class="btn btn-gold" onclick="startMode(\'approved\',' + approvedQuestionCount + ')">Entrenar las ' + approvedQuestionCount + ' aprobadas</button>';
+      const realCard = Array.from(home.querySelectorAll('.card')).find(function(el){
+        return el.textContent && el.textContent.indexOf('Modo Examen Real') !== -1;
+      });
+      if (realCard) home.insertBefore(card, realCard);
+      else home.appendChild(card);
+    }
+
     if (typeof window.buildPool === 'function') {
       const buildPoolOriginal = window.buildPool;
       window.buildPool = function(m, max) {
-        const resultado = buildPoolOriginal(m, max);
+        const resultado = m === 'approved' ? buildApprovedPool(max) : buildPoolOriginal(m, max);
         window.PK_LAST_POOL_SIZE = Array.isArray(resultado) ? resultado.length : 0;
         return resultado;
       };
@@ -185,6 +226,10 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
           alert('El Killer Pilot no está listo: deben cargarse exactamente 15 preguntas válidas.');
           return;
         }
+        if (m === 'approved' && approvedQuestionCount === 0) {
+          alert('Todavía no hay preguntas Nueva Generación aprobadas disponibles.');
+          return;
+        }
         window.PK_RUNTIME_MODE = m;
         startModeOriginal(m, max);
       };
@@ -194,17 +239,19 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
       window.renderQ = function() {
         if (window.PK_LAST_POOL_SIZE === 0) {
           const quiz = document.getElementById('quiz');
-          const home = document.getElementById('home');
+          const homeEl = document.getElementById('home');
           if (quiz) quiz.classList.add('hidden');
-          if (home) home.classList.remove('hidden');
+          if (homeEl) homeEl.classList.remove('hidden');
           alert('No se encontraron preguntas para este modo. Revisa que el banco correspondiente haya cargado correctamente.');
           return;
         }
         renderQOriginal();
-        if (window.PK_RUNTIME_MODE === 'killer_pilot') {
-          const label = document.getElementById('q-variant');
-          const count = document.getElementById('q-count');
-          if (label && count) label.textContent = 'Killer Pilot · Pregunta ' + count.textContent;
+        const label = document.getElementById('q-variant');
+        const count = document.getElementById('q-count');
+        if (window.PK_RUNTIME_MODE === 'killer_pilot' && label && count) {
+          label.textContent = 'Killer Pilot · Pregunta ' + count.textContent;
+        } else if (window.PK_RUNTIME_MODE === 'approved' && label && count) {
+          label.textContent = 'Nueva Generación aprobada · Pregunta ' + count.textContent;
         }
       };
     }
