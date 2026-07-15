@@ -1,14 +1,15 @@
 // ============================================================
 // PEARSON KILLER — pk-migration-manual-cycle-20.js
-// Flujo sin API: preparar 20 -> exportar payload -> importar 20 -> auditar -> avanzar.
+// Flujo sin API: preparar 40 -> exportar payload -> importar 40 -> auditar -> avanzar.
+// Mantiene el nombre histórico del archivo por compatibilidad.
 // NO autoaprueba preguntas y NO toca main.
 // ============================================================
 
 (function(global){
   'use strict';
 
-  const VERSION = '1.0.0';
-  const BATCH_SIZE = 20;
+  const VERSION = '1.1.0';
+  const BATCH_SIZE = 40;
 
   function requireDependency(name, value){
     if(!value) throw new Error(`${name} no está cargado`);
@@ -46,13 +47,13 @@
       }], 1)[0].jobs[0];
       return {
         ...rewrite,
-        migration_id:`manual20_${String(batchIndex).padStart(3,'0')}_${String(index+1).padStart(3,'0')}`,
+        migration_id:`manual40_${String(batchIndex).padStart(3,'0')}_${String(index+1).padStart(3,'0')}`,
         source_fingerprint:fingerprint(row)
       };
     });
 
     const run = {
-      run_id:`manual20_run_${String(batchIndex).padStart(3,'0')}`,
+      run_id:`manual40_run_${String(batchIndex).padStart(3,'0')}`,
       batch_size:BATCH_SIZE,
       selected_count:selected.length,
       jobs
@@ -116,5 +117,7 @@
 
   const API = { VERSION, BATCH_SIZE, prepareNext, importAndAudit };
   if(typeof module !== 'undefined') module.exports = API;
+  // Alias histórico + nuevo alias explícito para no romper nada existente.
   global.PK_MIGRATION_MANUAL_CYCLE_20 = API;
+  global.PK_MIGRATION_MANUAL_CYCLE_40 = API;
 })(typeof window !== 'undefined' ? window : globalThis);
