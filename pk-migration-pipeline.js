@@ -5,7 +5,7 @@
 //
 // Objetivo:
 // 1) Inventariar preguntas antiguas.
-// 2) Crear trabajos de reescritura por lotes para un modelo externo (Claude/OpenAI).
+// 2) Crear trabajos de reescritura por lotes estándar de 50 para un modelo externo (Claude/OpenAI).
 // 3) Exigir salida estructurada con el patrón validado de los Lotes 10, 14, 15 y 16.
 // 4) Preauditar automáticamente estructura y señales de calidad.
 // 5) Separar candidatas fuertes, reescritura adicional y rechazo.
@@ -15,8 +15,8 @@
 (function(global){
   'use strict';
 
-  const VERSION = '1.0.0';
-  const TARGET_BATCH_SIZE = 10;
+  const VERSION = '1.1.0';
+  const TARGET_BATCH_SIZE = 50;
 
   const QUALITY = {
     MIN_QUESTION_CHARS: 150,
@@ -107,6 +107,7 @@
       batches.push({
         batch_id: `oldbank_rewrite_${String((i/size)+1).padStart(3,'0')}`,
         version: VERSION,
+        target_batch_size: size,
         jobs: jobs.slice(i, i+size)
       });
     }
@@ -198,6 +199,7 @@
 
   const API = {
     VERSION,
+    TARGET_BATCH_SIZE,
     QUALITY,
     normalizeOldBank,
     createRewriteBatches,
