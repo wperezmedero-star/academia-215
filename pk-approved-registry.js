@@ -45,11 +45,14 @@
     'manual40_r015_026','manual40_r015_029','manual40_r015_030','manual40_r015_032',
     'manual40_r015_034','manual40_r015_036','manual40_r015_037','manual40_r015_039','manual40_r015_040',
     'manual40_r015_025_rw','manual40_r015_027_rw','manual40_r015_028_rw','manual40_r015_031_rw',
-    'manual40_r015_033_rw','manual40_r015_035_rw','manual40_r015_038_rw'
+    'manual40_r015_033_rw','manual40_r015_035_rw','manual40_r015_038_rw',
+
+    // Simulacro Bloque 1 — importación verificada inicial
+    'sim_b1_001','sim_b1_002','sim_b1_003','sim_b1_004','sim_b1_005'
   ];
 
   global.PK_APPROVED_REGISTRY = {
-    version: '2026-07-15.10',
+    version: '2026-07-15.11',
     approved_ids: approvedIds,
     approved_set: new Set(approvedIds),
     total: approvedIds.length,
@@ -57,9 +60,10 @@
       run_010: 20,
       run_013: 37,
       run_014: 40,
-      run_015: 40
+      run_015: 40,
+      simulacro_b1_imported: 5
     },
     status: 'approved_for_branch_exam_integration',
-    policy: 'audit_pass_auto_register'
+    policy: 'audit_pass_or_verified_import_auto_register'
   };
 })(typeof window !== 'undefined' ? window : globalThis);
