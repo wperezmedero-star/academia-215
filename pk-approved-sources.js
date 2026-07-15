@@ -14,11 +14,12 @@
     {name:'run_014_rewrites_01',path:'pk-migration-manual40-run-014-rewrites-01.js',global_name:'PK_MIGRATION_MANUAL40_RUN_014_REWRITES_01'},
     {name:'run_014_02',path:'pk-migration-manual40-run-014-candidates-02.js',global_name:'PK_MIGRATION_MANUAL40_RUN_014_02'},
     {name:'run_014_rewrites_02',path:'pk-migration-manual40-run-014-rewrites-02.js',global_name:'PK_MIGRATION_MANUAL40_RUN_014_REWRITES_02'},
-    {name:'run_015_01',path:'pk-migration-manual40-run-015-candidates-01.js',global_name:'PK_MIGRATION_MANUAL40_RUN_015_01'}
+    {name:'run_015_01',path:'pk-migration-manual40-run-015-candidates-01.js',global_name:'PK_MIGRATION_MANUAL40_RUN_015_01'},
+    {name:'run_015_rewrites_01',path:'pk-migration-manual40-run-015-rewrites-01.js',global_name:'PK_MIGRATION_MANUAL40_RUN_015_REWRITES_01'}
   ];
 
   global.PK_APPROVED_SOURCE_INDEX = {
-    version:'2026-07-15.2',
+    version:'2026-07-15.3',
     sources:sources,
     total_sources:sources.length,
     policy:'single_manifest_for_approved_runs'
