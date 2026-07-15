@@ -25,6 +25,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#020617;padding:16px;b
   <div class="card"><strong>Registro</strong><pre id="log"></pre></div>
 </main>
 
+<!-- Banco y arquitectura base -->
 <script src="pk-schema.js"></script>
 <script src="pk-migration-pipeline.js"></script>
 <script src="pk-strict-preauditor.js"></script>
@@ -33,6 +34,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#020617;padding:16px;b
 <script src="pk-migration-auto-cycle.js"></script>
 <script src="pk-migration-bootstrap.js"></script>
 <script src="pk-loader.js"></script>
+<script src="pk-model-provider-openai.js"></script>
 
 <script>
 (function(){
@@ -53,7 +55,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#020617;padding:16px;b
 
   function getProvider(){
     if(typeof window.PK_MODEL_PROVIDER !== 'function'){
-      throw new Error('Falta window.PK_MODEL_PROVIDER. Conecta aquí el backend/API del modelo productor.');
+      throw new Error('Falta PK_MODEL_PROVIDER. Verifica pk-model-provider-openai.js y el endpoint /api/pk-produce.');
     }
     return window.PK_MODEL_PROVIDER;
   }
@@ -63,22 +65,20 @@ pre{white-space:pre-wrap;word-break:break-word;background:#020617;padding:16px;b
     const bootstrap=requireBootstrap();
     runtime=bootstrap.createRuntime({
       transport:getProvider(),
-      provider_name:'pk_model_provider',
+      provider_name:'openai_responses_serverless',
       concepts:window.PK_CONCEPTOS_FULL||[],
-      onBatchComplete:function(result){
-        renderState();
-        log('Lote completado',result.batch);
-      }
+      onBatchComplete:function(r){ renderState(); log('Lote completado',r.batch); }
     });
-    renderState();
     return runtime;
   }
 
   document.getElementById('check').onclick=function(){
     try{
       const report=requireBootstrap().assertReady();
-      log('Dependencias verificadas',report);
-      statusEl.textContent=JSON.stringify(report,null,2);
+      const providerReady=typeof window.PK_MODEL_PROVIDER==='function';
+      const full={...report,provider_ready:providerReady,endpoint:'/api/pk-produce'};
+      log('Dependencias verificadas',full);
+      statusEl.textContent=JSON.stringify(full,null,2);
     }catch(err){ log('ERROR de dependencias',{message:err.message}); }
   };
 
@@ -86,7 +86,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#020617;padding:16px;b
     try{
       const result=await getRuntime().runNextBatch();
       renderState();
-      log('Siguiente lote finalizado',result.batch||{status:runtime.state.status});
+      log('Lote finalizado',result.batch||{status:getRuntime().state.status});
     }catch(err){ log('ERROR al ejecutar siguiente lote',{message:err.message,validation:err.validation||null}); }
   };
 
@@ -94,7 +94,7 @@ pre{white-space:pre-wrap;word-break:break-word;background:#020617;padding:16px;b
     try{
       const result=await getRuntime().runAll();
       renderState();
-      log('Recorrido finalizado',{status:runtime.state.status,totals:runtime.state.totals,lot_count:result.results.length});
+      log('Recorrido finalizado',{status:result.state.status,totals:result.state.totals});
     }catch(err){ log('ERROR al ejecutar recorrido',{message:err.message,validation:err.validation||null}); }
   };
 })();
