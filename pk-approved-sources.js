@@ -18,11 +18,12 @@
     {name:'run_015_rewrites_01',path:'pk-migration-manual40-run-015-rewrites-01.js',global_name:'PK_MIGRATION_MANUAL40_RUN_015_REWRITES_01'},
     {name:'run_015_02',path:'pk-migration-manual40-run-015-candidates-02.js',global_name:'PK_MIGRATION_MANUAL40_RUN_015_02'},
     {name:'run_015_rewrites_02',path:'pk-migration-manual40-run-015-rewrites-02.js',global_name:'PK_MIGRATION_MANUAL40_RUN_015_REWRITES_02'},
-    {name:'simulacro_b1_001',path:'pk-simulacro-b1-import-001.js',global_name:'PK_SIMULACRO_B1_001'}
+    {name:'simulacro_b1_001',path:'pk-simulacro-b1-import-001.js',global_name:'PK_SIMULACRO_B1_001'},
+    {name:'simulacro_b1_006_055',path:'pk-simulacro-b1-import-006-055.js',global_name:'PK_SIMULACRO_B1_006_055'}
   ];
 
   global.PK_APPROVED_SOURCE_INDEX = {
-    version:'2026-07-15.6',
+    version:'2026-07-15.7',
     sources:sources,
     total_sources:sources.length,
     policy:'single_manifest_for_approved_runs_and_verified_imports'
