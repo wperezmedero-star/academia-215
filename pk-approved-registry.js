@@ -33,18 +33,22 @@
     'manual40_r014_022','manual40_r014_024','manual40_r014_025','manual40_r014_026',
     'manual40_r014_027','manual40_r014_028','manual40_r014_029','manual40_r014_031',
     'manual40_r014_032','manual40_r014_033','manual40_r014_034','manual40_r014_037',
-    'manual40_r014_038','manual40_r014_039'
+    'manual40_r014_038','manual40_r014_039',
+
+    // Run 014 — 6 aprobadas tras reescritura 21-40
+    'manual40_r014_021_rw','manual40_r014_023_rw','manual40_r014_030_rw',
+    'manual40_r014_035_rw','manual40_r014_036_rw','manual40_r014_040_rw'
   ];
 
   global.PK_APPROVED_REGISTRY = {
-    version: '2026-07-15.5',
+    version: '2026-07-15.6',
     approved_ids: approvedIds,
     approved_set: new Set(approvedIds),
     total: approvedIds.length,
     runs: {
       run_010: 20,
       run_013: 37,
-      run_014: 34
+      run_014: 40
     },
     status: 'approved_for_branch_exam_integration',
     policy: 'audit_pass_auto_register'
