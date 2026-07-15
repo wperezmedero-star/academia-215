@@ -1,15 +1,18 @@
 // ============================================================
 // PEARSON KILLER — pk-loader.js
-// Cargador central del banco + integración segura de preguntas aprobadas.
-// v1.5 — 15/07/2026
+// Cargador central del banco + integración automática de preguntas aprobadas.
+// v1.6 — 15/07/2026
 // ============================================================
 
-// Carga síncrona de la primera tanda Nueva Generación aprobada.
-// pk-loader.js se ejecuta durante el parseo del HTML, por lo que document.write
-// mantiene el orden: datos -> registro -> construcción del banco unificado.
+// Carga síncrona de fuentes Nueva Generación auditadas.
+// El registro machine-readable decide cuáles entran realmente al examen.
 if (typeof document !== 'undefined' && document.readyState === 'loading') {
   document.write('<script src="pk-migration-manual20-run-010-candidates-01.js"><\/script>');
   document.write('<script src="pk-migration-manual20-run-010-candidates-02.js"><\/script>');
+  document.write('<script src="pk-migration-manual40-run-013-candidates-01.js"><\/script>');
+  document.write('<script src="pk-migration-manual40-run-013-candidates-02.js"><\/script>');
+  document.write('<script src="pk-migration-manual40-run-013-rewrites-01.js"><\/script>');
+  document.write('<script src="pk-migration-manual40-run-013-rewrites-02.js"><\/script>');
   document.write('<script src="pk-approved-registry.js"><\/script>');
 }
 
@@ -51,9 +54,9 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
   });
 
   // ------------------------------------------------------------
-  // NUEVA GENERACIÓN — solo entra lo incluido explícitamente en
-  // PK_APPROVED_REGISTRY. Los archivos fuente pueden seguir pending;
-  // el registro machine-readable es la autorización de integración.
+  // NUEVA GENERACIÓN — integración automática por auditoría.
+  // Solo entra lo incluido explícitamente en PK_APPROVED_REGISTRY.
+  // Las fuentes pueden permanecer pending; el registro es la autorización.
   // ------------------------------------------------------------
   const approvedRegistry = window.PK_APPROVED_REGISTRY || { approved_ids: [] };
   const approvedSet = approvedRegistry.approved_set instanceof Set
@@ -61,34 +64,49 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
     : new Set(approvedRegistry.approved_ids || []);
 
   const migrationSources = [
-    window.PK_MIGRATION_MANUAL20_RUN_010_01,
-    window.PK_MIGRATION_MANUAL20_RUN_010_02
-  ].filter(Array.isArray);
+    { name: 'run_010_01', data: window.PK_MIGRATION_MANUAL20_RUN_010_01 },
+    { name: 'run_010_02', data: window.PK_MIGRATION_MANUAL20_RUN_010_02 },
+    { name: 'run_013_01', data: window.PK_MIGRATION_MANUAL40_RUN_013_01 },
+    { name: 'run_013_02', data: window.PK_MIGRATION_MANUAL40_RUN_013_02 },
+    { name: 'run_013_rewrites_01', data: window.PK_MIGRATION_MANUAL40_RUN_013_REWRITES_01 },
+    { name: 'run_013_rewrites_02', data: window.PK_MIGRATION_MANUAL40_RUN_013_REWRITES_02 }
+  ].filter(function(src){ return Array.isArray(src.data); });
 
-  const approvedMigrationConcepts = [];
+  // Un ID aprobado produce una sola pregunta. Si hubiera una versión reescrita
+  // con el mismo ID en una fuente posterior, esa versión sustituye a la anterior.
+  const approvedById = new Map();
+
   migrationSources.forEach(function(source) {
-    source.forEach(function(item) {
+    source.data.forEach(function(item) {
       if (!item || !approvedSet.has(item.id)) return;
-      const variants = (item.variantes || item.variants || []).map(function(v) {
+
+      const variants = (item.variantes || item.variants || []).filter(function(v) {
+        return v && typeof v.q === 'string' && v.q.trim() &&
+          Array.isArray(v.o) && v.o.length === 4 &&
+          Number.isInteger(v.a) && v.a >= 0 && v.a <= 3;
+      }).map(function(v) {
         const copy = Object.assign({}, v);
         copy.category = 'killer_ready';
         copy.human_review_status = 'approved';
         if (!copy.e) copy.e = copy.correcto || '';
         return copy;
       });
+
       if (!variants.length) return;
-      approvedMigrationConcepts.push({
+
+      approvedById.set(item.id, {
         id: item.id,
         area: item.area,
         concepto: item.concepto || item.subtema_blueprint || item.id,
         category: 'killer_ready',
         human_review_status: 'approved',
-        source: 'migration_run_010',
+        source: source.name,
         variantes: variants
       });
     });
   });
 
+  const approvedMigrationConcepts = Array.from(approvedById.values());
   conceptosUnificados = conceptosUnificados.concat(approvedMigrationConcepts);
 
   // Killer Pilot permanece aislado.
@@ -172,9 +190,11 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
     totalVariantes: totalVariantes,
     approvedMigrationConcepts: approvedMigrationConcepts.length,
     approvedMigrationQuestions: approvedMigrationConcepts.reduce(function(n,c){return n+(c.variantes||[]).length;},0),
+    approvedRegistryTotal: approvedRegistry.total || (approvedRegistry.approved_ids || []).length,
     approvedRegistryVersion: approvedRegistry.version || null,
+    autoIntegrationPolicy: approvedRegistry.policy || null,
     killerPilot: window.PK_KILLER_PILOT_STATUS,
-    version: '1.5'
+    version: '1.6'
   };
 
   window.addEventListener('DOMContentLoaded', function() {
@@ -222,10 +242,4 @@ if (typeof document !== 'undefined' && document.readyState === 'loading') {
       };
     }
   });
-
-  if (typeof console !== 'undefined' && console.log) {
-    console.log('Pearson Killer — pk-loader.js v1.5 cargado');
-    console.log('Módulos activos: ' + modulosOK.length + '/' + MODULOS.length);
-    console.log('Preguntas Nueva Generación integradas al banco: ' + window.PK_LOADER_STATUS.approvedMigrationQuestions);
-  }
 })();
