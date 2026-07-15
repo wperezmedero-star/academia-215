@@ -22,33 +22,35 @@
     'manual40_r013_021_rw','manual40_r013_023_rw','manual40_r013_027_rw','manual40_r013_028_rw',
     'manual40_r013_029_rw','manual40_r013_030_rw',
 
-    // Run 014 — 20 aprobadas tras auditoría + reauditoría (01-20)
+    // Run 014 — 40 aprobadas
     'manual40_r014_001','manual40_r014_002','manual40_r014_003','manual40_r014_004',
     'manual40_r014_005','manual40_r014_006','manual40_r014_007','manual40_r014_008',
     'manual40_r014_009','manual40_r014_010','manual40_r014_011','manual40_r014_012',
     'manual40_r014_013','manual40_r014_014','manual40_r014_015','manual40_r014_016',
     'manual40_r014_017','manual40_r014_018','manual40_r014_019','manual40_r014_020',
-
-    // Run 014 — 14 aprobadas en auditoría 21-40
     'manual40_r014_022','manual40_r014_024','manual40_r014_025','manual40_r014_026',
     'manual40_r014_027','manual40_r014_028','manual40_r014_029','manual40_r014_031',
     'manual40_r014_032','manual40_r014_033','manual40_r014_034','manual40_r014_037',
     'manual40_r014_038','manual40_r014_039',
-
-    // Run 014 — 6 aprobadas tras reescritura 21-40
     'manual40_r014_021_rw','manual40_r014_023_rw','manual40_r014_030_rw',
-    'manual40_r014_035_rw','manual40_r014_036_rw','manual40_r014_040_rw'
+    'manual40_r014_035_rw','manual40_r014_036_rw','manual40_r014_040_rw',
+
+    // Run 015 — 12 aprobadas en auditoría 01-20
+    'manual40_r015_001','manual40_r015_003','manual40_r015_004','manual40_r015_005',
+    'manual40_r015_009','manual40_r015_011','manual40_r015_012','manual40_r015_013',
+    'manual40_r015_015','manual40_r015_016','manual40_r015_018','manual40_r015_020'
   ];
 
   global.PK_APPROVED_REGISTRY = {
-    version: '2026-07-15.6',
+    version: '2026-07-15.7',
     approved_ids: approvedIds,
     approved_set: new Set(approvedIds),
     total: approvedIds.length,
     runs: {
       run_010: 20,
       run_013: 37,
-      run_014: 40
+      run_014: 40,
+      run_015: 12
     },
     status: 'approved_for_branch_exam_integration',
     policy: 'audit_pass_auto_register'
