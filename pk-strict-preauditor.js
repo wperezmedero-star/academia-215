@@ -1,19 +1,21 @@
 // ============================================================
 // PEARSON KILLER — pk-strict-preauditor.js
 // Segunda capa automática: preauditor "celoso" de calidad Pearson.
-// v1.1.0 — calibrado con Corrida 001.
-// Propósito: preferir falsos negativos antes que dejar pasar preguntas débiles.
-// NO aprueba preguntas. Solo decide si una candidata merece revisión humana.
+// v1.2.0 — clasificación operativa Premium / Aprobada / Reescritura.
+// NO autoaprueba revisión humana. Clasifica candidatas por calidad técnica.
 // NO toca main ni mezcla preguntas con el modo examen.
 // ============================================================
 
 (function(global){
   'use strict';
 
-  const VERSION = '1.1.0';
+  const VERSION = '1.2.0';
 
   const CFG = {
-    MIN_STRICT_SCORE: 12,
+    PREMIUM_SCORE: 12,          // 12/14 = 85.7%
+    APPROVED_SCORE: 10,         // 10/14 = 71.4%
+    REJECT_SCORE: 8,
+    MAX_SOFT_BLOCKERS_APPROVED: 2,
     MIN_STRONG_DISTRACTORS: 2,
     MAX_CORRECT_LENGTH_RATIO: 1.35,
     MAX_ANY_OPTION_LENGTH_RATIO: 1.65,
@@ -50,6 +52,12 @@
   ];
   const TRADEOFF_MARKERS = ['pero','aunque','a la vez','sin embargo','mientras','prioridad','limitado','no puede','quiere','sin sacrificar','prefiere'];
   const CONDITIONAL_SIGNALS = ['si ', 'salvo', 'a menos que', 'dependería', 'podría ser correcta', 'sería apropiada'];
+
+  const HARD_BLOCKER_PATTERNS = [
+    /definición o reconocimiento directo disfrazado/i,
+    /menos de dos distractores técnicamente plausibles/i,
+    /estructura ambigua o inválida/i
+  ];
 
   function txt(x){ return String(x || '').trim(); }
   function words(x){ return txt(x).split(/\s+/).filter(Boolean); }
@@ -145,9 +153,15 @@
     return { hasCondition, namesRealAlternative, strong: d.length >= 50 && hasCondition && namesRealAlternative };
   }
 
+  function classifyBlockers(blockers){
+    const hard = blockers.filter(b => HARD_BLOCKER_PATTERNS.some(r => r.test(b)));
+    const soft = blockers.filter(b => !hard.includes(b));
+    return { hard, soft };
+  }
+
   function strictPreAudit(concept){
     const v = concept && concept.variantes && concept.variantes[0];
-    if(!v) return { decision:'reject_before_human', score:0, max_score:14, blockers:['sin variante'] };
+    if(!v) return { decision:'reject_before_human', quality_tier:'reject', score:0, max_score:14, blockers:['sin variante'] };
 
     const blockers = [];
     const warnings = [];
@@ -191,17 +205,36 @@
     if(options.length === 4 && uniqueOptions.size === 4 && Number.isInteger(v.a) && v.a >= 0 && v.a <= 3) score++;
     else blockers.push('estructura ambigua o inválida');
 
+    const blockerClasses = classifyBlockers(blockers);
     let decision = 'rewrite_before_human';
-    if(blockers.length === 0 && score >= CFG.MIN_STRICT_SCORE) decision = 'candidate_for_strict_human_review';
-    if(score < 8) decision = 'reject_or_rebuild';
+    let quality_tier = 'rewrite';
+
+    if(score < CFG.REJECT_SCORE){
+      decision = 'reject_or_rebuild';
+      quality_tier = 'reject';
+    } else if(blockerClasses.hard.length === 0 && blockers.length === 0 && score >= CFG.PREMIUM_SCORE){
+      decision = 'candidate_for_strict_human_review';
+      quality_tier = 'premium';
+    } else if(
+      blockerClasses.hard.length === 0 &&
+      blockerClasses.soft.length <= CFG.MAX_SOFT_BLOCKERS_APPROVED &&
+      score >= CFG.APPROVED_SCORE
+    ){
+      decision = 'candidate_for_human_review';
+      quality_tier = 'approved';
+    }
 
     return {
       version: VERSION,
       id: concept.id || null,
       score,
       max_score: 14,
+      score_pct: Math.round((score / 14) * 1000) / 10,
       decision,
+      quality_tier,
       blockers,
+      hard_blockers: blockerClasses.hard,
+      soft_blockers: blockerClasses.soft,
       warnings,
       diagnostics: { scenario, definition, distractors, lengths, tone, conditional },
       human_review_status: 'pending'
@@ -210,12 +243,16 @@
 
   function strictPreAuditBatch(concepts){
     const rows = (concepts || []).map(c => ({ concept:c, audit:strictPreAudit(c) }));
+    const premium = rows.filter(x => x.audit.quality_tier === 'premium');
+    const approved = rows.filter(x => x.audit.quality_tier === 'approved');
     return {
       version: VERSION,
       total: rows.length,
-      candidates: rows.filter(x => x.audit.decision === 'candidate_for_strict_human_review'),
-      rewrite: rows.filter(x => x.audit.decision === 'rewrite_before_human'),
-      rejected: rows.filter(x => x.audit.decision === 'reject_or_rebuild'),
+      premium,
+      approved,
+      candidates: [...premium, ...approved],
+      rewrite: rows.filter(x => x.audit.quality_tier === 'rewrite'),
+      rejected: rows.filter(x => x.audit.quality_tier === 'reject'),
       rows
     };
   }
