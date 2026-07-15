@@ -1,32 +1,11 @@
 // ============================================================
 // PEARSON KILLER — pk-data-killer-pilot.js
-// LOTE PILOTO — 15 preguntas completamente nuevas
+// LOTE PILOTO — 15 preguntas revisadas técnicamente
 // Tema: Tipos de Pólizas de Salud (HMO, PPO, EPO, POS, HDHP, HSA, FSA, HRA)
 //
-// Requisitos cumplidos en cada una de las 15:
-//   - escenario profesional (no reconocimiento directo);
-//   - principio oculto (el encabezado nunca nombra el concepto evaluado);
-//   - información relevante e irrelevante mezclada;
-//   - cuatro opciones plausibles, con dos claramente tentadoras;
-//   - una sola mejor respuesta;
-//   - palabra decisiva (MÁS PROBABLE, MEJOR, EXCEPTO, etc.);
-//   - explicación individual de por qué falla cada opción;
-//   - 'distractor_condicional': qué cambio en el escenario haría
-//     correcta OTRA opción — el criterio más difícil de automatizar,
-//     resuelto aquí manualmente por diseño, no por heurística.
-//
-// IMPORTANTE — AISLAMIENTO:
-// Este archivo se carga en pearson-killer.html como variable
-// GLOBAL INDEPENDIENTE (window.PK_KILLER_PILOT). A propósito NO
-// se agrega al arreglo MODULOS de pk-loader.js, para que estas 15
-// preguntas NUNCA se mezclen automáticamente con las 545 del banco
-// existente. Solo el modo 'killer_pilot' (agregado en pearson-killer.html)
-// las consume directamente.
-//
-// human_review_status de las 15: PENDING. El autor (Claude) se
-// autoevaluó contra los 8 criterios cualitativos como ejercicio de
-// calidad, pero eso NO sustituye tu revisión humana final — así lo
-// exige la Regla 6 del auditor (pk-schema.js v1.1).
+// Revisión humana técnica: se eliminaron absolutos innecesarios y se
+// precisaron reglas dependientes del diseño del plan, fecha efectiva,
+// cobertura descalificante y continuidad de beneficios.
 // ============================================================
 
 const PK_KILLER_PILOT = [
@@ -39,22 +18,22 @@ const PK_KILLER_PILOT = [
   variantes: [{
     nivel: 5,
     tipo_trampa: "ESCENARIO",
-    q: "D está inscrito en un HMO a través de su empleo, plan que normalmente exige referido de su médico de cabecera (PCP) para cualquier consulta con especialistas. Mientras viaja por trabajo a otro condado, fuera del área de servicio de su plan, sufre un accidente de tránsito y es trasladado en ambulancia al hospital más cercano, que no pertenece a la red de su HMO. ¿Qué es MÁS PROBABLE respecto a la cobertura de esa atención hospitalaria?",
+    q: "D está inscrito en un HMO a través de su empleo, plan que normalmente exige referido de su médico de cabecera (PCP) para consultas con especialistas. Mientras viaja por trabajo fuera del área de servicio del plan, sufre un accidente de tránsito y es trasladado en ambulancia al hospital más cercano, que no pertenece a la red. ¿Qué es MÁS PROBABLE respecto a la cobertura de la atención de emergencia?",
     o: [
       "No está cubierta, porque el hospital no pertenece a la red y D no obtuvo referido de su PCP",
-      "Está cubierta como atención de emergencia, sin necesidad de referido ni autorización previa del HMO, incluso fuera de la red",
+      "La atención de emergencia puede estar cubierta sin referido ni autorización previa, aun cuando el hospital esté fuera de la red, sujeta a las condiciones aplicables del plan y la ley",
       "Está cubierta solo si D llama a su PCP desde la sala de emergencias antes de recibir tratamiento",
       "Está cubierta únicamente si, dentro de las 24 horas siguientes, D consigue que su PCP emita un referido retroactivo"
     ],
     a: 1,
-    trampa: "La gente generaliza 'HMO = necesito referido y red para todo' sin conocer la excepción de emergencia, que es universal en pólizas de salud reguladas: una emergencia verdadera se cubre fuera de la red sin autorización previa.",
-    correcto: "Las emergencias verdaderas están cubiertas fuera de la red y sin necesidad de referido previo, incluso bajo la estructura más restrictiva de HMO. Esta es una excepción estándar de la industria y una protección regulatoria común, precisamente porque exigir autorización previa en una emergencia pondría en riesgo la vida del asegurado.",
+    trampa: "La trampa consiste en aplicar la regla ordinaria de red y referidos del HMO a una situación de emergencia.",
+    correcto: "La atención de emergencia no se condiciona normalmente a un referido o autorización previa. La cobertura y el costo compartido exactos dependen de las reglas aplicables al plan y de la normativa vigente, pero la falta de referido previo no convierte por sí sola una emergencia en un servicio no cubierto.",
     incorrectos: [
-      "A) Aplica la regla general de referido/red del HMO a una situación de emergencia, donde esa regla no rige — es exactamente el error que la excepción de emergencia existe para prevenir.",
-      "C) Exigir una llamada al PCP antes de tratar una emergencia contradice el propósito mismo de la excepción: la atención de emergencia no puede condicionarse a autorización previa.",
-      "D) No existe tal requisito de 'referido retroactivo en 24 horas' como condición de cobertura para la atención de emergencia ya prestada; algunos planes piden notificación posterior, no autorización."
+      "A) Aplica la regla general de red y referidos a una emergencia, donde la ausencia de autorización previa no es por sí sola motivo suficiente para negar la atención de emergencia.",
+      "C) Exigir una llamada al PCP antes de tratar una emergencia contradice la lógica de la atención inmediata.",
+      "D) Un plan puede exigir notificación posterior en ciertos casos, pero eso no equivale a exigir un referido retroactivo como condición universal de cobertura."
     ],
-    distractor_condicional: "Si en vez de un accidente D hubiera decidido, estando fuera de su área de servicio, visitar una clínica no urgente por conveniencia (por ejemplo, un resfriado leve) sin que fuera una emergencia, la respuesta correcta pasaría a ser la opción A: esa atención NO urgente fuera de la red generalmente no estaría cubierta sin autorización previa."
+    distractor_condicional: "Si D hubiera buscado por conveniencia una consulta no urgente fuera de la red, la cobertura podría ser negada o reducida conforme a las reglas del HMO."
   }]
 },
 
@@ -66,22 +45,17 @@ const PK_KILLER_PILOT = [
   variantes: [{
     nivel: 3,
     tipo_trampa: "SINONIMOS",
-    q: "Una doctora trabaja exclusivamente para una organización de atención administrada: atiende únicamente a los miembros de ese plan, dentro de las instalaciones propias del plan, como empleada asalariada de la organización, y no mantiene consultorio privado propio ni atiende pacientes de otros seguros. ¿Qué tipo de estructura describe MEJOR la relación de esta doctora con el plan?",
-    o: [
-      "HMO de Panel Abierto",
-      "HMO de Panel Cerrado",
-      "Organización de Punto de Servicio (POS)",
-      "Organización de Proveedores Preferidos (PPO)"
-    ],
+    q: "Una doctora trabaja exclusivamente para una organización de atención administrada: atiende únicamente a los miembros de ese plan, dentro de instalaciones del propio sistema, como empleada asalariada, y no mantiene consultorio privado independiente. ¿Qué tipo de estructura describe MEJOR esa relación?",
+    o: ["HMO de Panel Abierto", "HMO de Panel Cerrado", "Organización de Punto de Servicio (POS)", "Organización de Proveedores Preferidos (PPO)"],
     a: 1,
-    trampa: "Se confunde con Panel Abierto, que también es una red de HMO, pero cuya diferencia clave es que los médicos usan sus PROPIAS oficinas privadas por tiempo parcial para atender pacientes del plan, en vez de ser empleados exclusivos del HMO.",
-    correcto: "El Panel Cerrado consiste en médicos que trabajan como empleados del HMO en sus propias instalaciones, atendiendo exclusivamente a los miembros de ese plan. El Panel Abierto, en cambio, usa una red de médicos con consultorios privados propios que atienden pacientes del HMO solo por tiempo parcial, junto con su práctica independiente.",
+    trampa: "Se confunde el panel cerrado con modelos de médicos independientes contratados por una red.",
+    correcto: "En un modelo de panel cerrado o de grupo cerrado, los médicos atienden dentro de una estructura más integrada y no mantienen una práctica abierta a pacientes ajenos al sistema descrito.",
     incorrectos: [
-      "A) El Panel Abierto se caracteriza justamente por lo contrario: médicos con consultorio privado propio, no empleados exclusivos del plan.",
-      "C) POS es un tipo de estructura de cobertura administrada distinta, que combina elementos de HMO y PPO — no describe la relación laboral de un médico con un plan.",
-      "D) PPO es una red de proveedores con tarifa negociada, sin exigir exclusividad laboral de sus médicos con ningún asegurador."
+      "A) El panel abierto se asocia con médicos que mantienen práctica independiente y participan en la red.",
+      "C) POS describe una estructura de beneficios y acceso, no esta relación laboral específica.",
+      "D) PPO es una red contractual de proveedores y no exige esta exclusividad laboral."
     ],
-    distractor_condicional: "Si la doctora, en cambio, mantuviera su propio consultorio privado y solo dedicara parte de su horario a atender pacientes de este plan de salud, la estructura correcta sería HMO de Panel Abierto (opción A)."
+    distractor_condicional: "Si la doctora mantuviera su propio consultorio y atendiera pacientes de distintos pagadores, la opción A sería más apropiada."
   }]
 },
 
@@ -89,26 +63,26 @@ const PK_KILLER_PILOT = [
   id: "killer_pilot_003",
   area: "salud",
   subtema_blueprint: "PPO",
-  concepto: "PPO — Facturación de Saldo Fuera de la Red",
+  concepto: "PPO — Posible Facturación de Saldo Fuera de la Red",
   variantes: [{
     nivel: 5,
     tipo_trampa: "ESCENARIO",
-    q: "N tiene una póliza PPO. La semana pasada pagó $50 de copago por una visita de rutina con un médico dentro de la red. Esta semana decide, sin pedir autorización previa, operarse con un cirujano fuera de la red por su reputación. El cirujano cobra $10,000; el plan de N reembolsa el 60% de lo que considera un 'cargo razonable y acostumbrado' fuera de la red, equivalente a $4,000. ¿Qué es MÁS PROBABLE que ocurra con el saldo no cubierto?",
+    q: "N tiene una póliza PPO y elige voluntariamente, para una cirugía programada, a un cirujano fuera de la red. Antes del procedimiento confirma que el plan pagará beneficios fuera de la red sobre un monto permitido menor que los $10,000 cobrados por el cirujano. Salvo que una protección legal específica o el contrato aplicable dispongan otra cosa, ¿qué es MÁS PROBABLE respecto a la diferencia no cubierta?",
     o: [
-      "N no debe nada adicional, porque su PPO cubre igual dentro y fuera de la red",
-      "El cirujano puede facturarle a N directamente la diferencia entre lo que cobró y lo que pagó el plan (facturación de saldo)",
-      "La aseguradora reembolsará retroactivamente el 100% del costo una vez revisado el caso",
-      "El cirujano está obligado por ley a aceptar el pago del plan como pago completo, igual que un proveedor dentro de la red"
+      "N no debe nada adicional, porque un PPO paga siempre igual dentro y fuera de la red",
+      "El proveedor fuera de la red puede intentar facturar a N parte o toda la diferencia entre su cargo y lo reconocido por el plan, además del costo compartido aplicable",
+      "La aseguradora debe pagar automáticamente el 100% del cargo después de la cirugía",
+      "Todo proveedor fuera de la red está obligado a aceptar el monto permitido por el plan como pago completo"
     ],
     a: 1,
-    trampa: "El copago de $50 de la visita dentro de la red es un dato irrelevante que no cambia el resultado — sirve para tentar a pensar que 'ya pagó lo que le correspondía' cuando en realidad esa visita anterior no tiene relación con el reembolso fuera de la red de esta cirugía.",
-    correcto: "En un PPO, los proveedores FUERA de la red no tienen contrato de tarifa negociada con el plan y por lo tanto no están obligados a aceptar el reembolso del plan como pago total — pueden facturar al paciente la diferencia (balance billing). Esta es precisamente la razón por la que la cobertura fuera de la red en un PPO, aunque existe, es más costosa para el asegurado que dentro de la red.",
+    trampa: "La existencia de beneficios fuera de la red no significa que el proveedor haya aceptado contractualmente la tarifa negociada del plan.",
+    correcto: "En una atención programada elegida voluntariamente fuera de la red, el proveedor puede no estar sujeto al contrato de tarifas del PPO y puede existir facturación adicional al paciente, salvo que una ley de protección contra facturación sorpresa u otra regla aplicable limite esa práctica.",
     incorrectos: [
-      "A) El PPO SÍ distingue entre dentro y fuera de la red — el reembolso fuera de la red es menor (60% vs. una tarifa mucho más alta dentro de la red) precisamente para desincentivar salir de la red.",
-      "C) No existe tal reembolso retroactivo automático al 100%; el 60% de la tarifa razonable fuera de la red es, salvo apelación exitosa, el resultado esperado.",
-      "D) Esa protección contra facturación de saldo aplica a proveedores DENTRO de la red, que sí aceptaron contractualmente la tarifa negociada como pago completo — no aplica a proveedores fuera de la red."
+      "A) Los PPO suelen diferenciar costos y beneficios entre dentro y fuera de la red.",
+      "C) No existe una obligación general de reembolso automático al 100% del cargo facturado.",
+      "D) Un proveedor fuera de la red no está, por ese solo hecho, obligado contractualmente a aceptar el monto permitido del plan como pago completo."
     ],
-    distractor_condicional: "Si N hubiera elegido un cirujano DENTRO de la red para la misma cirugía, la opción D sería la más cercana a correcta: ese proveedor, por contrato con el plan, no podría facturarle a N la diferencia entre su tarifa habitual y lo que pagó el plan."
+    distractor_condicional: "Si el cirujano fuera un proveedor participante dentro de la red, normalmente estaría obligado por contrato a aceptar la tarifa negociada, sin facturar al paciente la diferencia entre su cargo habitual y esa tarifa."
   }]
 },
 
@@ -116,26 +90,26 @@ const PK_KILLER_PILOT = [
   id: "killer_pilot_004",
   area: "salud",
   subtema_blueprint: "PPO",
-  concepto: "PPO vs. HMO — Flexibilidad de Acceso a Especialistas",
+  concepto: "PPO vs. HMO — Acceso a Especialistas",
   variantes: [{
     nivel: 3,
     tipo_trampa: "COMPARACION",
-    q: "Un ejecutivo que viaja constantemente por trabajo debe elegir entre el HMO y el PPO que ofrece su empresa. Su prioridad declarada es poder consultar a cualquier especialista que necesite, en cualquier ciudad, sin depender de la aprobación de un tercero antes de cada visita. ¿Qué característica ESTRUCTURAL del PPO explica MEJOR por qué es la opción más apropiada para su prioridad declarada?",
+    q: "Un ejecutivo debe elegir entre un HMO y un PPO. Su prioridad es poder consultar especialistas sin tener que obtener primero un referido de su médico de cabecera. ¿Qué característica ESTRUCTURAL del PPO explica MEJOR por qué suele ajustarse a esa prioridad?",
     o: [
-      "El PPO no exige designar un médico de cabecera ni obtener referidos para consultar especialistas",
+      "El PPO generalmente permite consultar especialistas sin referido de un PCP, aunque ciertos servicios todavía pueden requerir autorización previa",
       "El PPO siempre tiene primas mensuales más bajas que el HMO",
-      "El PPO cubre el 100% de todos los gastos médicos sin ningún deducible",
-      "El PPO no permite recibir atención médica fuera del estado de residencia"
+      "El PPO cubre el 100% de todos los gastos médicos sin deducible",
+      "El PPO prohíbe recibir atención fuera del estado de residencia"
     ],
     a: 0,
-    trampa: "La prima más baja (opción B) es tentadora porque suena a 'ventaja', pero en la práctica el PPO suele tener primas MÁS altas que el HMO precisamente por ofrecer esa flexibilidad — el dato relevante real es la ausencia de referidos, no el costo.",
-    correcto: "La característica estructural clave del PPO es que no exige designar un médico de cabecera (PCP) ni obtener referidos previos para consultar especialistas, lo que se ajusta directamente a la prioridad del ejecutivo de no depender de aprobaciones previas.",
+    trampa: "No debe confundirse la ausencia de referido con la ausencia de toda autorización previa.",
+    correcto: "La diferencia relevante es que un PPO generalmente no exige un referido del PCP para acceder a especialistas. Eso no significa que ningún servicio pueda estar sujeto a autorización previa o manejo de utilización.",
     incorrectos: [
-      "B) Es generalmente falso — los PPO suelen tener primas más altas que los HMO equivalentes, precisamente a cambio de mayor flexibilidad de red.",
-      "C) Ningún tipo de plan mencionado elimina el deducible por completo; esta afirmación es una generalización incorrecta sobre los PPO.",
-      "D) Los PPO no tienen esa restricción geográfica; de hecho, suelen tener redes más amplias, no más limitadas, que otras estructuras."
+      "B) El costo de la prima depende del plan; no existe una regla de que el PPO siempre sea más barato.",
+      "C) Un PPO puede tener deducibles, copagos y coaseguro.",
+      "D) La estructura PPO no se define por una prohibición general de atención fuera del estado."
     ],
-    distractor_condicional: "Si la prioridad del ejecutivo fuera minimizar el costo mensual de la prima en vez de la flexibilidad de acceso, el HMO (generalmente con primas más bajas) sería la opción más apropiada, no el PPO."
+    distractor_condicional: "Si la prioridad fuera coordinar la atención mediante un PCP y aceptar una red más restringida a cambio de costos potencialmente menores, un HMO podría ajustarse mejor."
   }]
 },
 
@@ -143,26 +117,26 @@ const PK_KILLER_PILOT = [
   id: "killer_pilot_005",
   area: "salud",
   subtema_blueprint: "EPO",
-  concepto: "EPO — Estructura Híbrida entre HMO y PPO",
+  concepto: "EPO — Acceso sin Referido y Red Exclusiva",
   variantes: [{
     nivel: 4,
     tipo_trampa: "COMPARACION",
-    q: "R tiene una póliza de salud. Consulta directamente a un dermatólogo sin pedir referido a ningún médico de cabecera, y el plan lo cubre sin problema. Meses después, R intenta ver a un cardiólogo fuera de la red del plan por una condición NO urgente, y la aseguradora le niega la cobertura por completo, sin ofrecerle ni siquiera un reembolso parcial. ¿Qué característica de la póliza de R explica ambos resultados a la vez?",
+    q: "R tiene un plan que, según su diseño, permite consultar especialistas de la red sin referido de un PCP. Más tarde busca atención NO urgente con un cardiólogo fuera de la red y el plan no paga beneficios fuera de la red. ¿Qué opción describe MEJOR esa combinación?",
     o: [
-      "Es un HMO, que exige referido para todo, pero cubre igual dentro y fuera de la red",
-      "Es una EPO, que no exige referido para especialistas (como un PPO) pero no cubre nada fuera de la red salvo emergencia (como un HMO)",
-      "Es una póliza que solo cubre situaciones de emergencia, sin excepción",
-      "Es un PPO estándar, que siempre reembolsa parcialmente la atención fuera de la red"
+      "Un HMO que necesariamente cubre igual dentro y fuera de la red",
+      "Una EPO: acceso directo a especialistas de la red, con cobertura ordinaria limitada a proveedores de la red salvo excepciones como emergencias",
+      "Una póliza que solo cubre emergencias",
+      "Un PPO que necesariamente paga el mismo beneficio fuera de la red"
     ],
     a: 1,
-    trampa: "La ausencia de referido hace pensar en PPO; la negación total fuera de la red hace pensar en HMO. La EPO combina exactamente esas dos características de dos estructuras distintas, y por eso se confunde con ambas por separado.",
-    correcto: "La EPO (Exclusive Provider Organization) toma del PPO la característica de no exigir referido para ver especialistas, pero toma del HMO la restricción de no cubrir atención fuera de la red salvo en caso de emergencia. Es precisamente esta combinación la que la distingue como estructura propia.",
+    trampa: "La ausencia de referido recuerda a un PPO, mientras la restricción ordinaria fuera de la red recuerda a un HMO.",
+    correcto: "Una EPO suele combinar acceso a especialistas de la red sin referido con una red exclusiva para la atención no urgente. Los detalles exactos dependen del contrato del plan.",
     incorrectos: [
-      "A) Un HMO típico SÍ exige referido para especialistas — contradice el primer hecho del escenario (R no pidió referido para el dermatólogo).",
-      "C) El primer evento (consulta al dermatólogo) no fue una emergencia y sí estuvo cubierto, por lo que 'solo cubre emergencias' no explica ambos hechos.",
-      "D) Un PPO estándar generalmente sí ofrece algún reembolso parcial fuera de la red, aunque menor — no la negación total que sufrió R con el cardiólogo."
+      "A) No describe la combinación del escenario y además afirma una cobertura fuera de red que no es característica definitoria de un HMO.",
+      "C) El plan sí cubrió una consulta no urgente dentro de la red.",
+      "D) Un PPO puede ofrecer beneficios fuera de la red, pero no se define por pagar lo mismo dentro y fuera."
     ],
-    distractor_condicional: "Si la póliza de R hubiera exigido referido de un PCP para ver al dermatólogo (el primer evento), la estructura correcta habría sido un HMO, no una EPO."
+    distractor_condicional: "Si el plan exigiera referido del PCP para especialistas y restringiera la atención ordinaria a la red, un HMO sería una opción más probable."
   }]
 },
 
@@ -170,26 +144,26 @@ const PK_KILLER_PILOT = [
   id: "killer_pilot_006",
   area: "salud",
   subtema_blueprint: "POS",
-  concepto: "POS — Niveles de Reembolso Según la Vía de Acceso",
+  concepto: "POS — Diferente Costo Según la Vía de Acceso",
   variantes: [{
     nivel: 5,
     tipo_trampa: "ESCENARIO",
-    q: "M tiene una póliza de salud que le permite, si así lo decide, consultar directamente a un especialista fuera de la red sin pasar por su médico de cabecera. Lo hace, y la aseguradora le reembolsa una parte del costo — pero a un porcentaje menor que el que hubiera recibido si su médico de cabecera lo hubiera referido a un especialista dentro de la red. ¿Qué tipo de estructura describe esta cobertura parcial (ni negación total, ni reembolso completo)?",
+    q: "M tiene un plan que usa un PCP para coordinar la atención dentro de la red, pero también le permite buscar por su cuenta ciertos servicios fuera de la red con mayor costo de bolsillo. ¿Qué estructura describe MEJOR ese diseño?",
     o: [
-      "Un HMO, porque toda estructura de atención administrada niega totalmente la atención sin referido",
-      "Un plan de Punto de Servicio (POS), que permite auto-referirse fuera de la red pero con un nivel de reembolso menor al que aplica cuando se sigue el sistema de referidos del PCP",
-      "Un PPO, que siempre reembolsa igual dentro y fuera de la red",
-      "Una EPO, que nunca cubre absolutamente nada fuera de la red bajo ninguna circunstancia"
+      "Un HMO que necesariamente niega toda atención sin referido",
+      "Un plan de Punto de Servicio (POS), que combina coordinación tipo HMO con una opción de usar proveedores fuera de la red a mayor costo, según el diseño del plan",
+      "Un PPO que siempre paga exactamente lo mismo dentro y fuera de la red",
+      "Una EPO que paga de forma rutinaria beneficios fuera de la red para atención no urgente"
     ],
     a: 1,
-    trampa: "El resultado de M no es ni la negación total característica del HMO/EPO fuera de la red, ni la igualdad de reembolso que sugiere erróneamente la opción C — es un punto intermedio, que es precisamente la firma distintiva del POS.",
-    correcto: "El plan de Punto de Servicio (POS) combina el sistema de referidos del HMO (el nivel de cobertura MÁS ALTO se obtiene siguiendo el sistema de PCP) con la posibilidad de auto-referirse fuera de la red como en un PPO, pero a un nivel de reembolso MENOR que si hubiera usado el sistema de referidos.",
+    trampa: "El rasgo decisivo es la combinación de coordinación mediante PCP con una opción de salir de la red, no un porcentaje de reembolso universal.",
+    correcto: "Un POS suele combinar características de HMO y PPO: atención coordinada dentro de la red y, según el contrato, posibilidad de recibir ciertos beneficios fuera de la red con mayor costo compartido.",
     incorrectos: [
-      "A) Contradice directamente el escenario: M sí recibió reembolso parcial, no una negación total como sería típico de un HMO puro sin referido.",
-      "C) Un PPO no necesariamente iguala el reembolso dentro y fuera de la red; y más importante, esta opción no explica la existencia de DOS niveles distintos de reembolso según la vía de acceso, que es justamente lo que describe el escenario.",
-      "D) La EPO no cubre nada fuera de la red salvo emergencia — pero M sí recibió cobertura parcial sin que se mencione una emergencia, lo cual contradice esta opción."
+      "A) Es demasiado absoluta y no describe la opción fuera de red del escenario.",
+      "C) Un PPO no se define por pagar igual dentro y fuera de la red.",
+      "D) Una EPO normalmente restringe la cobertura ordinaria a la red."
     ],
-    distractor_condicional: "Si M hubiera obtenido primero el referido de su PCP para ver a ese mismo especialista, habría recibido el nivel de reembolso MÁS ALTO disponible bajo su plan POS, en vez del nivel reducido por auto-referirse."
+    distractor_condicional: "Si el plan no utilizara PCP ni referidos y ofreciera beneficios fuera de la red directamente, un PPO sería más probable."
   }]
 },
 
@@ -201,22 +175,22 @@ const PK_KILLER_PILOT = [
   variantes: [{
     nivel: 4,
     tipo_trampa: "CUAL_NO",
-    q: "Un consultor de recursos humanos explica a un grupo de empleados las tres estructuras de atención administrada que ofrece la empresa este año: HMO, EPO y POS. ¿Cuál de las siguientes afirmaciones del consultor es FALSA?",
+    q: "Un consultor explica características GENERALES de HMO, EPO y POS, aclarando que los contratos específicos pueden variar. ¿Cuál afirmación es FALSA?",
     o: [
-      "Las tres estructuras suelen tener redes de proveedores contratados a tarifa negociada",
-      "El HMO generalmente exige referido del médico de cabecera para ver especialistas, mientras que la EPO generalmente no lo exige",
-      "Las tres estructuras —HMO, EPO y POS— cubren igual la atención fuera de la red, sin importar cuál de las tres elija el empleado",
-      "El plan POS combina el sistema de referidos del HMO con la posibilidad de salir de la red que ofrece un PPO, aunque con menor reembolso al salir"
+      "Las tres estructuras suelen utilizar redes de proveedores contratados",
+      "Un HMO suele usar un PCP y referidos con más frecuencia que una EPO",
+      "HMO, EPO y POS ofrecen necesariamente la misma cobertura fuera de la red",
+      "Un POS suele combinar coordinación de atención tipo HMO con alguna posibilidad de obtener beneficios fuera de la red a mayor costo"
     ],
     a: 2,
-    trampa: "Alguien podría asumir que, por pertenecer todas a la categoría genérica de 'atención administrada', las tres tratan la atención fuera de la red de forma equivalente — es exactamente lo contrario: varían mucho entre sí en ese punto específico.",
-    correcto: "Es FALSO que las tres cubran igual fuera de la red: el HMO y la EPO generalmente NO cubren nada fuera de la red salvo emergencia; el POS sí ofrece cobertura parcial fuera de la red, aunque a un nivel de reembolso reducido. Esta es precisamente la diferencia más importante entre las tres estructuras.",
+    trampa: "Pertenecer a la categoría de atención administrada no significa que los tres diseños manejen igual la atención fuera de la red.",
+    correcto: "Es falso afirmar que los tres ofrecen necesariamente la misma cobertura fuera de la red. Esa es precisamente una de las áreas donde suelen diferenciarse.",
     incorrectos: [
-      "A) Es verdadera: las tres estructuras funcionan sobre la base de redes de proveedores con tarifas negociadas.",
-      "B) Es verdadera: el HMO exige referido y la EPO típicamente no, siendo esa una de sus diferencias clave.",
-      "D) Es verdadera: describe correctamente la naturaleza híbrida del POS entre el HMO y el PPO."
+      "A) Es una descripción general válida de estos modelos de atención administrada.",
+      "B) Es una comparación general válida, aunque los contratos concretos pueden variar.",
+      "D) Describe la naturaleza habitual de un POS sin convertirla en una regla absoluta sobre todos los contratos."
     ],
-    distractor_condicional: "No aplica un cambio de dato en este formato EXCEPTO/FALSA — la respuesta depende de identificar cuál de las cuatro afirmaciones no es consistente con la estructura real de cada plan, no de un escenario que pueda alterarse."
+    distractor_condicional: "No aplica un cambio simple de escenario: la pregunta evalúa una comparación general entre estructuras."
   }]
 },
 
@@ -224,26 +198,26 @@ const PK_KILLER_PILOT = [
   id: "killer_pilot_008",
   area: "salud",
   subtema_blueprint: "HDHP",
-  concepto: "HDHP — Excepción de Atención Preventiva Antes del Deducible",
+  concepto: "HDHP — Atención Preventiva Antes del Deducible",
   variantes: [{
     nivel: 5,
     tipo_trampa: "EXCEPCION_LEGAL",
-    q: "Una familia está inscrita en un plan de salud con deducible de $3,400 este año y no ha gastado nada de ese deducible todavía. La madre asiste a su examen físico anual de rutina (chequeo general y vacunas), y en el consultorio no le cobran nada por esa visita. Su esposo, sorprendido, pregunta cómo es posible que el plan pagara ANTES de cumplirse el deducible sin que esto ponga en riesgo que el plan siga calificando como plan de deducible alto (HDHP). ¿Cuál es la explicación MÁS probable?",
+    q: "Una familia está inscrita en un HDHP y todavía no ha satisfecho el deducible. La madre recibe un servicio preventivo que el plan cubre antes del deducible. ¿Cuál es la explicación MÁS correcta respecto a la condición del plan como HDHP elegible para HSA?",
     o: [
-      "Es un error de facturación del consultorio que debe corregirse antes de que termine el año",
-      "Los planes HDHP pueden cubrir servicios preventivos de rutina antes del deducible sin perder su calificación como HDHP, conforme a las reglas del IRS que rigen estos planes",
-      "El deducible familiar completo ya se cumplió automáticamente apenas comenzó el año, por tratarse de un plan familiar",
-      "Los HDHP nunca cobran deducible a ningún miembro menor de edad de la familia"
+      "Todo pago del plan antes del deducible descalifica automáticamente al HDHP",
+      "Las reglas fiscales permiten que un HDHP proporcione cobertura preventiva permitida antes del deducible sin perder por ello su condición de HDHP",
+      "El deducible familiar se considera cumplido automáticamente al comenzar el año",
+      "Los HDHP nunca aplican deducible a miembros menores de edad"
     ],
     a: 1,
-    trampa: "La regla general que la gente aprende es 'en un HDHP no se paga nada hasta cumplir el deducible' — la atención preventiva es la excepción reconocida a esa regla, y por eso genera esta duda tan frecuente.",
-    correcto: "El IRS permite específicamente que los planes HDHP cubran ciertos servicios de atención preventiva (como chequeos de rutina y vacunas) antes de que se cumpla el deducible, sin que esto afecte la calificación del plan como HDHP para efectos de elegibilidad de HSA. Es una excepción diseñada para no desincentivar la prevención.",
+    trampa: "La regla general del deducible tiene excepciones permitidas, entre ellas determinada atención preventiva.",
+    correcto: "La normativa fiscal permite que un HDHP cubra atención preventiva permitida antes de satisfacer el deducible sin perder su condición de HDHP. No debe afirmarse que toda atención preventiva concreta está necesariamente cubierta al 100% por la sola regla fiscal; eso también depende de otras normas y del diseño del plan.",
     incorrectos: [
-      "A) No hay ningún error: la cobertura preventiva sin costo antes del deducible es exactamente lo que exige la regulación aplicable a los HDHP.",
-      "C) No existe tal regla de 'cumplimiento automático' del deducible familiar al inicio del año; el deducible se acumula con los gastos reales incurridos.",
-      "D) No existe una exención general de deducible basada solo en la edad del miembro de la familia."
+      "A) Ignora las excepciones expresamente permitidas para atención preventiva.",
+      "C) El deducible no se satisface automáticamente al iniciar el año.",
+      "D) No existe una exención general del deducible basada únicamente en la edad."
     ],
-    distractor_condicional: "Si en vez de un chequeo preventivo de rutina hubiera sido una consulta por un síntoma específico nuevo (atención diagnóstica, no preventiva), ese gasto SÍ contaría normalmente contra el deducible del HDHP."
+    distractor_condicional: "Si el servicio fuera diagnóstico o terapéutico y no encajara en una excepción permitida, la cobertura antes del deducible podría afectar la condición HSA-compatible del plan."
   }]
 },
 
@@ -251,26 +225,26 @@ const PK_KILLER_PILOT = [
   id: "killer_pilot_009",
   area: "salud",
   subtema_blueprint: "HDHP",
-  concepto: "HDHP y HSA — Cobertura Descalificante del Cónyuge",
+  concepto: "HDHP y HSA — FSA General del Cónyuge",
   variantes: [{
     nivel: 5,
     tipo_trampa: "ESCENARIO",
-    q: "P está inscrito en un HDHP a través de su propio empleo, con un deducible que cumple el mínimo exigido. Su cónyuge trabaja en otra empresa y, sin que P lo sepa al principio, lo inscribió como dependiente en una cuenta de gastos flexibles (FSA) de propósito GENERAL que el cónyuge tiene en su trabajo, la cual reembolsa cualquier tipo de gasto médico desde el primer dólar. P quiere abrir una HSA este año. ¿Qué efecto tiene la FSA del cónyuge sobre la elegibilidad de P para contribuir a una HSA?",
+    q: "P está cubierto por un HDHP elegible para HSA. El empleador de su cónyuge ofrece una FSA de salud de propósito GENERAL cuyo saldo puede reembolsar gastos médicos elegibles de P como cónyuge. ¿Qué efecto tiene esa disponibilidad de reembolso sobre la elegibilidad de P para contribuir a una HSA?",
     o: [
-      "Ninguno, porque la FSA pertenece legalmente al cónyuge, no a P",
-      "P pierde la elegibilidad para contribuir a una HSA, porque estar cubierto por una FSA de propósito general de cualquiera de los dos cónyuges es cobertura de salud descalificante",
-      "P puede contribuir a la HSA normalmente, pero con el límite de contribución reducido a la mitad",
-      "P solo pierde la elegibilidad si los gastos reembolsados por la FSA superan los $500 anuales"
+      "Ninguno, porque la elección de la FSA la hizo el cónyuge",
+      "P puede perder la elegibilidad para contribuir a una HSA durante los meses en que la FSA general pueda reembolsar sus gastos, porque constituye otra cobertura de salud no permitida",
+      "P siempre puede contribuir, pero solo hasta la mitad del límite anual",
+      "Solo descalifica si la FSA reembolsa más de $500"
     ],
     a: 1,
-    trampa: "La gente asume que solo cuenta la cobertura a NOMBRE PROPIO del solicitante de la HSA, pero la cobertura de una FSA de propósito general del cónyuge —de la cual el solicitante es beneficiario— también cuenta como cobertura descalificante para la HSA.",
-    correcto: "Cualquier persona cubierta por una FSA de propósito general —incluso como dependiente de la FSA de su cónyuge— pierde la elegibilidad para contribuir a una HSA, porque esa FSA reembolsa gastos médicos antes del deducible, lo cual es incompatible con el requisito de 'ninguna otra cobertura descalificante' de la HSA.",
+    trampa: "En una FSA no se 'inscribe como dependiente' a la persona de la misma manera que en un seguro; lo relevante es si la FSA puede reembolsar sus gastos médicos.",
+    correcto: "Una FSA de salud de propósito general del cónyuge puede descalificar a P para contribuciones a HSA si P es una persona cuyos gastos pueden ser reembolsados por esa FSA. La elegibilidad se determina por mes y por la cobertura disponible, no por quién hizo la elección salarial.",
     incorrectos: [
-      "A) Es un error común: la titularidad legal de la cuenta no es lo relevante — lo relevante es si la persona está CUBIERTA por esa cobertura descalificante, y P sí lo está como dependiente inscrito.",
-      "C) No existe tal regla de 'límite reducido a la mitad' por tener cobertura descalificante parcial — la elegibilidad para la HSA es binaria: se tiene o no se tiene.",
-      "D) No existe un umbral de $500 que determine si la cobertura descalifica; lo que importa es el TIPO de cuenta (propósito general vs. limitado), no el monto reembolsado."
+      "A) La titularidad de la elección no resuelve el problema si la FSA puede pagar gastos de P.",
+      "C) No existe una regla general de reducción automática a la mitad.",
+      "D) La descalificación no depende de un umbral de $500."
     ],
-    distractor_condicional: "Si la FSA del cónyuge fuera de propósito LIMITADO (por ejemplo, solo para gastos dentales o de visión) en vez de propósito general, P podría seguir contribuyendo a su HSA sin problema, porque las FSA limitadas no son cobertura descalificante."
+    distractor_condicional: "Si la FSA fuera de propósito limitado, por ejemplo solo dental y visión, podría ser compatible con la elegibilidad para HSA."
   }]
 },
 
@@ -278,26 +252,26 @@ const PK_KILLER_PILOT = [
   id: "killer_pilot_010",
   area: "salud",
   subtema_blueprint: "HSA",
-  concepto: "HSA — Efecto de Inscribirse en Medicare",
+  concepto: "HSA — Inscripción en Medicare y Fecha Efectiva",
   variantes: [{
     nivel: 4,
     tipo_trampa: "ESCENARIO",
-    q: "V, de 66 años, sigue trabajando a tiempo completo y mantiene su HDHP a través de su empleador. Como cumple 66 años, decide inscribirse en Medicare Parte A porque escuchó que es gratuita para quien acumuló suficientes créditos de trabajo, y piensa que no tiene sentido 'dejar pasar' un beneficio sin costo. ¿Qué consecuencia tiene esta decisión sobre su cuenta HSA?",
+    q: "V, de 66 años, sigue trabajando y mantiene un HDHP. Decide inscribirse en Medicare Parte A. ¿Qué debe revisar para determinar hasta cuándo puede hacer contribuciones elegibles a su HSA?",
     o: [
-      "Ninguna: puede seguir contribuyendo a su HSA con normalidad mientras siga trabajando",
-      "Debe dejar de hacer nuevas contribuciones a su HSA a partir del mes en que su cobertura de Medicare Parte A entra en vigor",
-      "Puede seguir contribuyendo, pero únicamente por el monto adicional de 'catch-up' para mayores de 55 años",
-      "Pierde automáticamente todos los fondos que ya tenía acumulados en la HSA antes de inscribirse en Medicare"
+      "Nada: puede seguir contribuyendo mientras continúe trabajando",
+      "La fecha efectiva de su cobertura de Medicare; desde el primer mes en que esté cubierto por Medicare deja de ser elegible para contribuir, y una fecha efectiva retroactiva puede exigir ajustar contribuciones ya realizadas",
+      "Puede seguir contribuyendo únicamente por el monto de catch-up",
+      "Pierde automáticamente todos los fondos que ya tenía en la HSA"
     ],
     a: 1,
-    trampa: "V razona 'es gratis, así que no tiene costo ni consecuencia' — pero estar inscrito en CUALQUIER parte de Medicare, sin importar si tiene prima o no, es cobertura descalificante para NUEVAS contribuciones a la HSA. El dato de que la Parte A es gratuita es irrelevante para esta regla.",
-    correcto: "Inscribirse en cualquier parte de Medicare (incluida la Parte A sin prima) hace que la persona deje de ser 'individuo elegible' para efectos de HSA, por lo que debe detener las contribuciones nuevas a partir del mes de inscripción. Los fondos ya acumulados antes de esa fecha siguen siendo propiedad de V y pueden seguir usándose libres de impuestos para gastos médicos calificados.",
+    trampa: "El punto técnico no es solo la fecha en que presenta la solicitud, sino la fecha efectiva de Medicare, que en ciertos casos puede ser retroactiva.",
+    correcto: "Una persona inscrita en Medicare deja de ser elegible para nuevas contribuciones a la HSA a partir del mes en que la cobertura de Medicare es efectiva. En algunas inscripciones tardías de Parte A puede existir retroactividad, por lo que deben revisarse cuidadosamente las fechas y corregirse contribuciones no elegibles si corresponde. Los fondos ya acumulados no se pierden.",
     incorrectos: [
-      "A) Es exactamente el error que comete V: seguir trabajando no evita la descalificación una vez inscrito en Medicare — lo que importa es la inscripción en Medicare, no el estatus laboral.",
-      "C) No existe una excepción de 'solo catch-up' para personas inscritas en Medicare — la descalificación aplica a toda nueva contribución, no solo a la porción adicional por edad.",
-      "D) Los fondos ya acumulados en la HSA antes de la inscripción en Medicare NO se pierden; siguen siendo del titular y pueden seguir usándose."
+      "A) Seguir trabajando no elimina el efecto de estar cubierto por Medicare sobre la elegibilidad para contribuir.",
+      "C) El catch-up tampoco puede aportarse durante meses de inelegibilidad.",
+      "D) La inscripción en Medicare no confisca el saldo ya existente de la HSA."
     ],
-    distractor_condicional: "Si V hubiera pospuesto su inscripción en Medicare (lo cual es posible mientras siga trabajando y mantenga cobertura de grupo calificada), podría haber seguido contribuyendo normalmente a su HSA sin esta interrupción."
+    distractor_condicional: "Si V no estuviera inscrito en Medicare y cumpliera los demás requisitos de elegibilidad para HSA, podría seguir contribuyendo conforme a los límites aplicables."
   }]
 },
 
@@ -305,26 +279,26 @@ const PK_KILLER_PILOT = [
   id: "killer_pilot_011",
   area: "salud",
   subtema_blueprint: "HSA",
-  concepto: "HSA vs. FSA — Portabilidad al Cambiar de Empleo",
+  concepto: "HSA vs. FSA — Propiedad, Terminación y Reclamaciones",
   variantes: [{
     nivel: 3,
     tipo_trampa: "COMPARACION",
-    q: "Al dejar su trabajo, K tiene $3,200 acumulados en su cuenta de ahorro de salud, y por separado tenía $400 sin usar en su cuenta de gastos flexibles de ese mismo año, financiada con reducción de su salario. Su nuevo empleador no ofrece un plan de deducible alto ni ningún tipo de cuenta de beneficios de salud. ¿Qué es MÁS PROBABLE que ocurra con cada uno de los dos saldos?",
+    q: "Al terminar su empleo, K tiene $3,200 en una HSA y $400 sin usar en una FSA de salud del empleador. ¿Qué es MÁS PROBABLE?",
     o: [
-      "K pierde ambos saldos automáticamente al dejar el empleo, sin excepción",
-      "Los $3,200 de la cuenta de ahorro los conserva de por vida, sin importar el cambio de empleo; los $400 de la cuenta de gastos flexibles generalmente se pierden al terminar el empleo, salvo excepciones limitadas del plan",
-      "Ambos saldos son completamente portables de por vida, sin ninguna diferencia entre ellos",
-      "K debe transferir ambos saldos a su antiguo empleador dentro de 60 días o los pierde definitivamente"
+      "Pierde automáticamente ambos saldos el último día de empleo",
+      "Conserva los $3,200 de la HSA; respecto a la FSA, puede todavía reclamar gastos elegibles incurridos antes de terminar su participación durante el período de presentación de reclamaciones del plan, y cualquier saldo restante puede perderse salvo que exista una forma aplicable de continuación, como COBRA cuando corresponda",
+      "Ambos saldos son portables de por vida",
+      "Debe transferir ambos saldos al antiguo empleador dentro de 60 días"
     ],
     a: 1,
-    trampa: "Tratar la cuenta de ahorro de salud (HSA) y la cuenta de gastos flexibles (FSA) como si tuvieran las mismas reglas de propiedad es el error central — son prácticamente opuestas en portabilidad, y confundirlas es uno de los errores más comunes entre asegurados.",
-    correcto: "La HSA es propiedad personal del titular, totalmente portable, y el cambio de empleo no afecta el saldo acumulado — sigue siendo de K de por vida, aunque el nuevo empleo no ofrezca HDHP. La FSA, en cambio, es una cuenta ligada al empleador, y el saldo no usado generalmente se pierde al terminar la relación laboral, salvo que el plan ofrezca alguna excepción limitada de continuación (como COBRA para la FSA en ciertos casos).",
+    trampa: "La HSA es propiedad del individuo; la FSA está vinculada al plan del empleador y exige distinguir entre saldo disponible, fecha de incurrencia del gasto y período para presentar reclamaciones.",
+    correcto: "La HSA permanece con K. En la FSA, terminar el empleo no significa necesariamente que desaparezca de inmediato la posibilidad de presentar una reclamación por un gasto ya incurrido mientras tenía cobertura; el plan puede tener un run-out period. El saldo no utilizado para gastos elegibles puede perderse, salvo continuidad aplicable como COBRA en ciertos casos.",
     incorrectos: [
-      "A) Es falso para la HSA: ese saldo es propiedad personal de K y no se pierde por cambiar de empleo.",
-      "C) Es falso para la FSA: a diferencia de la HSA, generalmente no es portable y el saldo se pierde al dejar el empleo.",
-      "D) No existe tal requisito de transferencia al antiguo empleador; los fondos de la HSA simplemente permanecen en la cuenta personal de K."
+      "A) Es falso para la HSA y simplifica demasiado las reglas de reclamación de la FSA.",
+      "C) La FSA no es una cuenta personal portable como la HSA.",
+      "D) No existe ese requisito general de transferencia de ambos saldos al antiguo empleador."
     ],
-    distractor_condicional: "No aplica un cambio simple de dato aquí — la diferencia de portabilidad es estructural entre los dos tipos de cuenta, no depende de las circunstancias particulares de K."
+    distractor_condicional: "Si K tuviera un gasto elegible incurrido antes de terminar su participación y lo presentara dentro del período de reclamaciones del plan, la FSA podría reembolsarlo aun después de la terminación."
   }]
 },
 
@@ -332,26 +306,26 @@ const PK_KILLER_PILOT = [
   id: "killer_pilot_012",
   area: "salud",
   subtema_blueprint: "FSA",
-  concepto: "FSA — Período de Gracia y Transferencia son Mutuamente Excluyentes",
+  concepto: "FSA — Período de Gracia y Carryover",
   variantes: [{
     nivel: 3,
     tipo_trampa: "SIEMPRE_NUNCA",
-    q: "Un empleado le pregunta a Recursos Humanos si puede beneficiarse, en el mismo año, tanto del período de gracia de 2.5 meses adicionales para gastar el saldo de su cuenta de gastos flexibles, como de la opción de transferir (carryover) una parte de ese saldo al año siguiente. ¿Qué debe responder Recursos Humanos?",
+    q: "Un empleado pregunta si un mismo plan de FSA de salud puede aplicar, para el mismo saldo de un año del plan, tanto un período de gracia como una transferencia limitada (carryover) al siguiente año. ¿Qué debe responder Recursos Humanos?",
     o: [
-      "Sí, ambos beneficios se pueden combinar libremente sin ninguna restricción",
-      "No — el diseño del plan de la empresa puede ofrecer UNA de las dos opciones (período de gracia O transferencia limitada), pero nunca ambas al mismo tiempo",
-      "No, porque ninguna de las dos opciones existe legalmente para las cuentas de gastos flexibles",
-      "Sí, pero únicamente si el empleado tiene 55 años o más"
+      "Sí, el plan puede combinar libremente ambos mecanismos para el mismo año",
+      "No: para un mismo año del plan, la FSA de salud puede ofrecer un período de gracia o un carryover permitido, pero no ambos para el mismo saldo",
+      "No, porque ninguno de los dos mecanismos existe",
+      "Sí, pero solo para empleados de 55 años o más"
     ],
     a: 1,
-    trampa: "El empleado asume que, si ambos beneficios existen por separado, deben poder sumarse — pero el IRS diseñó estas dos opciones como alternativas mutuamente excluyentes a nivel de plan, no como beneficios acumulables a elección del empleado.",
-    correcto: "El empleador debe elegir, al diseñar el plan, entre ofrecer un período de gracia de hasta 2.5 meses adicionales o permitir una transferencia (carryover) limitada de fondos al año siguiente — nunca las dos disposiciones al mismo tiempo dentro del mismo plan.",
+    trampa: "Ambas opciones pueden existir por separado, pero no se acumulan para el mismo año del plan.",
+    correcto: "El diseño del plan puede ofrecer un período de gracia o permitir un carryover dentro del límite aplicable, pero no ambos respecto del mismo año del plan.",
     incorrectos: [
-      "A) Contradice la regla del IRS que hace estas dos opciones mutuamente excluyentes a nivel de diseño del plan.",
-      "C) Ambas opciones sí existen y son válidas — el error no es que no existan, sino que no pueden combinarse.",
-      "D) La edad del empleado (55+) es relevante para el catch-up de la HSA, no para las reglas de gracia/transferencia de la FSA — son conceptos de cuentas distintas."
+      "A) Contradice la regla de exclusión entre ambos mecanismos.",
+      "C) Ambos mecanismos existen bajo reglas aplicables.",
+      "D) La edad no determina esta regla."
     ],
-    distractor_condicional: "No aplica un cambio de escenario aquí — la exclusión mutua es una regla de diseño del plan aplicable a todos los empleados por igual, independientemente de sus circunstancias individuales."
+    distractor_condicional: "No aplica un cambio individual de escenario: es una regla del diseño del plan."
   }]
 },
 
@@ -359,26 +333,26 @@ const PK_KILLER_PILOT = [
   id: "killer_pilot_013",
   area: "salud",
   subtema_blueprint: "FSA",
-  concepto: "Saldo Transferido de FSA como Cobertura Descalificante para HSA",
+  concepto: "Carryover de FSA General y Elegibilidad HSA",
   variantes: [{
     nivel: 5,
     tipo_trampa: "ESCENARIO",
-    q: "J quiere abrir una HSA este año, ahora que se inscribió en un HDHP por primera vez. El año pasado tuvo una cuenta de gastos flexibles de propósito GENERAL con su empleador anterior, y le quedaron $200 sin usar que el plan le permitió transferir (carryover) hacia este año, disponibles para gastar en cualquier momento. ¿Qué efecto tiene ese saldo transferido sobre la elegibilidad de J para contribuir a la HSA este año?",
+    q: "J pasa a un HDHP elegible para HSA este año. Del año anterior conserva un carryover de $200 en una FSA de salud de propósito GENERAL que continúa disponible para reembolsar gastos médicos generales durante el nuevo año del plan. ¿Cuál es la MEJOR conclusión?",
     o: [
-      "Ninguno, porque es un saldo pequeño de solo $200",
-      "Sigue siendo cobertura descalificante para la HSA mientras esos fondos permanezcan disponibles para gastar, aunque provengan de un año anterior",
-      "Solo descalifica si el saldo transferido supera los $500",
-      "Un saldo transferido (carryover) nunca afecta la elegibilidad de HSA bajo ninguna circunstancia, a diferencia de una FSA activa del año en curso"
+      "El monto es demasiado pequeño para afectar la HSA",
+      "La disponibilidad del carryover de una FSA general puede mantener cobertura descalificante para HSA durante el período en que J tenga derecho a ese reembolso; la fecha exacta de elegibilidad debe determinarse según las reglas del plan y la elegibilidad mensual",
+      "Solo afecta si el saldo supera $500",
+      "Un carryover nunca afecta la elegibilidad para HSA"
     ],
     a: 1,
-    trampa: "J podría pensar que, por tratarse de dinero 'del año pasado' o de un monto pequeño, ya no cuenta para efectos de descalificación — pero mientras los fondos sigan disponibles para gastar, la FSA de propósito general sigue siendo cobertura descalificante, sin importar su origen o monto.",
-    correcto: "Mientras los $200 transferidos permanezcan disponibles para que J los use en gastos médicos generales, esa FSA de propósito general sigue contando como cobertura descalificante para la HSA — el hecho de que el dinero provenga de un carryover del año anterior no lo exime de esta regla.",
+    trampa: "No debe asumirse que gastar rápidamente el saldo convierte automáticamente en elegibles todos los meses anteriores o posteriores sin revisar la estructura del plan.",
+    correcto: "Mientras J tenga derecho a reembolso de gastos médicos generales bajo una FSA de propósito general, puede existir cobertura descalificante para HSA. La elegibilidad para HSA se determina mensualmente y puede depender de cómo el plan trate el carryover, por lo que no debe expresarse como una regla simplista de 'hasta que el saldo llegue a cero'.",
     incorrectos: [
-      "A) No existe una excepción por monto pequeño; lo que importa es el tipo de cobertura (propósito general), no la cantidad de dinero.",
-      "C) No existe tal umbral de $500 en esta regla — cualquier monto disponible bajo una FSA de propósito general cuenta como cobertura descalificante.",
-      "D) Es falso: un saldo transferido de una FSA de propósito general tiene el mismo efecto descalificante que una FSA activa del año en curso, mientras el dinero siga disponible."
+      "A) El monto por sí solo no crea una excepción general.",
+      "C) No existe un umbral general de $500 para esta regla.",
+      "D) Un carryover de FSA general sí puede afectar la elegibilidad para HSA."
     ],
-    distractor_condicional: "Si esa FSA hubiera sido de propósito LIMITADO (solo dental o visión) en vez de propósito general, o si J hubiera agotado el saldo completo antes de empezar su cobertura HDHP, no habría conflicto con su elegibilidad para la HSA."
+    distractor_condicional: "Si el carryover se convirtiera conforme al diseño permitido del plan en cobertura de propósito limitado, por ejemplo dental y visión, podría dejar de ser cobertura descalificante para HSA."
   }]
 },
 
@@ -386,26 +360,26 @@ const PK_KILLER_PILOT = [
   id: "killer_pilot_014",
   area: "salud",
   subtema_blueprint: "HRA",
-  concepto: "HRA vs. HSA — Quién Financia y Quién Controla los Fondos",
+  concepto: "HRA vs. HSA — Propiedad y Portabilidad",
   variantes: [{
     nivel: 4,
     tipo_trampa: "COMPARACION",
-    q: "Al terminar el año, a S le queda un saldo sin usar en la cuenta de reembolso de salud (HRA) que le ofrece su empleador; a su esposo le queda un saldo sin usar en su cuenta de ahorro de salud (HSA). Ambos preguntan qué pasaría con cada saldo si cambiaran de trabajo el próximo año. ¿Cuál es la diferencia CLAVE entre ambos casos?",
+    q: "Al terminar el año, S tiene un saldo disponible bajo una HRA ofrecida por su empleador; su esposo tiene saldo en una HSA. Si ambos cambian de trabajo, ¿cuál es la diferencia CLAVE?",
     o: [
-      "Ambos saldos son propiedad personal del empleado y totalmente portables de un empleo a otro",
-      "La HRA es financiada y controlada por el empleador — el saldo no usado generalmente se queda con el empleador si S cambia de trabajo; la HSA es propiedad de su esposo y lo acompaña sin importar dónde trabaje",
-      "Ambas cuentas son financiadas exclusivamente con el dinero del propio empleado",
-      "Ninguna de las dos cuentas permite acumular saldo de un año a otro bajo ninguna circunstancia"
+      "Ambos saldos son propiedad personal y totalmente portables",
+      "La HRA es un beneficio financiado por el empleador y su uso después de terminar el empleo depende de los términos del plan y de cualquier continuidad aplicable; la HSA pertenece al titular y permanece con él",
+      "Ambas cuentas son financiadas exclusivamente por el empleado",
+      "Ninguna puede conservar fondos o créditos de un año a otro"
     ],
     a: 1,
-    trampa: "Se tiende a tratar la HRA como si fuera una cuenta personal igual que la HSA solo porque ambas empiezan con 'H' y ambas sirven para gastos de salud — mezclarlas ignora la diferencia fundamental de quién las financia y controla.",
-    correcto: "La HRA es una cuenta financiada y controlada por el empleador; el saldo no usado generalmente pertenece al empleador y no acompaña al empleado si cambia de trabajo, salvo que el plan lo permita expresamente. La HSA, en cambio, es propiedad personal del titular, y el saldo lo acompaña de por vida sin importar los cambios de empleo.",
+    trampa: "La HRA no debe describirse como una cuenta personal idéntica a la HSA.",
+    correcto: "La HSA pertenece al individuo. La HRA es un arreglo financiado por el empleador; el derecho a usar montos no utilizados después de terminar el empleo depende del diseño del plan y de las reglas de continuidad aplicables.",
     incorrectos: [
-      "A) Es cierto solo para la HSA, no para la HRA — tratarlas como iguales en portabilidad es exactamente el error de la trampa.",
-      "C) Es falso para la HRA, que es financiada exclusivamente por el empleador, no por el empleado.",
-      "D) Es falso: algunos diseños de HRA sí permiten acumular saldo de un año a otro (a discreción del empleador), y la HSA sí acumula sin límite de tiempo por diseño."
+      "A) Es correcto para la HSA, no como regla general para la HRA.",
+      "C) La HRA es financiada por el empleador.",
+      "D) La HSA acumula saldo y una HRA puede permitir arrastre según el diseño del plan."
     ],
-    distractor_condicional: "No aplica un cambio de escenario simple aquí — la diferencia de propiedad y control es estructural entre HRA y HSA, independientemente de las circunstancias particulares de S y su esposo."
+    distractor_condicional: "Si el plan HRA previera expresamente acceso post-empleo o una continuación aplicable, S podría conservar temporalmente ciertos derechos de reembolso; eso no convertiría la HRA en propiedad personal portable como una HSA."
   }]
 },
 
@@ -413,26 +387,26 @@ const PK_KILLER_PILOT = [
   id: "killer_pilot_015",
   area: "salud",
   subtema_blueprint: "HRA",
-  concepto: "Compatibilidad de HRA de Propósito General con HSA",
+  concepto: "Compatibilidad de HRA General con HSA",
   variantes: [{
     nivel: 5,
     tipo_trampa: "EXCEPCION_LEGAL",
-    q: "Un empleador ofrece a sus empleados un HDHP junto con una HRA que reembolsa CUALQUIER gasto médico elegible desde el primer dólar, incluso antes de que se cumpla el deducible del HDHP. Un empleado inscrito en ambos beneficios quiere abrir además una HSA. ¿Puede hacerlo bajo el diseño actual de esa HRA?",
+    q: "Un empleador ofrece un HDHP junto con una HRA que puede reembolsar gastos médicos generales desde el primer dólar, antes de que el empleado satisfaga el deducible aplicable del HDHP. El empleado quiere contribuir además a una HSA. ¿Cuál es la MEJOR conclusión bajo ese diseño?",
     o: [
-      "Sí, sin ningún problema, porque la HRA y la HSA son cuentas completamente independientes entre sí",
-      "No — esa HRA de propósito general, que reembolsa gastos antes del deducible, es cobertura descalificante para la HSA, a menos que se rediseñe como HRA 'limitada' o 'post-deducible'",
-      "Sí, pero debe reducir su contribución anual a la HSA a la mitad del límite normal",
-      "No, porque ningún empleado puede tener HRA y HSA de forma simultánea bajo ninguna circunstancia"
+      "Siempre puede contribuir porque HRA y HSA son administrativamente independientes",
+      "La HRA de propósito general puede constituir cobertura descalificante para HSA; la compatibilidad puede lograrse con diseños permitidos, como una HRA de propósito limitado o post-deducible",
+      "Puede contribuir automáticamente a la mitad del límite anual",
+      "HRA y HSA nunca pueden coexistir bajo ninguna circunstancia"
     ],
     a: 1,
-    trampa: "Las dos opciones extremas son las más tentadoras: pensar que son 'cuentas independientes' sin relación (ignora la regla de cobertura descalificante) o asumir que 'nunca' pueden coexistir (exagera la restricción, cuando en realidad sí es posible con el diseño correcto de HRA).",
-    correcto: "Una HRA de propósito general que reembolsa gastos médicos antes de que se cumpla el deducible del HDHP cuenta como cobertura de salud descalificante para la HSA. Sin embargo, SÍ es posible tener ambas cuentas si la HRA se rediseña como 'limitada' (solo cubre dental/visión) o 'post-deducible' (solo reembolsa después de cumplido el deducible mínimo del HDHP).",
+    trampa: "La compatibilidad depende de qué gastos cubre la HRA y cuándo empieza a reembolsarlos.",
+    correcto: "Una HRA de propósito general que paga gastos antes del deducible puede ser cobertura no permitida para la elegibilidad HSA. Determinados diseños, como HRA de propósito limitado o post-deducible, pueden ser compatibles si cumplen las reglas aplicables.",
     incorrectos: [
-      "A) Ignora la regla de cobertura descalificante: no basta con que sean cuentas administrativamente distintas — lo que importa es CUÁNDO y QUÉ reembolsa la HRA.",
-      "C) No existe tal regla de 'reducir la contribución a la mitad' como solución a este conflicto; la elegibilidad de HSA es binaria, no se resuelve prorrateando la contribución.",
-      "D) Es una exageración: SÍ es posible combinar HRA y HSA, siempre que la HRA tenga el diseño correcto (limitada o post-deducible) — la opción correcta explica exactamente cómo."
+      "A) La independencia administrativa no elimina el análisis de otra cobertura.",
+      "C) No existe una regla general de reducción automática a la mitad.",
+      "D) Es demasiado absoluta: ciertas HRA sí pueden coexistir con una HSA."
     ],
-    distractor_condicional: "Si la HRA de este empleador ya estuviera diseñada como 'post-deducible' (reembolsando solo después de que el empleado cumpla el deducible mínimo del HDHP) o como HRA 'limitada' a dental y visión, la respuesta correcta sería la opción A: sí podría tener ambas cuentas sin conflicto."
+    distractor_condicional: "Si la HRA estuviera diseñada de manera compatible, por ejemplo como propósito limitado o post-deducible conforme a las reglas aplicables, el empleado podría conservar la elegibilidad para HSA si cumple los demás requisitos."
   }]
 }
 
