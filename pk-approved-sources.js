@@ -1,8 +1,6 @@
-// PEARSON KILLER — Índice único de fuentes Nueva Generación
-// Desde Run 015 en adelante, los nuevos archivos se registran aquí; pk-loader.js no se edita por cada Run.
+// PEARSON KILLER — Índice único de fuentes aprobadas e importaciones verificadas
 (function(global){
   'use strict';
-
   const sources = [
     {name:'run_010_01',path:'pk-migration-manual20-run-010-candidates-01.js',global_name:'PK_MIGRATION_MANUAL20_RUN_010_01'},
     {name:'run_010_02',path:'pk-migration-manual20-run-010-candidates-02.js',global_name:'PK_MIGRATION_MANUAL20_RUN_010_02'},
@@ -21,19 +19,13 @@
     {name:'simulacro_b1_001',path:'pk-simulacro-b1-import-001.js',global_name:'PK_SIMULACRO_B1_001'},
     {name:'simulacro_b1_006_055',path:'pk-simulacro-b1-import-006-055.js',global_name:'PK_SIMULACRO_B1_006_055'},
     {name:'simulacro_b2_001_035',path:'pk-simulacro-b2-import-001.js',global_name:'PK_SIMULACRO_B2_001'},
-    {name:'simulacro_b2_036_050',path:'pk-simulacro-b2-import-036-050.js',global_name:'PK_SIMULACRO_B2_036_050'}
+    {name:'simulacro_b2_036_050',path:'pk-simulacro-b2-import-036-050.js',global_name:'PK_SIMULACRO_B2_036_050'},
+    {name:'sim_batch_050_1',path:'pk-simulacro-batch-050-01.js',global_name:'PK_SIM_BATCH_050_1'},
+    {name:'sim_batch_050_2',path:'pk-simulacro-batch-050-02.js',global_name:'PK_SIM_BATCH_050_2'},
+    {name:'sim_batch_050_3',path:'pk-simulacro-batch-050-03.js',global_name:'PK_SIM_BATCH_050_3'},
+    {name:'sim_batch_050_4',path:'pk-simulacro-batch-050-04.js',global_name:'PK_SIM_BATCH_050_4'},
+    {name:'sim_batch_050_5',path:'pk-simulacro-batch-050-05.js',global_name:'PK_SIM_BATCH_050_5'}
   ];
-
-  global.PK_APPROVED_SOURCE_INDEX = {
-    version:'2026-07-15.9',
-    sources:sources,
-    total_sources:sources.length,
-    policy:'single_manifest_for_approved_runs_and_verified_imports'
-  };
-
-  if(typeof document!=='undefined' && document.readyState==='loading'){
-    sources.forEach(function(source){
-      document.write('<script src="'+source.path+'"><\/script>');
-    });
-  }
+  global.PK_APPROVED_SOURCE_INDEX={version:'2026-07-15.10',sources:sources,total_sources:sources.length,policy:'single_manifest_for_approved_runs_and_verified_imports'};
+  if(typeof document!=='undefined'&&document.readyState==='loading') sources.forEach(function(source){document.write('<script src="'+source.path+'"><\/script>');});
 })(typeof window!=='undefined'?window:globalThis);
