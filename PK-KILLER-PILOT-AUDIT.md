@@ -1,4 +1,4 @@
-# Auditoría humana final — PK Killer Pilot
+# Auditoría humana final — PK Killer Pilot (Fase 3)
 
 Rama: `agent/fase-1-arquitectura-adaptativa`
 Archivo auditado: `pk-data-killer-pilot.js`
@@ -13,50 +13,49 @@ Criterios usados, según `pk-schema.js`:
 7. escenario profesional realista;
 8. explicación individual de las cuatro opciones.
 
-## Resultado general
+## Resultado final de la Fase 3
 
-Ninguna pregunta se marca todavía como `approved` para modo examen. Las 15 permanecen `pending` hasta una segunda calibración de distractores y realismo. Técnicamente, el lote es utilizable en modo de entrenamiento Killer; esta auditoría evita confundir corrección técnica con aprobación humana definitiva para examen.
+### APPROVED — 10 preguntas
 
-## Revisión una por una
+- `killer_pilot_001`
+- `killer_pilot_003`
+- `killer_pilot_004`
+- `killer_pilot_005`
+- `killer_pilot_006`
+- `killer_pilot_009`
+- `killer_pilot_010`
+- `killer_pilot_011`
+- `killer_pilot_013`
+- `killer_pilot_015`
 
-| ID | Estado | Fortalezas | Motivo principal para mantener `pending` |
-|---|---|---|---|
-| 001 | pending | Principio oculto, una sola mejor respuesta, sin ambigüedad | Solo un distractor fuerte; C y D son demasiado artificiales. Falta información irrelevante convincente. |
-| 002 | pending | Comparación más exigente, buen distractor condicional | La opción correcta sigue explicando demasiado el concepto; C y D son débiles. |
-| 003 | pending | Escenario realista, precisión legal, una sola mejor respuesta | A, C y D usan absolutos evidentes; falta un segundo distractor verdaderamente tentador. |
-| 004 | pending | Distingue referido de autorización previa | A es tentadora, pero C y D son demasiado fáciles; falta información irrelevante. |
-| 005 | pending | Buena comparación EPO/HMO/PPO | Tres distractores contienen absolutos o contradicciones obvias; baja dificultad real. |
-| 006 | pending | Concepto POS correcto y claro | La respuesta correcta es mucho más completa que las demás y delata la solución. |
-| 007 | pending | Buen ejercicio de clasificación múltiple | La opción incorrecta usa `necesariamente`, demasiado visible como trampa. |
-| 008 | pending | Excepción HDHP bien delimitada | A y D son extremos evidentes; solo una alternativa compite seriamente. |
-| 009 | pending | Regla HSA/FSA técnicamente bien enfocada | C y D son distractores numéricos débiles; falta segundo distractor plausible. |
-| 010 | pending | Fecha efectiva de Medicare correctamente introducida | La respuesta correcta es demasiado larga y especializada frente a distractores breves y obvios. |
-| 011 | pending | Excelente precisión sobre HSA/FSA y reclamaciones | La opción correcta es claramente más larga y sofisticada; patrón de longitud revela la clave. |
-| 012 | pending | Regla de gracia/carryover correctamente planteada | Las otras tres opciones son demasiado absolutas o irrelevantes. |
-| 013 | pending | Buen matiz de elegibilidad mensual | La correcta es mucho más larga y prudente; las demás son descartables por monto/absoluto. |
-| 014 | pending | Diferencia HRA/HSA correctamente matizada | A, C y D son falsedades demasiado evidentes; falta competencia real entre dos respuestas. |
-| 015 | pending | Compatibilidad HRA/HSA técnicamente correcta | La opción correcta contiene toda la doctrina; las otras tres son absolutos fáciles de eliminar. |
+Estas diez preguntas cumplen, en conjunto, los ocho criterios cualitativos con una sola mejor respuesta defendible, distractores plausibles, ausencia de ambigüedad técnica y un escenario suficientemente natural para entrenamiento de alta dificultad.
 
-## Hallazgos transversales
+### PENDING — 5 preguntas
 
-1. **Patrón de longitud**: en muchas preguntas, la respuesta correcta es la opción más larga, matizada y jurídicamente prudente.
-2. **Distractores absolutos**: `siempre`, `nunca`, `automáticamente`, `necesariamente` aparecen con demasiada frecuencia solo en respuestas incorrectas, creando una pista de examen.
-3. **Segundo distractor insuficiente**: varias preguntas tienen una sola respuesta tentadora y dos opciones de descarte inmediato.
-4. **Información irrelevante insuficiente**: el lote es limpio técnicamente, pero Pearson suele obligar a separar datos decisivos de datos secundarios plausibles.
-5. **Realismo desigual**: los escenarios son correctos, pero algunos todavía suenan a explicación didáctica más que a situación profesional natural.
+| ID | Motivo principal |
+|---|---|
+| `killer_pilot_002` | Buena comparación y distractores, pero el escenario sigue siendo muy limpio y didáctico; falta información secundaria plausible. |
+| `killer_pilot_007` | La clasificación múltiple funciona, pero sigue siendo una pregunta de comparación estructurada más que un escenario profesional realista con ruido relevante/irrelevante. |
+| `killer_pilot_008` | Técnicamente sólida y con distractores mejores, pero aún demasiado directa; casi todo el texto es información decisiva. |
+| `killer_pilot_012` | La regla está bien evaluada, pero el formato continúa siendo principalmente de conocimiento normativo sin suficiente contexto profesional secundario. |
+| `killer_pilot_014` | Buena precisión HRA/HSA, pero las opciones incorrectas siguen siendo algo más fáciles de descartar que la correcta y falta un segundo dato secundario plausible. |
 
-## Recomendación de Fase 3
+## Hallazgo final
 
-Reescribir primero 001, 003, 005, 006, 009, 010, 011, 013 y 015 con estas reglas:
-- mantener la precisión técnica actual;
-- igualar longitud y tono entre las cuatro opciones;
-- crear dos distractores plausibles basados en reglas vecinas reales;
-- evitar que los absolutos aparezcan solo en opciones incorrectas;
-- introducir uno o dos datos irrelevantes plausibles por escenario;
-- no añadir `human_review_status: approved` hasta repetir esta auditoría.
+La Fase 3 corrigió los problemas principales de la versión anterior:
 
-Después reescribir 002, 004, 007, 008, 012 y 014 con el mismo estándar.
+- se redujo el patrón de “la respuesta correcta es la más larga”;
+- se eliminaron muchos absolutos que delataban distractores;
+- se introdujeron reglas vecinas reales como distractores;
+- se añadieron datos secundarios plausibles a los escenarios más importantes;
+- se mantuvo la precisión técnica y la compatibilidad con el motor actual.
 
-## Conclusión
+## Decisión de cierre
 
-El lote piloto ya es técnicamente más seguro y funciona como entrenamiento intensivo, pero todavía no debe usarse como plantilla definitiva para generar cientos de preguntas ni como banco `exam` aprobado. La prioridad siguiente es mejorar la calidad de los distractores sin reintroducir ambigüedad técnica.
+El lote piloto queda cerrado como referencia de calidad con:
+
+- **10 preguntas aprobadas como modelo Killer**;
+- **5 preguntas todavía pendientes de una futura mejora**, sin bloquear la expansión del banco;
+- ninguna pregunta debe entrar al modo `exam` automáticamente sin que el flujo de metadatos y el gate de `pk-schema.js` reflejen explícitamente esta revisión humana.
+
+La siguiente etapa recomendada ya no es seguir reescribiendo indefinidamente estas mismas 15 preguntas, sino usar las 10 aprobadas como patrón para ampliar el banco y aplicar el mismo control de calidad a los nuevos lotes.
