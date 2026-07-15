@@ -41,11 +41,13 @@
     'sim_b2_001','sim_b2_002','sim_b2_003','sim_b2_004','sim_b2_005','sim_b2_006','sim_b2_007','sim_b2_008','sim_b2_009','sim_b2_010',
     'sim_b2_011','sim_b2_012','sim_b2_013','sim_b2_014','sim_b2_015','sim_b2_016','sim_b2_017','sim_b2_018','sim_b2_019','sim_b2_020',
     'sim_b2_021','sim_b2_022','sim_b2_023','sim_b2_024','sim_b2_025','sim_b2_026','sim_b2_027','sim_b2_028','sim_b2_029','sim_b2_030',
-    'sim_b2_031','sim_b2_032','sim_b2_033','sim_b2_034','sim_b2_035'
+    'sim_b2_031','sim_b2_032','sim_b2_033','sim_b2_034','sim_b2_035',
+    'sim_b2_036','sim_b2_037','sim_b2_038','sim_b2_039','sim_b2_040','sim_b2_041','sim_b2_042','sim_b2_043','sim_b2_044','sim_b2_045',
+    'sim_b2_046','sim_b2_047','sim_b2_048','sim_b2_049','sim_b2_050'
   ];
 
   global.PK_APPROVED_REGISTRY = {
-    version: '2026-07-15.13',
+    version: '2026-07-15.14',
     approved_ids: approvedIds,
     approved_set: new Set(approvedIds),
     total: approvedIds.length,
@@ -56,7 +58,7 @@
       run_015: 40,
       simulacro_b1_imported: 53,
       simulacro_b1_held_for_current_fact_check: 2,
-      simulacro_b2_imported: 35
+      simulacro_b2_imported: 50
     },
     status: 'approved_and_accelerated_imports_for_branch_exam_integration',
     policy: 'audit_pass_or_verified_import_auto_register; current_fact_items_can_be_held'
