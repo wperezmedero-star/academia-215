@@ -79,6 +79,25 @@
     }
   });
 
+  // El Killer Pilot permanece deliberadamente AISLADO del banco unificado.
+  // pearson-killer.html lo consume solo cuando mode === 'killer_pilot'.
+  // Esta validación evita que un archivo incompleto pase silenciosamente a producción.
+  const killerPilot = Array.isArray(window.PK_KILLER_PILOT) ? window.PK_KILLER_PILOT : [];
+  const totalPreguntasKillerPilot = killerPilot.reduce(function(total, concepto) {
+    const variantes = concepto.variantes || concepto.variants || [];
+    return total + (Array.isArray(variantes) ? variantes.length : 0);
+  }, 0);
+  const killerPilotOK = totalPreguntasKillerPilot === 15;
+
+  window.PK_KILLER_PILOT_STATUS = {
+    cargado: killerPilot.length > 0,
+    totalConceptos: killerPilot.length,
+    totalPreguntas: totalPreguntasKillerPilot,
+    esperado: 15,
+    valido: killerPilotOK,
+    aisladoDelBancoPrincipal: true
+  };
+
   // Combinar las áreas temáticas de todos los módulos que las definan
   // (todos comparten la misma estructura PK_AREAS, así que solo
   // necesitamos una — pero por seguridad las fusionamos si difieren)
@@ -117,7 +136,8 @@
     modulosFaltantes: modulosFaltantes,
     totalConceptos: conceptosUnificados.length,
     totalVariantes: totalVariantes,
-    version: "1.0"
+    killerPilot: window.PK_KILLER_PILOT_STATUS,
+    version: "1.1"
   };
 
   // Log silencioso para debugging (no interfiere con la UI)
@@ -126,6 +146,10 @@
     console.log("Módulos activos: " + modulosOK.length + "/" + MODULOS.length);
     console.log("Total conceptos: " + conceptosUnificados.length);
     console.log("Total variantes: " + totalVariantes);
+    console.log("Killer Pilot: " + totalPreguntasKillerPilot + "/15 preguntas; aislado=" + true);
+    if (!killerPilotOK) {
+      console.error("KILLER PILOT INVÁLIDO: se esperaban exactamente 15 preguntas y se cargaron " + totalPreguntasKillerPilot + ".");
+    }
     if (modulosFaltantes.length > 0) {
       console.warn("Módulos NO cargados (revisar orden de <script> tags): " + modulosFaltantes.join(", "));
     }
