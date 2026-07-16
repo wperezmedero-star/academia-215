@@ -1,6 +1,6 @@
 // Mejora del Simulacro Oficial 2-15
-// Fusiona Academia + Pearson Killer, elimina duplicados y evita repetir
-// inmediatamente la misma selección de 150 preguntas.
+// Fusiona Academia + Pearson Killer, elimina duplicados y reduce la repetición
+// inmediata entre simulacros consecutivos.
 (function(){
   'use strict';
 
@@ -17,13 +17,25 @@
 
   function loadScript(src){
     return new Promise((resolve)=>{
-      if(document.querySelector('script[data-sim-upgrade="'+src+'"]')){ resolve(); return; }
+      const existing=[...document.scripts].find(s=>{
+        const value=s.getAttribute('src')||'';
+        return value===src || value.endsWith('/'+src);
+      });
+      if(existing){
+        if(existing.dataset.simLoaded==='yes' || existing.readyState==='complete') resolve();
+        else {
+          existing.addEventListener('load',resolve,{once:true});
+          existing.addEventListener('error',resolve,{once:true});
+          setTimeout(resolve,2500);
+        }
+        return;
+      }
       const s=document.createElement('script');
       s.src=src;
       s.async=false;
       s.dataset.simUpgrade=src;
-      s.onload=()=>resolve();
-      s.onerror=()=>{ console.warn('No se pudo cargar',src); resolve(); };
+      s.onload=()=>{s.dataset.simLoaded='yes';resolve();};
+      s.onerror=()=>{console.warn('No se pudo cargar',src);resolve();};
       document.head.appendChild(s);
     });
   }
@@ -43,7 +55,7 @@
   }
 
   function questionKey(q){
-    return normalizeText(q.q);
+    return normalizeText(q && q.q);
   }
 
   function shuffled(items){
@@ -57,9 +69,14 @@
 
   function academiaQuestions(){
     const out=[];
-    if(!Array.isArray(window.L)) return out;
-    window.L.filter(l=>!(l.intro||'').includes('Próximamente')).forEach(l=>{
-      (l.questions||[]).forEach(q=>out.push({...q,lessonId:l.id,lessonTitle:l.title,source:'academia'}));
+    // L es una constante global léxica definida por index.html.
+    if(typeof L==='undefined' || !Array.isArray(L)) return out;
+    L.filter(l=>!(l.intro||'').includes('Próximamente')).forEach(l=>{
+      (l.questions||[]).forEach(q=>{
+        if(q && q.q && Array.isArray(q.o) && Number.isInteger(q.a)){
+          out.push({...q,lessonId:l.id,lessonTitle:l.title,source:'academia'});
+        }
+      });
     });
     return out;
   }
@@ -94,7 +111,7 @@
     const unique=[];
     for(const q of items){
       const key=questionKey(q);
-      if(!key||seen.has(key)) continue;
+      if(!key || seen.has(key)) continue;
       seen.add(key);
       unique.push(q);
     }
@@ -103,44 +120,66 @@
 
   function selectRotating(pool,count){
     let previous=[];
-    try{ previous=JSON.parse(localStorage.getItem('sim215_last_keys')||'[]'); }catch(e){}
+    try{ previous=JSON.parse(localStorage.getItem('sim215_last_keys')||'[]'); }
+    catch(e){ previous=[]; }
+
     const previousSet=new Set(previous);
     const fresh=shuffled(pool.filter(q=>!previousSet.has(questionKey(q))));
     const repeated=shuffled(pool.filter(q=>previousSet.has(questionKey(q))));
 
-    // Primero preguntas que no salieron en el intento anterior.
-    // Solo repite las necesarias para completar las 150.
+    // Primero usa preguntas que no aparecieron en el intento anterior.
+    // Solo reutiliza preguntas anteriores si hacen falta para llegar a 150.
     const selected=[...fresh,...repeated].slice(0,Math.min(count,pool.length));
     const mixed=shuffled(selected);
-    try{ localStorage.setItem('sim215_last_keys',JSON.stringify(mixed.map(questionKey))); }catch(e){}
+
+    try{
+      localStorage.setItem('sim215_last_keys',JSON.stringify(mixed.map(questionKey)));
+      localStorage.setItem('sim215_last_pool_size',String(pool.length));
+    }catch(e){}
     return mixed;
   }
 
-  window.launchSimulacro = async function(){
+  async function upgradedLaunchSimulacro(){
     const startButton=document.querySelector('button[onclick="launchSimulacro()"]');
     const originalText=startButton?startButton.innerHTML:'';
-    if(startButton){ startButton.disabled=true; startButton.textContent='Preparando preguntas…'; }
+    if(startButton){
+      startButton.disabled=true;
+      startButton.textContent='Preparando preguntas…';
+    }
 
     await ensurePearsonBank();
 
     const combined=uniqueQuestions([...academiaQuestions(),...pearsonQuestions()]);
-    window.simQs=selectRotating(combined,150);
-    window.simAnswers=new Array(window.simQs.length).fill(null);
-    window.simCurrent=0;
-    window.simTimeLeft=210*60;
-    window.simRunning=true;
+    const selected=selectRotating(combined,150);
 
-    if(startButton){ startButton.disabled=false; startButton.innerHTML=originalText; }
-    if(typeof window.hide==='function') window.hide();
+    if(selected.length===0){
+      if(startButton){startButton.disabled=false;startButton.innerHTML=originalText;}
+      alert('No se pudo cargar el banco de preguntas. Recarga la página e inténtalo otra vez.');
+      return;
+    }
+
+    // Estas variables globales léxicas pertenecen al motor original de index.html.
+    simQs=selected;
+    simAnswers=new Array(simQs.length).fill(null);
+    simCurrent=0;
+    simTimeLeft=210*60;
+    simRunning=true;
+
+    if(startButton){startButton.disabled=false;startButton.innerHTML=originalText;}
+    hide();
     document.getElementById('simulacro-exam').classList.remove('hidden');
-    window.renderSimQ();
-    window.renderSimNav();
-    window.startSimTimer();
+    renderSimQ();
+    renderSimNav();
+    startSimTimer();
 
-    console.info('Simulacro variable:',window.simQs.length,'preguntas seleccionadas de',combined.length,'únicas.');
-  };
+    console.info('Simulacro variable:',simQs.length,'seleccionadas de',combined.length,'preguntas únicas.');
+  }
 
-  // Precarga silenciosa para que el botón responda más rápido.
+  // Sustituye la función original después de que index.html haya cargado su motor.
+  launchSimulacro=upgradedLaunchSimulacro;
+  window.launchSimulacro=upgradedLaunchSimulacro;
+
+  // Precarga silenciosa para reducir la espera al pulsar el botón.
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ensurePearsonBank,{once:true});
   else ensurePearsonBank();
 })();
