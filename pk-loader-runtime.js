@@ -1,6 +1,7 @@
 // ============================================================
 // PEARSON KILLER — Runtime del cargador central
 // Se ejecuta después del manifiesto, registro y fuentes aprobadas.
+// v3.2 — integra el lote nuevo y elimina preguntas duplicadas
 // ============================================================
 (function(){
   'use strict';
@@ -23,7 +24,8 @@
     ['refuerzo', window.PK_REFUERZO],
     ['disposiciones', window.PK_DISPOSICIONES],
     ['campo', window.PK_CAMPO],
-    ['killer_hmoppo', window.PK_KILLER_HMOPPO]
+    ['killer_hmoppo', window.PK_KILLER_HMOPPO],
+    ['killer_pilot', window.PK_KILLER_PILOT]
   ];
 
   let conceptosUnificados = [];
@@ -88,6 +90,42 @@
   const approvedMigrationConcepts = Array.from(approvedById.values());
   conceptosUnificados = conceptosUnificados.concat(approvedMigrationConcepts);
 
+  // Elimina preguntas repetidas entre todos los bancos antes de crear simulacros.
+  // Se compara el texto normalizado para detectar diferencias solo de mayúsculas,
+  // espacios o signos. Se conserva la primera versión encontrada.
+  function normalizarPregunta(texto){
+    return String(texto || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, ' ')
+      .trim();
+  }
+
+  const preguntasVistas = new Set();
+  let preguntasDuplicadasEliminadas = 0;
+
+  conceptosUnificados = conceptosUnificados.map(function(concepto){
+    const variantes = concepto.variantes || concepto.variants || [];
+    const variantesUnicas = variantes.filter(function(v){
+      if(!v || typeof v.q !== 'string' || !v.q.trim()) return false;
+      const clave = normalizarPregunta(v.q);
+      if(!clave) return false;
+      if(preguntasVistas.has(clave)){
+        preguntasDuplicadasEliminadas++;
+        return false;
+      }
+      preguntasVistas.add(clave);
+      return true;
+    });
+
+    const copia = Object.assign({}, concepto);
+    copia.variantes = variantesUnicas;
+    return copia;
+  }).filter(function(concepto){
+    return Array.isArray(concepto.variantes) && concepto.variantes.length > 0;
+  });
+
   const AREAS_UNIFICADAS = {
     suscripcion:'Procedimientos de Suscripción en Campo',
     vida:'Tipos de Seguros de Vida',
@@ -124,6 +162,8 @@
     modulosFaltantes:modulosFaltantes,
     totalConceptos:conceptosUnificados.length,
     totalVariantes:totalVariantes,
+    preguntasDuplicadasEliminadas:preguntasDuplicadasEliminadas,
+    killerPilotIntegrado:Array.isArray(window.PK_KILLER_PILOT) ? window.PK_KILLER_PILOT.length : 0,
     approvedMigrationConcepts:approvedMigrationConcepts.length,
     approvedMigrationQuestions:approvedMigrationConcepts.reduce(function(n,c){return n+(c.variantes||[]).length;},0),
     approvedRegistryTotal:approvedRegistry.total || (approvedRegistry.approved_ids||[]).length,
@@ -133,6 +173,6 @@
     loadedSources:migrationSources.length,
     missingSources:missingSources,
     autoIntegrationPolicy:approvedRegistry.policy || null,
-    version:'3.1'
+    version:'3.2'
   };
 })();
