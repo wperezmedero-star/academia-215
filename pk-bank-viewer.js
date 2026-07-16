@@ -6,7 +6,7 @@
     var concepts=Array.isArray(window.PK_CONCEPTOS_FULL)?window.PK_CONCEPTOS_FULL:[],rows=[];
     concepts.forEach(function(c){(Array.isArray(c.variantes)?c.variantes:[]).forEach(function(v,idx){
       if(!v||typeof v.q!=='string'||!Array.isArray(v.o)||v.o.length!==4)return;
-      rows.push({id:c.id||'',area:c.area||'generales',concept:c.concepto||c.id||'Concepto',source:c.source||v.source||'',variant:idx+1,q:v.q,o:v.o,a:Number.isInteger(v.a)?v.a:null,e:v.e||v.correcto||''});
+      rows.push({id:c.id||'',area:c.area||'generales',areaLabel:(window.AREAS&&window.AREAS[c.area])||c.area||'Generales',concept:c.concepto||c.id||'Concepto',source:c.source||v.source||'',variant:idx+1,q:v.q,o:v.o,a:Number.isInteger(v.a)?v.a:null,e:v.e||v.correcto||'',tipo_trampa:v.tipo_trampa||null});
     });});
     return rows;
   }
@@ -37,15 +37,23 @@
       view.querySelector('#pk-bank-summary').textContent=data.length+' preguntas encontradas · mostrando '+(data.length?start+1:0)+'–'+Math.min(start+state.size,data.length)+' · toca una opción para responder';
       view.querySelector('#pk-bank-list').innerHTML=slice.map(function(x,i){
         var opts=x.o.map(function(opt,j){return '<button class="pk-bank-opt" data-answer="'+j+'">'+String.fromCharCode(65+j)+') '+esc(opt)+'</button>';}).join('');
-        return '<article class="pk-bank-card" data-correct="'+x.a+'"><div class="pk-bank-meta">#'+(start+i+1)+' · '+esc(x.area)+' · '+esc(x.concept)+(x.source?' · '+esc(x.source):'')+'</div><div class="pk-bank-q">'+esc(x.q)+'</div>'+opts+'<div class="pk-bank-result"></div>'+(x.e?'<div class="pk-bank-exp"><strong>Explicación:</strong> '+esc(x.e)+'</div>':'')+'</article>';
+        return '<article class="pk-bank-card" data-row="'+(start+i)+'" data-correct="'+x.a+'"><div class="pk-bank-meta">#'+(start+i+1)+' · '+esc(x.area)+' · '+esc(x.concept)+(x.source?' · '+esc(x.source):'')+'</div><div class="pk-bank-q">'+esc(x.q)+'</div>'+opts+'<div class="pk-bank-result"></div>'+(x.e?'<div class="pk-bank-exp"><strong>Explicación:</strong> '+esc(x.e)+'</div>':'')+'</article>';
       }).join('')||'<div class="pk-bank-card">No se encontraron preguntas con ese filtro.</div>';
       view.querySelector('#pk-bank-page').textContent='Página '+state.page+' de '+pages;view.querySelector('#pk-bank-prev').disabled=state.page<=1;view.querySelector('#pk-bank-next').disabled=state.page>=pages;view.scrollTop=0;
     }
     view.addEventListener('click',function(e){
       var btn=e.target.closest('.pk-bank-opt');if(!btn)return;var card=btn.closest('.pk-bank-card');if(!card||card.dataset.answered==='1')return;
-      var chosen=Number(btn.dataset.answer),correct=Number(card.dataset.correct);card.dataset.answered='1';
+      var chosen=Number(btn.dataset.answer),correct=Number(card.dataset.correct),row=all[Number(card.dataset.row)];card.dataset.answered='1';
       card.querySelectorAll('.pk-bank-opt').forEach(function(b){b.disabled=true;var n=Number(b.dataset.answer);if(n===correct)b.classList.add('correct');else if(n===chosen)b.classList.add('wrong');});
-      var result=card.querySelector('.pk-bank-result');result.textContent=chosen===correct?'✅ Correcto':'❌ Incorrecto';result.className='pk-bank-result show '+(chosen===correct?'ok':'bad');var exp=card.querySelector('.pk-bank-exp');if(exp)exp.classList.add('show');
+      var ok=chosen===correct;
+      if(row){
+        var q={q:row.q,o:row.o,a:row.a,e:row.e,concept:row.concept,area:row.area,areaLabel:row.areaLabel,tipo_trampa:row.tipo_trampa};
+        if(ok&&typeof window.recordCorrect==='function')window.recordCorrect(q);
+        if(!ok&&typeof window.recordError==='function')window.recordError(q,chosen);
+        if(window.PK_STORAGE&&typeof window.PK_STORAGE.recordAttempt==='function')window.PK_STORAGE.recordAttempt({q:q,correcta:ok,userAnswerIdx:chosen,tiempoMs:null,cambioRespuesta:false});
+        if(typeof window.renderStatsSummary==='function')window.renderStatsSummary();
+      }
+      var result=card.querySelector('.pk-bank-result');result.textContent=ok?'✅ Correcto':'❌ Incorrecto · guardado en Mis errores';result.className='pk-bank-result show '+(ok?'ok':'bad');var exp=card.querySelector('.pk-bank-exp');if(exp)exp.classList.add('show');
     });
     open.addEventListener('click',function(){view.classList.add('open');state.page=1;render();});view.querySelector('#pk-bank-close').addEventListener('click',function(){view.classList.remove('open');});
     search.addEventListener('input',function(){state.query=this.value;state.page=1;render();});area.addEventListener('change',function(){state.area=this.value;state.page=1;render();});
