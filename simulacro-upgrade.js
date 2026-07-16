@@ -1,6 +1,6 @@
 // Mejora del Simulacro Oficial 2-15
-// Fusiona Academia + Pearson Killer, elimina duplicados y reduce la repetición
-// inmediata entre simulacros consecutivos.
+// Fusiona Academia + Pearson Killer, elimina duplicados, reduce la repetición
+// inmediata y muestra el rendimiento en vivo durante el simulacro.
 (function(){
   'use strict';
 
@@ -69,7 +69,6 @@
 
   function academiaQuestions(){
     const out=[];
-    // L es una constante global léxica definida por index.html.
     if(typeof L==='undefined' || !Array.isArray(L)) return out;
     L.filter(l=>!(l.intro||'').includes('Próximamente')).forEach(l=>{
       (l.questions||[]).forEach(q=>{
@@ -126,9 +125,6 @@
     const previousSet=new Set(previous);
     const fresh=shuffled(pool.filter(q=>!previousSet.has(questionKey(q))));
     const repeated=shuffled(pool.filter(q=>previousSet.has(questionKey(q))));
-
-    // Primero usa preguntas que no aparecieron en el intento anterior.
-    // Solo reutiliza preguntas anteriores si hacen falta para llegar a 150.
     const selected=[...fresh,...repeated].slice(0,Math.min(count,pool.length));
     const mixed=shuffled(selected);
 
@@ -137,6 +133,41 @@
       localStorage.setItem('sim215_last_pool_size',String(pool.length));
     }catch(e){}
     return mixed;
+  }
+
+  function ensureLiveScorePanel(){
+    let panel=document.getElementById('sim-live-score');
+    if(panel) return panel;
+
+    panel=document.createElement('div');
+    panel.id='sim-live-score';
+    panel.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0 10px;';
+
+    const progress=document.querySelector('#simulacro-exam .prog');
+    if(progress && progress.parentNode) progress.parentNode.insertBefore(panel,progress);
+    return panel;
+  }
+
+  function updateLiveScore(){
+    if(typeof simQs==='undefined' || typeof simAnswers==='undefined') return;
+    const panel=ensureLiveScorePanel();
+    if(!panel) return;
+
+    let answered=0, correct=0;
+    simAnswers.forEach((answer,i)=>{
+      if(answer===null || answer===undefined) return;
+      answered++;
+      if(simQs[i] && answer===simQs[i].a) correct++;
+    });
+    const incorrect=answered-correct;
+    const pct=answered ? Math.round((correct/answered)*100) : 0;
+    const pctColor=pct>=70?'#22c55e':pct>=60?'#f59e0b':'#ef4444';
+
+    panel.innerHTML=
+      '<div style="background:#092313;border:1px solid #166534;border-radius:9px;padding:7px 4px;text-align:center"><div style="font-size:1rem;font-weight:900;color:#22c55e">✅ '+correct+'</div><div style="font-size:.64rem;color:#86efac">Correctas</div></div>'+ 
+      '<div style="background:#2a0909;border:1px solid #991b1b;border-radius:9px;padding:7px 4px;text-align:center"><div style="font-size:1rem;font-weight:900;color:#ef4444">❌ '+incorrect+'</div><div style="font-size:.64rem;color:#fca5a5">Incorrectas</div></div>'+ 
+      '<div style="background:#111d36;border:1px solid #334155;border-radius:9px;padding:7px 4px;text-align:center"><div style="font-size:1rem;font-weight:900;color:#93c5fd">📝 '+answered+'</div><div style="font-size:.64rem;color:#94a3b8">Respondidas</div></div>'+ 
+      '<div style="background:#1b1230;border:1px solid #6d28d9;border-radius:9px;padding:7px 4px;text-align:center"><div style="font-size:1rem;font-weight:900;color:'+pctColor+'">📊 '+pct+'%</div><div style="font-size:.64rem;color:#c4b5fd">Rendimiento</div></div>';
   }
 
   async function upgradedLaunchSimulacro(){
@@ -148,7 +179,6 @@
     }
 
     await ensurePearsonBank();
-
     const combined=uniqueQuestions([...academiaQuestions(),...pearsonQuestions()]);
     const selected=selectRotating(combined,150);
 
@@ -158,7 +188,6 @@
       return;
     }
 
-    // Estas variables globales léxicas pertenecen al motor original de index.html.
     simQs=selected;
     simAnswers=new Array(simQs.length).fill(null);
     simCurrent=0;
@@ -170,16 +199,23 @@
     document.getElementById('simulacro-exam').classList.remove('hidden');
     renderSimQ();
     renderSimNav();
+    updateLiveScore();
     startSimTimer();
 
     console.info('Simulacro variable:',simQs.length,'seleccionadas de',combined.length,'preguntas únicas.');
   }
 
-  // Sustituye la función original después de que index.html haya cargado su motor.
   launchSimulacro=upgradedLaunchSimulacro;
   window.launchSimulacro=upgradedLaunchSimulacro;
 
-  // Precarga silenciosa para reducir la espera al pulsar el botón.
+  // Actualiza el marcador incluso cuando el usuario cambia una respuesta anterior.
+  const originalSimPick=simPick;
+  simPick=function(i){
+    originalSimPick(i);
+    updateLiveScore();
+  };
+  window.simPick=simPick;
+
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ensurePearsonBank,{once:true});
   else ensurePearsonBank();
 })();
