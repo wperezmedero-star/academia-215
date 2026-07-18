@@ -557,11 +557,11 @@ const PK_LIFE = [
         "60 días desde la terminación del empleo o de la cobertura"
       ],
       a: 2,
-      trampa: "El período de conversión es 31 días — no confundir con el free look (10 días para vida), ni con COBRA (60 días para elegir).",
+      trampa: "El período de conversión es 31 días — no confundir con el free look (14 días para vida y anualidades), ni con COBRA (60 días para elegir).",
       correcto: "El Privilegio de Conversión en seguros de vida de grupo debe ejercerse dentro de los 31 DÍAS siguientes a la terminación de la cobertura de grupo. No requiere evidencia de asegurabilidad.",
       incorrectos: [
-        "A) 10 días es el período de examen gratuito (free look) de pólizas de vida — no el de conversión.",
-        "B) 21 días es el free look para anualidades — no el período de conversión de vida de grupo.",
+        "A) 14 días es el período de examen gratuito (free look) de pólizas de vida y anualidades — no el de conversión.",
+        "B) 21 días NO es el free look estándar para anualidades; vida y anualidades tienen 14 días — no el período de conversión de vida de grupo.",
         "D) 60 días es el período para ELEGIR cobertura COBRA de salud — no conversión de vida de grupo."
       ]
     },

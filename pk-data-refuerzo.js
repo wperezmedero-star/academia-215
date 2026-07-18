@@ -580,11 +580,11 @@ const PK_REFUERZO = [
     {
       nivel: 4,
       tipo_trampa: "NUMEROS_FECHAS",
-      q: "El período de espera por condición preexistente en una póliza Medigap NO puede exceder:",
+      q: "Cuando una aseguradora Medigap aplica un período de espera para la cobertura relacionada con una condición preexistente, dicho período NO puede exceder:",
       o: ["3 meses", "6 meses", "12 meses", "24 meses"],
       a: 1,
-      trampa: "Los 6 meses de preexistencia de Medigap se confunden con otros períodos de espera de diferentes productos.",
-      correcto: "El período de espera por condición preexistente en Medigap NO puede exceder 6 MESES — un límite de protección al consumidor específico de este producto suplementario. [VERIFICADO — límite estándar de Medigap]",
+      trampa: "No confundir dos reglas distintas: hasta 6 meses de espera para beneficios relacionados con una condición preexistente cuando corresponde, y 6 meses de inscripción abierta garantizada.",
+      correcto: "Cuando corresponde, el período de espera para beneficios relacionados con una condición preexistente en Medigap no puede exceder 6 MESES. Esto no significa que puedan negar la emisión durante la inscripción abierta; la cobertura acreditable previa puede reducir o eliminar la espera. [VERIFICADO — límite estándar de Medigap]",
       incorrectos: [
         "A) 3 meses podría ser menor pero no es el límite máximo estándar.",
         "C) 12 meses excede el límite de Medigap.",
@@ -597,7 +597,7 @@ const PK_REFUERZO = [
       q: "El período de inscripción abierta de Medigap (donde no pueden negarte por preexistencias) dura cuántos meses desde que cumples 65 y tienes Parte B?",
       o: ["3 meses", "6 meses", "9 meses", "12 meses"],
       a: 1,
-      trampa: "Ambos números clave de Medigap son 6 (preexistencia máxima Y ventana de inscripción abierta) — conviene recordar que ambos son 6 meses.",
+      trampa: "Son dos reglas distintas que comparten el número 6: máximo general de espera por preexistencia cuando corresponde y ventana de inscripción abierta de 6 meses.",
       correcto: "El período de INSCRIPCIÓN ABIERTA de Medigap dura 6 MESES desde que cumples 65 y estás inscrito en Parte B — durante ese tiempo no pueden negarte cobertura ni cobrarte más por preexistencias. [VERIFICADO — protección estándar de inscripción abierta]",
       incorrectos: [
         "A) 3 meses es menor al período estándar.",

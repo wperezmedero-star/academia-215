@@ -637,7 +637,7 @@ const PK_NIVEL3 = [
     {
       nivel: 4,
       tipo_trampa: "NUMEROS_FECHAS",
-      q: "El período de espera para una condición PREEXISTENTE en una póliza de complemento de Medicare (Medigap) NO puede extenderse generalmente más allá de cuántos meses?",
+      q: "Cuando corresponde aplicar un período de espera para beneficios relacionados con una condición PREEXISTENTE en una póliza Medigap, ¿cuál es el máximo general?",
       o: [
         "3 meses",
         "6 meses",
@@ -646,7 +646,7 @@ const PK_NIVEL3 = [
       ],
       a: 1,
       trampa: "Este límite específico se confunde con otros períodos de espera de preexistencia aplicables a diferentes tipos de productos de salud (como LTC, que puede tener períodos distintos).",
-      correcto: "El período de espera por condición preexistente en una póliza Medigap generalmente NO puede exceder 6 MESES — un límite regulatorio de protección al consumidor específico para este tipo de producto suplementario de Medicare. [VERIFICADO — límite regulatorio estándar reconocido para Medigap]",
+      correcto: "Cuando corresponde, el período de espera para beneficios relacionados con una condición preexistente en Medigap generalmente no puede exceder 6 MESES. Durante la inscripción abierta no pueden negar la póliza ni cobrar más por la condición; la cobertura acreditable previa puede reducir o eliminar la espera. [VERIFICADO — límite regulatorio estándar reconocido para Medigap]",
       incorrectos: [
         "A) 3 meses es menor al límite máximo reconocido — podría ser menor pero no es el límite específico establecido.",
         "C) 12 meses excede el límite máximo generalmente reconocido para Medigap específicamente.",
