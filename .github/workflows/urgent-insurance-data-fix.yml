@@ -1,0 +1,122 @@
+name: Urgent insurance data corrections
+
+on:
+  push:
+    paths:
+      - '.github/workflows/urgent-insurance-data-fix.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  correct-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Correct verified insurance-data errors
+        shell: python
+        run: |
+          from pathlib import Path
+          from datetime import datetime, timezone
+
+          changed = []
+
+          def patch_file(path, replacements):
+              p = Path(path)
+              if not p.exists():
+                  print(f'WARNING: {path} not found')
+                  return
+              text = p.read_text(encoding='utf-8')
+              original = text
+              for old, new in replacements:
+                  text = text.replace(old, new)
+              if text != original:
+                  p.write_text(text, encoding='utf-8')
+                  changed.append(path)
+
+          # Florida Manual 2-15, sec. 19.5.2:
+          # Life and annuities = 14 days; Medigap/LTC = 30 days.
+          life_replacements = [
+              ('free look (10 días para vida)', 'free look (14 días para vida y anualidades)'),
+              ('10 días es el período de examen gratuito (free look) de pólizas de vida', '14 días es el período de examen gratuito (free look) de pólizas de vida y anualidades'),
+              ('21 días es el free look para anualidades', '21 días NO es el free look estándar para anualidades; vida y anualidades tienen 14 días'),
+              ('10 días para vida', '14 días para vida y anualidades'),
+          ]
+          patch_file('pk-data-life.js', life_replacements)
+
+          # Clarify Medigap: the 6-month figure is a maximum waiting period
+          # for coverage related to a preexisting condition when applicable.
+          # It is distinct from the 6-month guaranteed open-enrollment window.
+          medigap_replacements = [
+              ('El período de espera por condición preexistente en una póliza Medigap NO puede exceder:',
+               'Cuando una aseguradora Medigap aplica un período de espera para la cobertura relacionada con una condición preexistente, dicho período NO puede exceder:'),
+              ('El período de espera para una condición PREEXISTENTE en una póliza de complemento de Medicare (Medigap) NO puede extenderse generalmente más allá de cuántos meses?',
+               'Cuando corresponde aplicar un período de espera para beneficios relacionados con una condición PREEXISTENTE en una póliza Medigap, ¿cuál es el máximo general?'),
+              ('El período de espera por condición preexistente en Medigap NO puede exceder 6 MESES — un límite de protección al consumidor específico de este producto suplementario.',
+               'Cuando corresponde, el período de espera para beneficios relacionados con una condición preexistente en Medigap no puede exceder 6 MESES. Esto no significa que puedan negar la emisión durante la inscripción abierta; la cobertura acreditable previa puede reducir o eliminar la espera.'),
+              ('El período de espera por condición preexistente en una póliza Medigap generalmente NO puede exceder 6 MESES — un límite regulatorio de protección al consumidor específico para este tipo de producto suplementario de Medicare.',
+               'Cuando corresponde, el período de espera para beneficios relacionados con una condición preexistente en Medigap generalmente no puede exceder 6 MESES. Durante la inscripción abierta no pueden negar la póliza ni cobrar más por la condición; la cobertura acreditable previa puede reducir o eliminar la espera.'),
+              ('Los 6 meses de preexistencia de Medigap se confunden con otros períodos de espera de diferentes productos.',
+               'No confundir dos reglas distintas: hasta 6 meses de espera para beneficios relacionados con una condición preexistente cuando corresponde, y 6 meses de inscripción abierta garantizada.'),
+              ('Ambos números clave de Medigap son 6 (preexistencia máxima Y ventana de inscripción abierta) — conviene recordar que ambos son 6 meses.',
+               'Son dos reglas distintas que comparten el número 6: máximo general de espera por preexistencia cuando corresponde y ventana de inscripción abierta de 6 meses.'),
+          ]
+          patch_file('pk-data-nivel3.js', medigap_replacements)
+          patch_file('pk-data-refuerzo.js', medigap_replacements)
+
+          # Correct any remaining stale explanatory phrases across question banks.
+          for p in Path('.').glob('pk-data-*.js'):
+              text = p.read_text(encoding='utf-8')
+              original = text
+              text = text.replace('free look (10 días para vida)', 'free look (14 días para vida y anualidades)')
+              text = text.replace('21 días es el free look para anualidades', '21 días NO es el free look estándar para anualidades; vida y anualidades tienen 14 días')
+              if text != original:
+                  p.write_text(text, encoding='utf-8')
+                  if str(p) not in changed:
+                      changed.append(str(p))
+
+          stale = []
+          needles = [
+              'free look (10 días para vida)',
+              '10 días es el período de examen gratuito (free look) de pólizas de vida',
+              '21 días es el free look para anualidades',
+          ]
+          for p in Path('.').glob('pk-data-*.js'):
+              text = p.read_text(encoding='utf-8')
+              for needle in needles:
+                  if needle in text:
+                      stale.append(f'{p}: {needle}')
+
+          log = Path('AUDIT_FIX_LOG.md')
+          log.write_text(
+              '# Corrección urgente de datos de seguros\n\n'
+              f'Fecha UTC: {datetime.now(timezone.utc).isoformat()}\n\n'
+              '## Reglas verificadas aplicadas\n'
+              '- Free look de vida y anualidades en Florida: 14 días.\n'
+              '- Free look de Medigap y LTC: 30 días.\n'
+              '- Conversión de vida de grupo: 31 días (sin cambios).\n'
+              '- Medigap: hasta 6 meses de espera para beneficios relacionados con preexistencias cuando corresponde; no confundir con la inscripción abierta garantizada de 6 meses.\n\n'
+              '## Archivos modificados\n' + ''.join(f'- {x}\n' for x in changed) + '\n'
+              '## Verificación de frases obsoletas\n' + ('- Ninguna encontrada.\n' if not stale else ''.join(f'- PENDIENTE: {x}\n' for x in stale)),
+              encoding='utf-8'
+          )
+          changed.append(str(log))
+
+          if stale:
+              raise SystemExit('Quedaron frases obsoletas: ' + '; '.join(stale))
+
+          print('Modified:', ', '.join(changed))
+
+      - name: Commit corrected question bank
+        run: |
+          git config user.name "Academia 2-15 Audit Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add pk-data-*.js AUDIT_FIX_LOG.md
+          if git diff --cached --quiet; then
+            echo "No changes required"
+          else
+            git commit -m "fix: correct Florida free-look and clarify Medigap rules"
+            git push
+          fi
