@@ -290,29 +290,29 @@ const PK_CONCEPTOS = [
     {
       nivel: 1,
       q: "En Florida, ¿cuántos días tiene el período de examen gratuito para una póliza de vida?",
-      o: ["7 días","10 días","21 días","30 días"],
-      a: 1,
-      trampa: "Confundir con el período de anualidades (21 días) o el especial para 65+ (30 días).",
-      correcto: "Período de examen gratuito para VIDA en Florida = 10 DÍAS. Para anualidades = 21 días. Para personas 65+ con anualidades = 30 días.",
-      incorrectos: ["A) 7 días no es el período de examen gratuito para pólizas de vida.","C) 21 días aplica a anualidades, no a pólizas de vida.","D) 30 días aplica a anualidades vendidas a personas de 65 años o más."]
+      o: ["7 días","10 días","14 días","30 días"],
+      a: 2,
+      trampa: "Confundir vida y anualidades (14 días) con salud (10 días) o Medigap y LTC (30 días).",
+      correcto: "Período de examen gratuito para VIDA y ANUALIDADES en Florida = 14 DÍAS.",
+      incorrectos: ["A) 7 días no corresponde.","B) 10 días corresponde a salud.","D) 30 días corresponde a Medigap y LTC."]
     },
     {
       nivel: 2,
-      q: "Rosa, de 68 años, compra una anualidad en Florida. Cambia de opinión 25 días después. ¿Puede devolver la anualidad y obtener reembolso completo?",
-      o: ["No — el período de examen gratuito para todas las anualidades es 21 días","Sí — para personas de 65 años o más, el período de examen gratuito de anualidades es 30 días","Solo si el agente acepta la devolución voluntariamente","No — una vez firmada, la anualidad no puede ser devuelta"],
-      a: 1,
-      trampa: "El período de 21 días aplica a anualidades en general, pero Florida extiende a 30 días para personas de 65+.",
-      correcto: "Florida otorga 30 días de examen gratuito para anualidades compradas por personas de 65 años O MÁS. Rosa tiene 68 años y solo han pasado 25 días — puede devolver.",
-      incorrectos: ["A) Para personas de 65+ el período es 30 días, no 21.","C) El período de examen gratuito es un DERECHO legal, no depende de la voluntad del agente.","D) Durante el período de examen gratuito, la anualidad SIEMPRE puede devolverse."]
+      q: "Rosa compra una anualidad en Florida y cambia de opinión 25 días después de recibirla. ¿Sigue dentro del free look?",
+      o: ["No — el free look de anualidades es de 14 días y ya terminó","Sí — toda anualidad tiene 30 días","Solo si el agente acepta la devolución voluntariamente","No — las anualidades nunca tienen free look"],
+      a: 0,
+      trampa: "El free look de anualidades es de 14 días; no confundir con los 30 días de Medigap y LTC.",
+      correcto: "Según el manual 2-15, las anualidades tienen 14 días de free look. A los 25 días, Rosa ya está fuera del plazo.",
+      incorrectos: ["B) El manual no asigna 30 días a anualidades; ese plazo corresponde a Medigap y LTC.","C) El período de examen gratuito es un DERECHO legal, no depende de la voluntad del agente.","D) Durante el período de examen gratuito, la anualidad SIEMPRE puede devolverse."]
     },
     {
       nivel: 3,
       q: "¿Cuál afirmación sobre los períodos de examen gratuito en Florida es INCORRECTA?",
-      o: ["Las pólizas de vida tienen un período de 10 días","Las anualidades vendidas a personas menores de 65 años tienen un período de 21 días","Las anualidades vendidas a personas de 65 años o más tienen un período de 30 días","Los períodos de examen gratuito son opcionales para las aseguradoras"],
+      o: ["Vida y anualidades tienen 14 días","Salud tiene 10 días","Medigap y LTC tienen 30 días","Los períodos de examen gratuito son opcionales para las aseguradoras"],
       a: 3,
       trampa: "La palabra 'opcionales' es la trampa. Los períodos de examen gratuito son un DERECHO legal obligatorio.",
       correcto: "Los períodos de examen gratuito son OBLIGATORIOS por ley en Florida — no son opcionales. La opción D es la afirmación incorrecta.",
-      incorrectos: ["A) Esta afirmación SÍ es correcta (vida = 10 días).","B) Esta afirmación SÍ es correcta (anualidades < 65 = 21 días).","C) Esta afirmación SÍ es correcta (anualidades 65+ = 30 días)."]
+      incorrectos: ["A) Coincide con el manual.","B) Coincide con el manual.","C) Coincide con el manual."]
     },
     {
       nivel: 4,
@@ -326,11 +326,11 @@ const PK_CONCEPTOS = [
     {
       nivel: 5,
       q: "Un agente declara: 'Si no le gusta la póliza, tiene una semana para devolverla.' Si la póliza es de vida, ¿esta declaración constituye una violación?",
-      o: ["No — el agente puede fijar el período de examen gratuito discrecionalmente","Sí — está REDUCIENDO ilegalmente el período de examen gratuito de 10 días a 7 días","No — una semana equivale a 7 días que es suficiente para examinar la póliza","Sí — el agente nunca debe mencionar el período de examen gratuito al cliente"],
+      o: ["No — el agente puede fijar el período de examen gratuito discrecionalmente","Sí — está REDUCIENDO ilegalmente el período de examen gratuito de 14 días a 7 días","No — una semana equivale a 7 días que es suficiente para examinar la póliza","Sí — el agente nunca debe mencionar el período de examen gratuito al cliente"],
       a: 1,
       trampa: "El agente no puede REDUCIR un derecho legal. Una semana (7 días) es menos que los 10 días obligatorios.",
-      correcto: "El período de examen gratuito de 10 días es un DERECHO LEGAL mínimo. El agente no puede reducirlo a 7 días — hacerlo es una violación de la ley de Florida.",
-      incorrectos: ["A) El período es fijado por ley, no por el agente.","C) 7 días es MENOS que los 10 días que la ley garantiza.","D) El agente puede y debe informar sobre este derecho al cliente."]
+      correcto: "El período de examen gratuito de 14 días es un DERECHO LEGAL mínimo. El agente no puede reducirlo a 7 días — hacerlo es una violación de la ley de Florida.",
+      incorrectos: ["A) El período es fijado por ley, no por el agente.","C) 7 días es MENOS que los 14 días que el manual establece.","D) El agente puede y debe informar sobre este derecho al cliente."]
     }
   ]
 },
