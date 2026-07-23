@@ -164,10 +164,10 @@
     const pctColor=pct>=70?'#22c55e':pct>=60?'#f59e0b':'#ef4444';
 
     panel.innerHTML=
-      '<div style="background:#092313;border:1px solid #166534;border-radius:9px;padding:7px 4px;text-align:center"><div style="font-size:1rem;font-weight:900;color:#22c55e">✅ '+correct+'</div><div style="font-size:.64rem;color:#86efac">Correctas</div></div>'+ 
-      '<div style="background:#2a0909;border:1px solid #991b1b;border-radius:9px;padding:7px 4px;text-align:center"><div style="font-size:1rem;font-weight:900;color:#ef4444">❌ '+incorrect+'</div><div style="font-size:.64rem;color:#fca5a5">Incorrectas</div></div>'+ 
-      '<div style="background:#111d36;border:1px solid #334155;border-radius:9px;padding:7px 4px;text-align:center"><div style="font-size:1rem;font-weight:900;color:#93c5fd">📝 '+answered+'</div><div style="font-size:.64rem;color:#94a3b8">Respondidas</div></div>'+ 
-      '<div style="background:#1b1230;border:1px solid #6d28d9;border-radius:9px;padding:7px 4px;text-align:center"><div style="font-size:1rem;font-weight:900;color:'+pctColor+'">📊 '+pct+'%</div><div style="font-size:.64rem;color:#c4b5fd">Rendimiento</div></div>';
+      '<div style="background:#092313;border:1px solid #166534;border-radius:9px;padding:7px 4px;text-align:center"><div style="font-size:1rem;font-weight:900;color:#22c55e">✅ <span id="sim-correct">'+correct+'</span></div><div style="font-size:.64rem;color:#86efac">Correctas</div></div>'+
+      '<div style="background:#2a0909;border:1px solid #991b1b;border-radius:9px;padding:7px 4px;text-align:center"><div style="font-size:1rem;font-weight:900;color:#ef4444">❌ <span id="sim-incorrect">'+incorrect+'</span></div><div style="font-size:.64rem;color:#fca5a5">Incorrectas</div></div>'+
+      '<div style="background:#111d36;border:1px solid #334155;border-radius:9px;padding:7px 4px;text-align:center"><div style="font-size:1rem;font-weight:900;color:#93c5fd">📝 <span id="sim-answered-live">'+answered+'</span></div><div style="font-size:.64rem;color:#94a3b8">Respondidas</div></div>'+
+      '<div style="background:#1b1230;border:1px solid #6d28d9;border-radius:9px;padding:7px 4px;text-align:center"><div style="font-size:1rem;font-weight:900;color:'+pctColor+'">📊 <span id="sim-percent">'+pct+'%</span></div><div style="font-size:.64rem;color:#c4b5fd">Rendimiento</div></div>';
   }
 
   async function upgradedLaunchSimulacro(){
