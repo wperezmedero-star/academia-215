@@ -22,33 +22,33 @@ const PK_FLORIDA = [
       o: [
         "7 días",
         "10 días",
-        "21 días",
+        "14 días",
         "30 días"
       ],
-      a: 1,
-      trampa: "Es fácil confundir este plazo con el período aplicable a anualidades (21 días) o con el período especial extendido para personas de 65+ (30 días).",
-      correcto: "El período de examen gratuito para pólizas de VIDA en Florida es GENERALMENTE 10 DÍAS. Para anualidades el período general es 21 días. Para anualidades vendidas a personas de 65+ el período se extiende a 30 días. [REQUIERE VERIFICACIÓN — confirmar estos plazos exactos contra el Florida Statute vigente actual, ya que la regulación puede haberse actualizado]",
+      a: 2,
+      trampa: "Es fácil confundir el free look de vida y anualidades (14 días) con salud (10 días) o Medigap y LTC (30 días).",
+      correcto: "Según el manual 2-15, el período de examen gratuito para pólizas de VIDA y ANUALIDADES en Florida es de 14 DÍAS desde la entrega.",
       incorrectos: [
-        "A) 7 días no corresponde al período estándar de examen gratuito para pólizas de vida en Florida.",
-        "C) 21 días corresponde generalmente al período aplicable a anualidades — no a pólizas de vida.",
-        "D) 30 días corresponde al período especial aplicable a anualidades vendidas a personas de 65 años o más."
+        "A) 7 días no corresponde al plazo del manual para vida.",
+        "B) 10 días corresponde al free look de salud.",
+        "D) 30 días corresponde a suplemento de Medicare y cuidado a largo plazo."
       ]
     },
     {
       nivel: 2,
       tipo_trampa: "ESCENARIO",
-      q: "Rosa, de 68 años, compra una anualidad en Florida. Cambia de opinión 25 días después de la compra. Según las reglas generales aplicables a personas de su edad, ¿puede devolver la anualidad y obtener un reembolso completo?",
+      q: "Rosa compra una anualidad en Florida y cambia de opinión 25 días después de recibirla. Según el manual 2-15, ¿está dentro del free look?",
       o: [
-        "No — el período de examen gratuito para todas las anualidades sin excepción es de 21 días",
-        "Sí — para personas de 65 años o más, el período de examen gratuito de anualidades generalmente se extiende a 30 días",
+        "No — el free look de anualidades es de 14 días y ya transcurrió",
+        "Sí — toda anualidad tiene 30 días",
         "Únicamente si el agente acepta voluntariamente procesar la devolución",
         "No — una vez firmado el contrato, la anualidad no puede devolverse bajo ninguna circunstancia"
       ],
-      a: 1,
-      trampa: "El período de 21 días aplica generalmente a anualidades, pero Florida extiende este plazo específicamente para personas de 65 años o más.",
-      correcto: "Florida generalmente otorga un período extendido de examen gratuito para anualidades compradas por personas de 65 años O MÁS. Con 68 años y solo 25 días transcurridos, Rosa generalmente podría devolver la anualidad para reembolso completo bajo esta protección extendida. [REQUIERE VERIFICACIÓN — confirmar el plazo exacto de 30 días vigente contra la regulación actual de Florida]",
+      a: 0,
+      trampa: "No confundir el free look de anualidades (14 días) con los 30 días de Medigap y LTC.",
+      correcto: "Según el manual 2-15, la anualidad tiene 14 días de free look. A los 25 días, Rosa ya está fuera de ese plazo.",
       incorrectos: [
-        "A) Para personas de 65+ el período generalmente se extiende más allá de los 21 días estándar.",
+        "B) El manual no establece 30 días para anualidades; ese plazo corresponde a Medigap y LTC.",
         "C) El período de examen gratuito constituye un DERECHO legal establecido — no depende de la discreción voluntaria del agente.",
         "D) Durante el período de examen gratuito vigente, el contrato generalmente SIEMPRE puede devolverse por derecho legal."
       ]
@@ -58,18 +58,18 @@ const PK_FLORIDA = [
       tipo_trampa: "CUAL_NO",
       q: "¿Cuál de las siguientes afirmaciones GENERALES sobre los períodos de examen gratuito en Florida es la MENOS PRECISA?",
       o: [
-        "Las pólizas de vida individuales tienen generalmente un período más corto que las anualidades",
-        "Las anualidades vendidas a personas menores de 65 años tienen generalmente un período estándar diferente al de personas mayores",
-        "Las anualidades vendidas a personas de 65 años o más generalmente tienen un período extendido de protección",
+        "Las pólizas de vida y las anualidades tienen 14 días",
+        "Las pólizas de salud tienen 10 días",
+        "Medigap y cuidado a largo plazo tienen 30 días",
         "Los períodos de examen gratuito son completamente opcionales y discrecionales para cada aseguradora individual"
       ],
       a: 3,
       trampa: "La palabra 'opcionales' es la señal clave — los períodos de examen gratuito constituyen un derecho legal generalmente obligatorio, no una cortesía discrecional de la aseguradora.",
       correcto: "Los períodos de examen gratuito son GENERALMENTE OBLIGATORIOS por ley en Florida — no son discrecionales para las aseguradoras individuales. La opción D es la afirmación MENOS PRECISA entre las presentadas. [VERIFICADO — el principio de obligatoriedad legal es estable, independientemente de los plazos exactos específicos]",
       incorrectos: [
-        "A) Esta afirmación general es consistente con la estructura típica conocida del sistema.",
-        "B) Esta afirmación general es consistente — existe diferenciación por edad en las protecciones aplicables.",
-        "C) Esta afirmación general es consistente con la estructura de protección extendida para personas mayores."
+        "A) Esta afirmación coincide con el manual.",
+        "B) Esta afirmación coincide con el manual.",
+        "C) Esta afirmación coincide con el manual."
       ]
     },
     {
@@ -97,13 +97,13 @@ const PK_FLORIDA = [
       q: "Un agente le declara a su cliente: 'Si no le gusta la póliza, tiene aproximadamente una semana para devolverla.' Si la póliza en cuestión es de vida individual, ¿constituye esta declaración potencialmente un problema?",
       o: [
         "No — el agente tiene discreción profesional para comunicar el período de examen gratuito de la manera que considere apropiada",
-        "Potencialmente sí — si el período legal real es de 10 días, comunicar únicamente 'una semana' (7 días) podría transmitir información imprecisa que subestima el derecho real del cliente",
+        "Potencialmente sí — si el período aplicable es de 14 días, comunicar únicamente 'una semana' (7 días) podría transmitir información imprecisa que subestima el derecho real del cliente",
         "No — una semana (7 días) es generalmente tiempo suficiente para que el cliente examine adecuadamente la póliza",
         "Sí — el agente nunca debería mencionar en absoluto el período de examen gratuito al cliente bajo ninguna circunstancia"
       ],
       a: 1,
       trampa: "Comunicar un plazo menor al legalmente establecido, aunque sea de forma imprecisa o coloquial, podría llevar al cliente a ejercer su derecho con menos tiempo del que realmente posee.",
-      correcto: "Si el período legal real es de 10 días, describir el derecho como 'aproximadamente una semana' podría generar confusión o subestimación del plazo real disponible para el cliente — un agente debería comunicar el plazo exacto con precisión, dado que constituye un derecho legal específico del consumidor. [VERIFICADO — principio general de comunicación precisa y transparente en la relación agente-cliente]",
+      correcto: "Si el período aplicable es de 14 días, describir el derecho como 'aproximadamente una semana' podría generar confusión o subestimación del plazo real disponible para el cliente — un agente debería comunicar el plazo exacto con precisión, dado que constituye un derecho legal específico del consumidor. [VERIFICADO — principio general de comunicación precisa y transparente en la relación agente-cliente]",
       incorrectos: [
         "A) La comunicación imprecisa de un derecho legal específico del consumidor no es simplemente una cuestión de discreción profesional libre.",
         "C) Comunicar un plazo aproximado menor al legal real podría llevar al cliente a actuar con menos tiempo del que legalmente posee.",
