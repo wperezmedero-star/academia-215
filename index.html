@@ -253,7 +253,7 @@ th{color:#bfdbfe;}
         <ul style="color:#e2e8f0;font-size:.85rem;padding-left:16px;line-height:1.8">
           <li>Las 150 preguntas se seleccionan aleatoriamente de todas las lecciones.</li>
           <li>El cronómetro corre desde que inicias — igual que el examen real.</li>
-          <li>NO se muestra si la respuesta es correcta o incorrecta durante el examen.</li>
+          <li>Después de cada respuesta se actualiza el marcador de correctas e incorrectas.</li>
           <li>Al terminar ves tu resultado, porcentaje y análisis por lección.</li>
           <li>Puedes navegar entre preguntas y cambiar respuestas antes de terminar.</li>
           <li>Si el tiempo se agota, el simulacro termina automáticamente.</li>
@@ -286,6 +286,13 @@ th{color:#bfdbfe;}
       </div>
       <!-- Progress bar -->
       <div class="prog"><div class="bar" id="sim-pbar" style="background:linear-gradient(90deg,#7c3aed,#4f46e5)"></div></div>
+      <!-- Live score -->
+      <div id="sim-live-score" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0">
+        <div style="background:#052e16;border:1px solid #166534;border-radius:9px;padding:7px;text-align:center;color:#86efac;font-weight:800">✅ <span id="sim-correct">0</span><small style="display:block;font-size:.62rem;color:#bbf7d0">Correctas</small></div>
+        <div style="background:#450a0a;border:1px solid #991b1b;border-radius:9px;padding:7px;text-align:center;color:#fca5a5;font-weight:800">❌ <span id="sim-incorrect">0</span><small style="display:block;font-size:.62rem;color:#fecaca">Incorrectas</small></div>
+        <div style="background:#172554;border:1px solid #1d4ed8;border-radius:9px;padding:7px;text-align:center;color:#93c5fd;font-weight:800">📝 <span id="sim-answered-live">0</span><small style="display:block;font-size:.62rem;color:#bfdbfe">Respondidas</small></div>
+        <div style="background:#2e1065;border:1px solid #6d28d9;border-radius:9px;padding:7px;text-align:center;color:#c4b5fd;font-weight:800">📊 <span id="sim-percent">0%</span><small style="display:block;font-size:.62rem;color:#ddd6fe">Porcentaje</small></div>
+      </div>
       <!-- Question navigator -->
       <div id="sim-nav" style="display:flex;flex-wrap:wrap;gap:4px;margin:8px 0;max-height:80px;overflow-y:auto;padding:4px"></div>
       <!-- Question -->
@@ -633,13 +640,24 @@ function renderSimQ(){
     btn.className="opt";
     btn.textContent=String.fromCharCode(65+i)+") "+opt;
     // Highlight if already answered
-    if(simAnswers[simCurrent]===i)btn.style.borderColor="#7c3aed";
+    if(simAnswers[simCurrent]===i){
+      const isCorrect=i===q.a;
+      btn.style.borderColor=isCorrect?"#22c55e":"#ef4444";
+      btn.style.background=isCorrect?"#052e16":"#450a0a";
+    }
     btn.onclick=()=>simPick(i);
     opts.appendChild(btn);
   });
-  // Update answered count
+  // Update live score and answered count
   const answered=simAnswers.filter(a=>a!==null).length;
+  const correct=simAnswers.reduce((n,a,idx)=>n+(a!==null&&a===simQs[idx].a?1:0),0);
+  const incorrect=answered-correct;
+  const percent=answered?Math.round((correct/answered)*100):0;
   document.getElementById("sim-answered").textContent=`${answered} de ${total} respondidas`;
+  document.getElementById("sim-correct").textContent=correct;
+  document.getElementById("sim-incorrect").textContent=incorrect;
+  document.getElementById("sim-answered-live").textContent=answered;
+  document.getElementById("sim-percent").textContent=percent+"%";
   // Prev/next buttons
   document.getElementById("sim-prev").disabled=simCurrent===0;
   const nextBtn=document.getElementById("sim-next");
@@ -666,7 +684,8 @@ function renderSimNav(){
     const answered=simAnswers[i]!==null;
     const current=i===simCurrent;
     if(current)btn.style.background="#7c3aed",btn.style.color="#fff";
-    else if(answered)btn.style.background="#1e3a8a",btn.style.color="#93c5fd";
+    else if(answered&&simAnswers[i]===simQs[i].a)btn.style.background="#166534",btn.style.color="#dcfce7";
+    else if(answered)btn.style.background="#991b1b",btn.style.color="#fee2e2";
     else btn.style.background="#1e293b",btn.style.color="#64748b";
     btn.textContent=i+1;
     btn.onclick=()=>{simCurrent=i;renderSimQ();renderSimNav();};
