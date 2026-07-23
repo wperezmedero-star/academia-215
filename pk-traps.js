@@ -50,7 +50,7 @@ const PK_TRAMPAS = {
       nombre: "Trampa de Números y Fechas",
       descripcion: "La pregunta prueba un número o fecha específico con opciones similares que podrían confundir.",
       señales: ["¿Cuántos días", "¿Cuántos meses", "¿Cuántos años", "¿Cuánto tiempo", "¿A qué edad"],
-      estrategia: "Memoriza los números clave: Free Look Vida=10, Anualidades=21, 65+=30. Gracia Vida=31, Salud Mensual=10. COBRA=18/36. Incontestabilidad=2 años. Antedatación=6 meses.",
+      estrategia: "Memoriza los números clave: Free Look Vida=14, Anualidades=14. Gracia Vida=31, Salud Mensual=10. COBRA=18/36. Incontestabilidad=2 años. Antedatación=6 meses.",
       ejemplo: "¿Cuántos días tiene el período de examen gratuito para una póliza de vida en Florida?"
     },
 
@@ -213,7 +213,7 @@ const PK_TRAMPAS = {
   TIPS_RAPIDOS: [
     "💡 Cuando veas EXCEPTO → busca la opción que NO pertenece",
     "💡 Cuando veas SIEMPRE o NUNCA → desconfía, casi siempre hay una excepción",
-    "💡 Free Look VIDA=10 días. ANUALIDADES=21 días. 65+ en anualidades=30 días",
+    "💡 Free Look VIDA=14 días. ANUALIDADES=14 días",
     "💡 Período de gracia VIDA=31 días. SALUD mensual=10 días. SALUD semanal=7 días",
     "💡 Incontestabilidad=2 años. Única excepción: FRAUDE INTENCIONAL",
     "💡 Twisting=diferente compañía. Churning=misma compañía",
