@@ -17,18 +17,18 @@ const PK_REFUERZO = [
 {
   id: "refuerzo_001",
   area: "provisiones",
-  concepto: "Free Look (10 días) vs Período de Gracia (31 días) de Vida",
+  concepto: "Free Look (14 días) vs Período de Gracia (31 días) de Vida",
   variantes: [
     {
       nivel: 4,
       tipo_trampa: "NUMEROS_FECHAS",
       q: "¿Cuántos días dura el período de examen gratuito (free look) de una póliza de VIDA en Florida?",
       o: ["10 días", "14 días", "21 días", "31 días"],
-      a: 0,
-      trampa: "El free look (10 días) se confunde constantemente con el período de gracia (31 días) — ambos son 'tiempo que tienes para hacer algo', pero uno es para arrepentirte de la compra, el otro para pagar una prima vencida.",
-      correcto: "FREE LOOK de vida = 10 DÍAS para revisar la póliza recién recibida y devolverla para reembolso completo si no la deseas. NO confundir con el período de gracia (31 días). [VERIFICADO — plazo estándar de free look de vida en Florida]",
+      a: 1,
+      trampa: "El free look (14 días) se confunde constantemente con el período de gracia (31 días) — ambos son 'tiempo que tienes para hacer algo', pero uno es para arrepentirte de la compra, el otro para pagar una prima vencida.",
+      correcto: "FREE LOOK de vida = 14 DÍAS para revisar la póliza recién recibida y devolverla para reembolso completo si no la deseas. NO confundir con el período de gracia (31 días). [VERIFICADO — plazo estándar de free look de vida en Florida]",
       incorrectos: [
-        "B) 14 días no corresponde al free look estándar de vida.",
+        "A) 10 días corresponde al free look de salud, no al de vida.",
         "C) 21 días no corresponde al free look de vida.",
         "D) 31 días es el PERÍODO DE GRACIA de vida — un concepto completamente distinto del free look."
       ]
@@ -39,10 +39,10 @@ const PK_REFUERZO = [
       q: "¿Cuántos días dura el período de GRACIA de una póliza de VIDA?",
       o: ["10 días", "20 días", "31 días", "60 días"],
       a: 2,
-      trampa: "El período de gracia (31 días) se confunde con el free look (10 días) — recuerda: gracia = tiempo para PAGAR una prima vencida sin perder cobertura.",
-      correcto: "PERÍODO DE GRACIA de vida = 31 DÍAS para pagar una prima vencida sin que la póliza caduque, manteniendo la cobertura vigente durante ese tiempo. NO confundir con el free look (10 días). [VERIFICADO — plazo estándar de gracia de vida]",
+      trampa: "El período de gracia (31 días) se confunde con el free look (14 días) — recuerda: gracia = tiempo para PAGAR una prima vencida sin perder cobertura.",
+      correcto: "PERÍODO DE GRACIA de vida = 31 DÍAS para pagar una prima vencida sin que la póliza caduque, manteniendo la cobertura vigente durante ese tiempo. NO confundir con el free look (14 días). [VERIFICADO — plazo estándar de gracia de vida]",
       incorrectos: [
-        "A) 10 días es el FREE LOOK de vida — concepto distinto (arrepentirse de la compra, no pagar prima vencida).",
+        "A) 10 días es el FREE LOOK de salud — concepto distinto (arrepentirse de la compra, no pagar prima vencida).",
         "B) 20 días no corresponde al período de gracia de vida.",
         "D) 60 días no corresponde al período de gracia de vida."
       ]
@@ -53,17 +53,17 @@ const PK_REFUERZO = [
       q: "¿Cuál es la diferencia entre el FREE LOOK y el PERÍODO DE GRACIA de una póliza de vida?",
       o: [
         "Son lo mismo con nombres diferentes",
-        "Free look (10 días) = tiempo para DEVOLVER una póliza recién comprada y recibir reembolso; Período de gracia (31 días) = tiempo para PAGAR una prima vencida sin perder cobertura",
+        "Free look (14 días) = tiempo para DEVOLVER una póliza recién comprada y recibir reembolso; Período de gracia (31 días) = tiempo para PAGAR una prima vencida sin perder cobertura",
         "Free look es de 31 días; gracia es de 10 días",
         "Ambos duran exactamente 30 días"
       ],
       a: 1,
       trampa: "Ambos son 'plazos de tiempo' de la póliza de vida que se cruzan constantemente, pero tienen propósitos completamente opuestos: uno al INICIO (arrepentirse), otro DURANTE (no perder cobertura por falta de pago).",
-      correcto: "FREE LOOK = 10 días al RECIBIR la póliza para devolverla con reembolso completo si te arrepientes. PERÍODO DE GRACIA = 31 días DURANTE la vigencia para pagar una prima vencida sin que caduque. Propósitos y momentos completamente distintos. [VERIFICADO — distinción estándar]",
+      correcto: "FREE LOOK = 14 días al RECIBIR la póliza para devolverla con reembolso completo si te arrepientes. PERÍODO DE GRACIA = 31 días DURANTE la vigencia para pagar una prima vencida sin que caduque. Propósitos y momentos completamente distintos. [VERIFICADO — distinción estándar]",
       incorrectos: [
         "A) NO son lo mismo — tienen propósitos y duraciones distintas.",
         "C) Esta opción invierte los números correctos.",
-        "D) No duran 30 días — free look es 10, gracia es 31."
+        "D) No duran 30 días — free look de vida es 14, gracia es 31."
       ]
     },
     {
@@ -72,8 +72,8 @@ const PK_REFUERZO = [
       q: "Carlos recibe su nueva póliza de vida el 1 de marzo. El 8 de marzo decide que no la quiere y la devuelve. ¿Bajo qué provisión tiene derecho a un reembolso completo?",
       o: ["Período de gracia", "Free look (examen gratuito)", "Cláusula de reinstalación", "Período de eliminación"],
       a: 1,
-      trampa: "Devolver una póliza RECIÉN recibida (día 8 de un plazo de 10) es free look — no debe confundirse con el período de gracia, que es para pagar primas vencidas.",
-      correcto: "Carlos está ejerciendo el FREE LOOK — devolvió la póliza dentro de los 10 días de recibirla (día 8), con derecho a reembolso completo de la prima pagada. [VERIFICADO — aplicación directa del free look de 10 días]",
+      trampa: "Devolver una póliza RECIÉN recibida (día 8 de un plazo de 14) es free look — no debe confundirse con el período de gracia, que es para pagar primas vencidas.",
+      correcto: "Carlos está ejerciendo el FREE LOOK — devolvió la póliza dentro de los 14 días de recibirla (día 8), con derecho a reembolso completo de la prima pagada. [VERIFICADO — aplicación directa del free look de 14 días]",
       incorrectos: [
         "A) El período de gracia es para pagar primas vencidas, no para devolver una póliza recién comprada.",
         "C) La reinstalación es para reactivar una póliza ya caducada — no aplica aquí.",
@@ -262,13 +262,13 @@ const PK_REFUERZO = [
       q: "Empareja correctamente: Conversión de vida de grupo / COBRA / Free look de vida / Período de gracia de vida",
       o: [
         "Conversión 60 / COBRA 31 / Free look 31 / Gracia 10",
-        "Conversión 31 / COBRA 60 / Free look 10 / Gracia 31",
+        "Conversión 31 / COBRA 60 / Free look 14 / Gracia 31",
         "Conversión 10 / COBRA 31 / Free look 60 / Gracia 31",
         "Todos duran 30 días"
       ],
       a: 1,
       trampa: "Esta pregunta reúne los cuatro plazos que más se cruzan entre sí para consolidar la memorización correcta de cada uno.",
-      correcto: "Emparejamiento correcto: CONVERSIÓN de vida de grupo = 31 días / COBRA elección = 60 días / FREE LOOK de vida = 10 días / PERÍODO DE GRACIA de vida = 31 días. [VERIFICADO — los cuatro plazos clave]",
+      correcto: "Emparejamiento correcto: CONVERSIÓN de vida de grupo = 31 días / COBRA elección = 60 días / FREE LOOK de vida = 14 días / PERÍODO DE GRACIA de vida = 31 días. [VERIFICADO — los cuatro plazos clave]",
       incorrectos: [
         "A) Invierte varios números.",
         "C) Invierte varios números.",
