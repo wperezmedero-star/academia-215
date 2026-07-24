@@ -81,82 +81,49 @@
   }
 
   function playMotivationalTheme() {
-    const AudioEngine = window.AudioContext || window.webkitAudioContext;
-    if (!AudioEngine) return Promise.reject(new Error("Audio no disponible"));
+    return fetch("academia-215-intro.b64?v=20260724-1")
+      .then(function (response) {
+        if (!response.ok) throw new Error("No se pudo cargar la introducción");
+        return response.text();
+      })
+      .then(function (encoded) {
+        const binary = window.atob(encoded.trim());
+        const bytes = new Uint8Array(binary.length);
+        for (let index = 0; index < binary.length; index += 1) {
+          bytes[index] = binary.charCodeAt(index);
+        }
 
-    const audio = new AudioEngine();
-    const start = audio.currentTime + 0.08;
-    const master = audio.createGain();
-    const compressor = audio.createDynamicsCompressor();
-    master.gain.setValueAtTime(0.0001, start);
-    master.gain.exponentialRampToValueAtTime(0.34, start + 0.18);
-    master.gain.setValueAtTime(0.34, start + 7.2);
-    master.gain.exponentialRampToValueAtTime(0.0001, start + 8);
-    master.connect(compressor);
-    compressor.connect(audio.destination);
+        const source = URL.createObjectURL(new Blob([bytes], { type: "audio/mpeg" }));
+        const audio = new Audio(source);
+        audio.preload = "auto";
+        audio.volume = 0.78;
 
-    function tone(frequency, at, length, level, type, destination) {
-      const oscillator = audio.createOscillator();
-      const gain = audio.createGain();
-      const filter = audio.createBiquadFilter();
-      oscillator.type = type || "sawtooth";
-      oscillator.frequency.setValueAtTime(frequency, start + at);
-      filter.type = "lowpass";
-      filter.frequency.setValueAtTime(type === "sine" ? 1200 : 1850, start + at);
-      gain.gain.setValueAtTime(0.0001, start + at);
-      gain.gain.exponentialRampToValueAtTime(level, start + at + 0.035);
-      gain.gain.exponentialRampToValueAtTime(0.0001, start + at + length);
-      oscillator.connect(filter);
-      filter.connect(gain);
-      gain.connect(destination || master);
-      oscillator.start(start + at);
-      oscillator.stop(start + at + length + 0.05);
-    }
-
-    function kick(at, level) {
-      const oscillator = audio.createOscillator();
-      const gain = audio.createGain();
-      oscillator.type = "sine";
-      oscillator.frequency.setValueAtTime(125, start + at);
-      oscillator.frequency.exponentialRampToValueAtTime(42, start + at + 0.2);
-      gain.gain.setValueAtTime(level, start + at);
-      gain.gain.exponentialRampToValueAtTime(0.0001, start + at + 0.24);
-      oscillator.connect(gain);
-      gain.connect(master);
-      oscillator.start(start + at);
-      oscillator.stop(start + at + 0.26);
-    }
-
-    function brassChord(frequencies, at, length, level) {
-      frequencies.forEach(function (frequency, index) {
-        tone(frequency, at + index * 0.012, length, level, "sawtooth");
-        tone(frequency / 2, at, length, level * 0.42, "triangle");
+        return new Promise(function (resolve, reject) {
+          function release() {
+            URL.revokeObjectURL(source);
+          }
+          audio.addEventListener(
+            "ended",
+            function () {
+              release();
+              resolve();
+            },
+            { once: true },
+          );
+          audio.addEventListener(
+            "error",
+            function () {
+              release();
+              reject(new Error("No se pudo reproducir la introducción"));
+            },
+            { once: true },
+          );
+          audio.play().catch(function (error) {
+            release();
+            reject(error);
+          });
+        });
       });
-    }
-
-    [0, 0.7, 1.4, 2.1, 2.8, 3.5, 4.2, 4.9, 5.6, 6.3, 7].forEach(function (at, i) {
-      kick(at, i < 4 ? 0.42 : 0.56);
-    });
-
-    const motif = [
-      [261.63, 0.12], [311.13, 0.82], [392, 1.52], [466.16, 2.22],
-      [523.25, 2.92], [392, 3.62], [466.16, 4.32], [523.25, 5.02],
-    ];
-    motif.forEach(function (note, index) {
-      tone(note[0], note[1], index === motif.length - 1 ? 1.1 : 0.48, 0.1, "sawtooth");
-      tone(note[0] * 2, note[1], 0.32, 0.025, "square");
-    });
-
-    brassChord([261.63, 311.13, 392], 5.7, 0.72, 0.065);
-    brassChord([311.13, 392, 466.16], 6.45, 0.62, 0.07);
-    brassChord([261.63, 392, 523.25], 7.12, 0.82, 0.085);
-    tone(1046.5, 7.16, 0.7, 0.035, "sine");
-
-    return audio.resume().then(function () {
-      window.setTimeout(function () {
-        audio.close().catch(function () {});
-      }, 8400);
-    });
   }
 
   function installMotivationalSplash() {
@@ -211,7 +178,7 @@
 
       playMotivationalTheme()
         .then(function () {
-          closeSplash(7800);
+          closeSplash(180);
         })
         .catch(function () {
           closeSplash(250);
