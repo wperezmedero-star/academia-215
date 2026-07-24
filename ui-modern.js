@@ -10,6 +10,47 @@
   const mediaReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const THEME_KEY = "ui215-theme-v1";
   const FONT_KEY = "ui215-font-v1";
+  const ICONS = {
+    home: '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/>',
+    zap: '<path d="m13 2-9 12h7l-1 8 9-12h-7z"/>',
+    chart: '<path d="M4 19V9"/><path d="M10 19V5"/><path d="M16 19v-7"/><path d="M22 19H2"/>',
+    target: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="m15 9 6-6"/><path d="M17 3h4v4"/>',
+    clipboard: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2"/><path d="M9 9h6M9 13h6M9 17h4"/>',
+    arrow: '<path d="m15 18-6-6 6-6"/><path d="M9 12h11"/>',
+    pencil: '<path d="m4 20 4.5-1 10-10-3.5-3.5-10 10z"/><path d="m13.5 7 3.5 3.5"/>',
+    flame: '<path d="M12 22c4 0 7-3 7-7 0-3-1.5-5.5-4-8 .2 3-1.2 4.2-2.5 5.2.2-4-2-7-5-9 .5 4-3.5 6.2-3.5 11.8 0 4 3.2 7 8 7z"/>',
+    cards: '<rect x="6" y="4" width="13" height="16" rx="2"/><path d="m6 7-2 .5A2 2 0 0 0 2.5 10l2.2 8"/><path d="M10 9h5M10 13h5"/>',
+    volume: '<path d="M4 10v4h4l5 4V6l-5 4z"/><path d="M17 9a4 4 0 0 1 0 6"/><path d="M19.5 6.5a8 8 0 0 1 0 11"/>',
+    shield: '<path d="M12 3 5 6v5c0 4.7 2.8 8 7 10 4.2-2 7-5.3 7-10V6z"/><path d="m9 12 2 2 4-4"/>',
+    book: '<path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H11v17H7.5A3.5 3.5 0 0 0 4 22z"/><path d="M20 5.5A3.5 3.5 0 0 0 16.5 2H13v17h3.5A3.5 3.5 0 0 1 20 22z"/>',
+    scale: '<path d="M12 3v18M7 5h10M5 8l-3 6h6zM19 8l-3 6h6zM8 21h8"/>',
+    heart: '<path d="M20.8 5.8a5.5 5.5 0 0 0-7.8 0L12 6.9l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 22l8.8-8.4a5.5 5.5 0 0 0 0-7.8z"/><path d="M7 13h3l1.2-3 2 6 1.2-3H18"/>',
+    users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>',
+    coins: '<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v5c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path d="M5 11v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5"/>',
+    building: '<path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6M8 10h.01M12 10h.01M16 10h.01"/>',
+    calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/>',
+    file: '<path d="M6 2h8l4 4v16H6z"/><path d="M14 2v5h5M9 13h6M9 17h6"/>',
+    brain: '<path d="M9.5 4.5A3 3 0 0 0 5 7a3 3 0 0 0-1 5.8A3.5 3.5 0 0 0 7.5 18H9"/><path d="M14.5 4.5A3 3 0 0 1 19 7a3 3 0 0 1 1 5.8 3.5 3.5 0 0 1-3.5 5.2H15M12 3v18M8 9h4M12 15h4"/>',
+    layers: '<path d="m12 2 9 5-9 5-9-5z"/><path d="m3 12 9 5 9-5M3 17l9 5 9-5"/>',
+    badge: '<circle cx="12" cy="9" r="6"/><path d="m8 14-2 8 6-3 6 3-2-8"/><path d="m9.5 9 1.6 1.6 3.4-3.4"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    moon: '<path d="M20.5 15.5A9 9 0 0 1 8.5 3.5a9 9 0 1 0 12 12z"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    auto: '<path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 3v18M12 3a9 9 0 0 1 0 18"/>',
+  };
+  const LESSON_ICONS = [
+    "shield", "scale", "heart", "file", "users", "coins", "building", "heart", "calendar", "file",
+    "brain", "layers", "badge", "clock", "shield", "chart", "users", "coins", "calendar", "badge",
+  ];
+
+  function iconMarkup(name, className) {
+    return (
+      '<svg class="' + (className || "ui-icon") +
+      '" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" ' +
+      'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+      (ICONS[name] || ICONS.badge) + "</svg>"
+    );
+  }
 
   function safeGet(key, fallback) {
     try {
@@ -42,14 +83,14 @@
 
     const themeButton = document.getElementById("ui-theme-toggle");
     if (themeButton) {
-      const icon = themeMode === "auto" ? "◐" : themeMode === "dark" ? "☾" : "☀";
+      const icon = themeMode === "auto" ? "auto" : themeMode === "dark" ? "moon" : "sun";
       const label =
         themeMode === "auto"
           ? "Tema automático"
           : themeMode === "dark"
             ? "Modo oscuro"
             : "Modo claro";
-      themeButton.textContent = icon;
+      themeButton.innerHTML = iconMarkup(icon, "ui-icon");
       themeButton.title = label;
       themeButton.setAttribute("aria-label", label + ". Toca para cambiar.");
     }
@@ -201,6 +242,61 @@
     cards.forEach(function (card, index) {
       card.dataset.uiIndex = String(index + 1).padStart(2, "0");
       card.style.setProperty("--ui-card-hue", String(188 + ((index * 17) % 112)));
+      if (!card.querySelector(".ui-lesson-icon")) {
+        const mark = document.createElement("span");
+        mark.className = "ui-lesson-icon";
+        mark.innerHTML = iconMarkup(LESSON_ICONS[index % LESSON_ICONS.length], "ui-icon");
+        card.prepend(mark);
+      }
+    });
+  }
+
+  function cleanIconLabel(text) {
+    return String(text || "")
+      .replace(/^[\s←🏠⚡📊🎯📋✏️🔥🃏🔊]+/u, "")
+      .trim();
+  }
+
+  function decorateVectorIcons() {
+    const actionIcons = [
+      ["startSimulacro", "target"],
+      ["startMixed", "zap"],
+      ["showStats", "chart"],
+      ["showPlan", "clipboard"],
+      ["startFC", "cards"],
+      ["speak", "volume"],
+      ["startLQ(true)", "flame"],
+      ["startLQ(false)", "pencil"],
+      ["goHome", "home"],
+    ];
+
+    document.querySelectorAll("button").forEach(function (button) {
+      if (button.querySelector(".ui-icon")) return;
+      const action = button.getAttribute("onclick") || "";
+      const match = actionIcons.find(function (entry) {
+        return action.includes(entry[0]);
+      });
+      if (!match) return;
+      const label = cleanIconLabel(button.textContent);
+      button.textContent = label;
+      button.insertAdjacentHTML("afterbegin", iconMarkup(match[1], "ui-icon"));
+      button.classList.add("ui-icon-button");
+    });
+
+    const title = document.querySelector("header h1");
+    if (title && !title.querySelector(".ui-icon")) {
+      title.textContent = cleanIconLabel(title.textContent);
+      title.insertAdjacentHTML("afterbegin", iconMarkup("book", "ui-icon"));
+    }
+
+    const splash = document.querySelector(".splash-icon");
+    if (splash) splash.innerHTML = iconMarkup("shield", "ui-icon ui-splash-vector");
+
+    document.querySelectorAll("#plan .box h4").forEach(function (heading, index) {
+      if (heading.querySelector(".ui-icon")) return;
+      const names = ["clock", "target", "brain"];
+      heading.textContent = cleanIconLabel(heading.textContent);
+      heading.insertAdjacentHTML("afterbegin", iconMarkup(names[index] || "badge", "ui-icon"));
     });
   }
 
@@ -245,6 +341,7 @@
 
   function installUltraInterface() {
     document.body.classList.add("ui-ultra");
+    decorateVectorIcons();
     decorateLessons();
     syncNavigation();
     decorateResultRing();

@@ -956,7 +956,7 @@ body.ui-ultra .lc::after {
   content: attr(data-ui-index);
   position: absolute;
   right: 14px;
-  top: 14px;
+  top: 58px;
   z-index: -1;
   color: hsl(var(--ui-card-hue) 80% 68% / 0.11);
   font-size: 4.8rem;
@@ -991,6 +991,62 @@ body.ui-ultra .lc .badge {
 body.ui-ultra .btn {
   position: relative;
   overflow: hidden;
+}
+
+.ui-icon {
+  width: 1.08em;
+  height: 1.08em;
+  flex: 0 0 auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 7px color-mix(in srgb, currentColor 34%, transparent));
+}
+
+.ui-icon-button,
+body.ui-ultra header h1,
+body.ui-ultra #plan .box h4 {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+}
+
+body.ui-ultra header h1 > .ui-icon {
+  width: 1.25em;
+  height: 1.25em;
+  color: var(--ui-primary);
+}
+
+.ui-splash-vector {
+  width: 64px;
+  height: 64px;
+  color: #60a5fa;
+  filter:
+    drop-shadow(0 0 14px rgba(96, 165, 250, 0.75))
+    drop-shadow(0 0 32px rgba(139, 92, 246, 0.45));
+}
+
+body.ui-ultra .ui-lesson-icon {
+  position: absolute;
+  right: 18px;
+  top: 17px;
+  z-index: 2;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid hsl(var(--ui-card-hue) 82% 68% / 0.35);
+  border-radius: 13px;
+  background:
+    linear-gradient(145deg, hsl(var(--ui-card-hue) 88% 62% / 0.2), transparent),
+    color-mix(in srgb, var(--ui-surface-strong) 92%, transparent);
+  color: hsl(var(--ui-card-hue) 90% 72%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 10px 24px hsl(var(--ui-card-hue) 70% 35% / 0.16);
+}
+
+body.ui-ultra .ui-lesson-icon .ui-icon {
+  width: 20px;
+  height: 20px;
 }
 
 body.ui-ultra .btn::after {
@@ -1488,8 +1544,21 @@ html[data-theme="light"] body.ui-ultra #home > .card:first-child::before {
 
   body.ui-ultra .lc::after {
     right: 10px;
-    top: 12px;
+    top: 54px;
     font-size: 3.7rem;
+  }
+
+  body.ui-ultra .ui-lesson-icon {
+    right: 12px;
+    top: 12px;
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
+  }
+
+  body.ui-ultra:not(.exam-zen) header .nav > .btn.ui-icon-button {
+    flex-direction: column;
+    gap: 3px;
   }
 
   body.ui-ultra .lc h3 {
