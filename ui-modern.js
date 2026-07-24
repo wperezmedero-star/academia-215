@@ -147,6 +147,8 @@
     if (!ring || !percent) return;
 
     const value = Math.max(0, Math.min(100, Number.parseInt(percent.textContent, 10) || 0));
+    if (ring.dataset.value === String(value)) return;
+    ring.dataset.value = String(value);
     ring.style.setProperty("--ui-score", String(value));
     const label = ring.querySelector("strong");
     if (label) label.textContent = value + "%";
@@ -171,11 +173,12 @@
       });
     }
 
-    const percent = document.getElementById("sim-percent");
-    if (percent) {
-      new MutationObserver(updateCompetencyRing).observe(percent, {
+    const scorePanel = document.getElementById("sim-live-score");
+    if (scorePanel) {
+      new MutationObserver(function () {
+        window.requestAnimationFrame(updateCompetencyRing);
+      }).observe(scorePanel, {
         childList: true,
-        characterData: true,
         subtree: true,
       });
     }
