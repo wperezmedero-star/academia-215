@@ -128,7 +128,7 @@ th{color:#bfdbfe;}
 .footer{text-align:center;color:var(--muted);font-size:.76rem;padding:20px;}
 @media(max-width:600px){.term{grid-template-columns:1fr}.hi{display:block}.nav{margin-top:8px}.btn{padding:8px 10px;font-size:.8rem}}
 </style>
-<link rel="stylesheet" href="ui-modern.css?v=20260724-6"/>
+<link rel="stylesheet" href="ui-modern.css?v=20260724-7"/>
 </head>
 <body>
   <div id="splash">
@@ -835,23 +835,7 @@ function goHome(){
 
 </script>
 
-  <script>
-window.addEventListener("load", function(){
-  setTimeout(function(){
-    const splash = document.getElementById("splash");
-
-    if(splash){
-      splash.style.transition = "opacity 0.5s ease";
-      splash.style.opacity = "0";
-
-      setTimeout(function(){
-        splash.remove();
-      }, 500);
-    }
-  }, 1500);
-});
-</script>
 <script src="simulacro-upgrade.js?v=20260723-2"></script>
-<script src="ui-modern.js?v=20260724-4"></script>
+<script src="ui-modern.js?v=20260724-6"></script>
 </body>
 </html>
