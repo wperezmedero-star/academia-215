@@ -404,7 +404,7 @@
 
   function cleanIconLabel(text) {
     return String(text || "")
-      .replace(/^[\s←🏠⚡📊🎯📋✏️🔥🃏🔊]+/u, "")
+      .replace(/^[\s←🏠⚡📊🎯📋✏️🔥🃏🔊📚🛡️⏱️🧠]+/u, "")
       .trim();
   }
 
