@@ -10,6 +10,7 @@
   const mediaReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const THEME_KEY = "ui215-theme-v1";
   const FONT_KEY = "ui215-font-v1";
+  const SOUND_KEY = "ui215-intro-sound-v1";
   const ICONS = {
     home: '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/>',
     zap: '<path d="m13 2-9 12h7l-1 8 9-12h-7z"/>',
@@ -66,6 +67,156 @@
     } catch (error) {
       // La apariencia sigue funcionando aunque el navegador bloquee storage.
     }
+  }
+
+  function closeSplash(delay) {
+    const splash = document.getElementById("splash");
+    if (!splash) return;
+    window.setTimeout(function () {
+      splash.classList.add("ui-splash-exit");
+      window.setTimeout(function () {
+        splash.remove();
+      }, 650);
+    }, delay || 0);
+  }
+
+  function playMotivationalTheme() {
+    const AudioEngine = window.AudioContext || window.webkitAudioContext;
+    if (!AudioEngine) return Promise.reject(new Error("Audio no disponible"));
+
+    const audio = new AudioEngine();
+    const start = audio.currentTime + 0.08;
+    const master = audio.createGain();
+    const compressor = audio.createDynamicsCompressor();
+    master.gain.setValueAtTime(0.0001, start);
+    master.gain.exponentialRampToValueAtTime(0.34, start + 0.18);
+    master.gain.setValueAtTime(0.34, start + 7.2);
+    master.gain.exponentialRampToValueAtTime(0.0001, start + 8);
+    master.connect(compressor);
+    compressor.connect(audio.destination);
+
+    function tone(frequency, at, length, level, type, destination) {
+      const oscillator = audio.createOscillator();
+      const gain = audio.createGain();
+      const filter = audio.createBiquadFilter();
+      oscillator.type = type || "sawtooth";
+      oscillator.frequency.setValueAtTime(frequency, start + at);
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(type === "sine" ? 1200 : 1850, start + at);
+      gain.gain.setValueAtTime(0.0001, start + at);
+      gain.gain.exponentialRampToValueAtTime(level, start + at + 0.035);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + at + length);
+      oscillator.connect(filter);
+      filter.connect(gain);
+      gain.connect(destination || master);
+      oscillator.start(start + at);
+      oscillator.stop(start + at + length + 0.05);
+    }
+
+    function kick(at, level) {
+      const oscillator = audio.createOscillator();
+      const gain = audio.createGain();
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(125, start + at);
+      oscillator.frequency.exponentialRampToValueAtTime(42, start + at + 0.2);
+      gain.gain.setValueAtTime(level, start + at);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + at + 0.24);
+      oscillator.connect(gain);
+      gain.connect(master);
+      oscillator.start(start + at);
+      oscillator.stop(start + at + 0.26);
+    }
+
+    function brassChord(frequencies, at, length, level) {
+      frequencies.forEach(function (frequency, index) {
+        tone(frequency, at + index * 0.012, length, level, "sawtooth");
+        tone(frequency / 2, at, length, level * 0.42, "triangle");
+      });
+    }
+
+    [0, 0.7, 1.4, 2.1, 2.8, 3.5, 4.2, 4.9, 5.6, 6.3, 7].forEach(function (at, i) {
+      kick(at, i < 4 ? 0.42 : 0.56);
+    });
+
+    const motif = [
+      [261.63, 0.12], [311.13, 0.82], [392, 1.52], [466.16, 2.22],
+      [523.25, 2.92], [392, 3.62], [466.16, 4.32], [523.25, 5.02],
+    ];
+    motif.forEach(function (note, index) {
+      tone(note[0], note[1], index === motif.length - 1 ? 1.1 : 0.48, 0.1, "sawtooth");
+      tone(note[0] * 2, note[1], 0.32, 0.025, "square");
+    });
+
+    brassChord([261.63, 311.13, 392], 5.7, 0.72, 0.065);
+    brassChord([311.13, 392, 466.16], 6.45, 0.62, 0.07);
+    brassChord([261.63, 392, 523.25], 7.12, 0.82, 0.085);
+    tone(1046.5, 7.16, 0.7, 0.035, "sine");
+
+    return audio.resume().then(function () {
+      window.setTimeout(function () {
+        audio.close().catch(function () {});
+      }, 8400);
+    });
+  }
+
+  function installMotivationalSplash() {
+    const splash = document.getElementById("splash");
+    const card = splash && splash.querySelector(".splash-card");
+    if (!splash || !card || card.dataset.uiReady) return;
+    card.dataset.uiReady = "true";
+
+    const muted = safeGet(SOUND_KEY, "on") === "off";
+    const phrase = document.createElement("div");
+    phrase.className = "ui-splash-phrase";
+    phrase.textContent = "Entrena. Avanza. Aprueba.";
+
+    const actions = document.createElement("div");
+    actions.className = "ui-splash-actions";
+    actions.innerHTML =
+      '<button type="button" class="ui-splash-start">' +
+      iconMarkup("zap", "ui-icon") +
+      "<span>" + (muted ? "Entrar" : "Comenzar entrenamiento") + "</span></button>" +
+      '<button type="button" class="ui-splash-sound" aria-pressed="' + String(muted) + '">' +
+      iconMarkup(muted ? "volume" : "volume", "ui-icon") +
+      "<span>" + (muted ? "Activar sonido" : "Silenciar") + "</span></button>";
+
+    card.append(phrase, actions);
+    const loader = card.querySelector(".splash-loader");
+    if (loader) loader.classList.add("ui-waiting");
+
+    actions.querySelector(".ui-splash-sound").addEventListener("click", function () {
+      const isMuted = safeGet(SOUND_KEY, "on") === "off";
+      safeSet(SOUND_KEY, isMuted ? "on" : "off");
+      this.setAttribute("aria-pressed", String(!isMuted));
+      this.querySelector("span").textContent = isMuted ? "Silenciar" : "Activar sonido";
+      actions.querySelector(".ui-splash-start span").textContent =
+        isMuted ? "Comenzar entrenamiento" : "Entrar";
+    });
+
+    actions.querySelector(".ui-splash-start").addEventListener("click", function () {
+      if (card.classList.contains("ui-intro-running")) return;
+      const soundOff = safeGet(SOUND_KEY, "on") === "off";
+      if (soundOff) {
+        closeSplash(0);
+        return;
+      }
+
+      card.classList.add("ui-intro-running");
+      this.querySelector("span").textContent = "Preparando tu reto…";
+      actions.querySelector(".ui-splash-sound").hidden = true;
+      if (loader) loader.classList.remove("ui-waiting");
+      window.setTimeout(function () {
+        phrase.classList.add("ui-visible");
+      }, 5300);
+
+      playMotivationalTheme()
+        .then(function () {
+          closeSplash(7800);
+        })
+        .catch(function () {
+          closeSplash(250);
+        });
+    });
   }
 
   function resolvedTheme(mode) {
@@ -383,6 +534,7 @@
   }
 
   function init() {
+    installMotivationalSplash();
     installUltraInterface();
     installControls();
     applyPreferences();
