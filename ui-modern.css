@@ -1419,10 +1419,12 @@ html[data-theme="light"] body.ui-ultra #home > .card:first-child::before {
   }
 
   body.ui-ultra:not(.exam-zen) header .ui-controls {
-    position: absolute;
-    right: 0;
-    top: 0;
-    padding: 0;
+    position: static;
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+    width: 100%;
+    margin: 0 0 2px;
+    padding: 0 2px;
   }
 
   body.ui-ultra .ui-control {
