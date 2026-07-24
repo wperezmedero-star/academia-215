@@ -132,6 +132,38 @@
     if (!splash || !card || card.dataset.uiReady) return;
     card.dataset.uiReady = "true";
 
+    const artwork = document.createElement("div");
+    artwork.className = "ui-splash-artwork";
+    artwork.setAttribute("aria-hidden", "true");
+    artwork.innerHTML = '<span class="ui-artwork-placeholder">' +
+      iconMarkup("shield", "ui-icon") +
+      "</span>";
+    const originalIcon = card.querySelector(".splash-icon");
+    if (originalIcon) originalIcon.replaceWith(artwork);
+
+    fetch("academia-215-motivacion.b64?v=20260724-1")
+      .then(function (response) {
+        if (!response.ok) throw new Error("Ilustración no disponible");
+        return response.text();
+      })
+      .then(function (encoded) {
+        const image = new Image();
+        image.alt = "";
+        image.decoding = "async";
+        image.src = "data:image/webp;base64," + encoded.trim();
+        image.addEventListener(
+          "load",
+          function () {
+            artwork.replaceChildren(image);
+            artwork.classList.add("ui-artwork-ready");
+          },
+          { once: true },
+        );
+      })
+      .catch(function () {
+        // El escudo vectorial permanece como alternativa si la imagen no carga.
+      });
+
     const muted = safeGet(SOUND_KEY, "on") === "off";
     const phrase = document.createElement("div");
     phrase.className = "ui-splash-phrase";
