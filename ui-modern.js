@@ -176,7 +176,7 @@
     const scorePanel = document.getElementById("sim-live-score");
     if (scorePanel) {
       new MutationObserver(function () {
-        window.requestAnimationFrame(updateCompetencyRing);
+        queueMicrotask(updateCompetencyRing);
       }).observe(scorePanel, {
         childList: true,
         subtree: true,
