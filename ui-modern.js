@@ -196,7 +196,97 @@
     );
   }
 
+  function decorateLessons() {
+    const cards = document.querySelectorAll("#grid .lc");
+    cards.forEach(function (card, index) {
+      card.dataset.uiIndex = String(index + 1).padStart(2, "0");
+      card.style.setProperty("--ui-card-hue", String(188 + ((index * 17) % 112)));
+    });
+  }
+
+  function syncNavigation() {
+    const isVisible = function (id) {
+      const element = document.getElementById(id);
+      return Boolean(element && !element.classList.contains("hidden"));
+    };
+
+    let active = "home";
+    if (isVisible("stats")) active = "stats";
+    else if (
+      isVisible("simulacro-menu") ||
+      isVisible("simulacro-exam") ||
+      isVisible("simulacro-result") ||
+      isVisible("simulacro-history")
+    ) {
+      active = "simulacro";
+    } else if (isVisible("quiz")) {
+      active = "mixed";
+    }
+
+    document.querySelectorAll("header .nav > .btn").forEach(function (button) {
+      const action = button.getAttribute("onclick") || "";
+      const matches =
+        (active === "home" && action.includes("goHome")) ||
+        (active === "stats" && action.includes("showStats")) ||
+        (active === "simulacro" && action.includes("startSimulacro")) ||
+        (active === "mixed" && action.includes("startMixed"));
+      button.dataset.uiActive = matches ? "true" : "false";
+      if (matches) button.setAttribute("aria-current", "page");
+      else button.removeAttribute("aria-current");
+    });
+  }
+
+  function decorateResultRing() {
+    const score = document.getElementById("sim-score-big");
+    if (!score) return;
+    const value = Math.max(0, Math.min(100, Number.parseInt(score.textContent, 10) || 0));
+    score.style.setProperty("--ui-result-score", String(value));
+  }
+
+  function installUltraInterface() {
+    document.body.classList.add("ui-ultra");
+    decorateLessons();
+    syncNavigation();
+    decorateResultRing();
+
+    const grid = document.getElementById("grid");
+    if (grid) {
+      new MutationObserver(decorateLessons).observe(grid, { childList: true });
+    }
+
+    const observedSections = [
+      "home",
+      "lesson",
+      "quiz",
+      "flash",
+      "result",
+      "stats",
+      "simulacro-menu",
+      "simulacro-exam",
+      "simulacro-result",
+      "simulacro-history",
+    ];
+    observedSections.forEach(function (id) {
+      const section = document.getElementById(id);
+      if (!section) return;
+      new MutationObserver(function () {
+        syncNavigation();
+        if (id === "simulacro-result") decorateResultRing();
+      }).observe(section, { attributes: true, attributeFilter: ["class"] });
+    });
+
+    const score = document.getElementById("sim-score-big");
+    if (score) {
+      new MutationObserver(decorateResultRing).observe(score, {
+        childList: true,
+        characterData: true,
+        subtree: true,
+      });
+    }
+  }
+
   function init() {
+    installUltraInterface();
     installControls();
     applyPreferences();
     installCompetencyRing();
