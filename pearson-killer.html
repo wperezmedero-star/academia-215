@@ -169,6 +169,7 @@ h1.title-gold{background:linear-gradient(180deg,var(--gold-light),var(--gold-dee
 @keyframes clockPulse{50%{transform:scale(1.04);box-shadow:0 0 16px rgba(239,68,68,.3)}}
 @media(max-width:520px){.retos-grid{grid-template-columns:1fr}.reto-btn{min-height:72px}}
 </style>
+<link rel="stylesheet" href="pearson-modern.css?v=20260725-1"/>
 </head>
 <body>
 
@@ -273,10 +274,10 @@ h2 .ic{width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.18em}
     <h2 style="color:#93c5fd"><svg class="ic"><use href="#ic-target"/></svg>Retos temáticos — 30 preguntas</h2>
     <p class="muted" style="margin-bottom:12px">Cada reto utiliza el banco verificado de Pearson Killer, muestra aciertos y errores, e incluye un reloj de 36 minutos.</p>
     <div class="retos-grid">
-      <button class="btn btn-blue reto-btn" onclick="startMode('reto_terminos',30)"><strong>📘 Términos</strong><small>Definiciones y significado</small></button>
-      <button class="btn btn-purple reto-btn" onclick="startMode('reto_conceptos',30)"><strong>🧠 Conceptos</strong><small>Comprensión y aplicación</small></button>
-      <button class="btn btn-gold reto-btn" onclick="startMode('reto_vocabulario',30)"><strong>🔤 Vocabulario</strong><small>Sinónimos español–inglés</small></button>
-      <button class="btn btn-red reto-btn" onclick="startMode('reto_regulacion',30)"><strong>⚖️ Regulación</strong><small>Leyes y reglas de Florida</small></button>
+      <button class="btn btn-blue reto-btn" onclick="startMode('reto_terminos',30)"><strong><svg class="ic"><use href="#ic-clipboard"/></svg>Términos</strong><small>Definiciones y significado</small></button>
+      <button class="btn btn-purple reto-btn" onclick="startMode('reto_conceptos',30)"><strong><svg class="ic"><use href="#ic-target"/></svg>Conceptos</strong><small>Comprensión y aplicación</small></button>
+      <button class="btn btn-gold reto-btn" onclick="startMode('reto_vocabulario',30)"><strong><svg class="ic"><use href="#ic-scroll"/></svg>Vocabulario</strong><small>Sinónimos español–inglés</small></button>
+      <button class="btn btn-red reto-btn" onclick="startMode('reto_regulacion',30)"><strong><svg class="ic"><use href="#ic-palm"/></svg>Regulación</strong><small>Leyes y reglas de Florida</small></button>
     </div>
   </div>
 
