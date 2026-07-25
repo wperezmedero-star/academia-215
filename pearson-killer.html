@@ -160,6 +160,14 @@ table{width:100%;border-collapse:collapse;font-size:.83rem}
 td,th{padding:9px 10px;border-bottom:1px solid rgba(245,207,107,.12);text-align:left}
 th{color:var(--muted);font-weight:600}
 h1.title-gold{background:linear-gradient(180deg,var(--gold-light),var(--gold-deep));-webkit-background-clip:text;background-clip:text;color:transparent}
+.retos-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.reto-btn{min-height:86px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;text-align:left}
+.reto-btn small{display:block;margin-top:4px;color:rgba(255,255,255,.72);font-weight:600}
+.quiz-clock{min-width:70px;padding:7px 10px;border:1px solid rgba(52,211,153,.45);border-radius:999px;background:rgba(5,150,105,.14);color:#6ee7b7;font-weight:900;text-align:center;font-variant-numeric:tabular-nums}
+.quiz-clock[data-urgency="amber"]{border-color:rgba(245,158,11,.55);background:rgba(245,158,11,.14);color:#fbbf24}
+.quiz-clock[data-urgency="red"]{border-color:rgba(239,68,68,.6);background:rgba(239,68,68,.14);color:#f87171;animation:clockPulse 1s ease-in-out infinite}
+@keyframes clockPulse{50%{transform:scale(1.04);box-shadow:0 0 16px rgba(239,68,68,.3)}}
+@media(max-width:520px){.retos-grid{grid-template-columns:1fr}.reto-btn{min-height:72px}}
 </style>
 </head>
 <body>
@@ -261,6 +269,17 @@ h2 .ic{width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.18em}
     <button class="btn btn-purple" onclick="startMode('refuerzo',40)"><svg class="ic"><use href="#ic-target"/></svg>Refuerzo: números y conceptos que confundo (40 preguntas)</button>
   </div>
 
+  <div class="card" style="border-color:#2563eb;background:linear-gradient(180deg,rgba(37,99,235,.12),transparent)">
+    <h2 style="color:#93c5fd"><svg class="ic"><use href="#ic-target"/></svg>Retos temáticos — 30 preguntas</h2>
+    <p class="muted" style="margin-bottom:12px">Cada reto utiliza el banco verificado de Pearson Killer, muestra aciertos y errores, e incluye un reloj de 36 minutos.</p>
+    <div class="retos-grid">
+      <button class="btn btn-blue reto-btn" onclick="startMode('reto_terminos',30)"><strong>📘 Términos</strong><small>Definiciones y significado</small></button>
+      <button class="btn btn-purple reto-btn" onclick="startMode('reto_conceptos',30)"><strong>🧠 Conceptos</strong><small>Comprensión y aplicación</small></button>
+      <button class="btn btn-gold reto-btn" onclick="startMode('reto_vocabulario',30)"><strong>🔤 Vocabulario</strong><small>Sinónimos español–inglés</small></button>
+      <button class="btn btn-red reto-btn" onclick="startMode('reto_regulacion',30)"><strong>⚖️ Regulación</strong><small>Leyes y reglas de Florida</small></button>
+    </div>
+  </div>
+
   <div class="card" style="border-color:#059669;background:linear-gradient(180deg,rgba(5,150,105,.08),transparent)">
     <h2 style="color:#34d399"><svg class="ic"><use href="#ic-target"/></svg>🧪 Killer Pilot — Lote nuevo (piloto)</h2>
     <p class="muted" style="margin-bottom:12px">15 preguntas completamente nuevas de Tipos de Pólizas de Salud (HMO, PPO, EPO, POS, HDHP, HSA, FSA, HRA), aisladas del banco de 545 — pendientes de tu revisión humana final antes de pasar a examen.</p>
@@ -298,6 +317,7 @@ h2 .ic{width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.18em}
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
     <button class="btn btn-sec" style="width:auto;padding:7px 12px;margin:0;font-size:.78rem" onclick="goHome()">✕ Salir</button>
     <span id="q-count" class="muted"></span>
+    <span id="q-clock" class="quiz-clock hidden" aria-label="Tiempo restante">36:00</span>
     <span id="q-score" style="font-weight:700;color:var(--gold);font-size:.88rem"></span>
   </div>
   <div class="prog"><div class="bar" id="pbar" style="background:linear-gradient(90deg,#dc2626,#ffd700)"></div></div>
@@ -395,7 +415,34 @@ if (CONCEPTS.length === 0) {
 // ============================================================
 let mode='', maxQ=30, pool=[], idx=0, correct=0, mistakes=[], answered=false;
 let areaStats={};
-let questionShownAt=0; // FASE 1 — timestamp para medir tiempo por pregunta (pk-storage.js)
+let questionShownAt=0;
+let quizTimer=null, quizSeconds=0;
+const TIMED_RETO_SECONDS=36*60;
+
+function isTimedReto(m){ return /^reto_/.test(m); }
+function stopQuizTimer(){
+  if(quizTimer){ clearInterval(quizTimer); quizTimer=null; }
+}
+function renderQuizClock(){
+  const clock=document.getElementById('q-clock');
+  if(!clock) return;
+  if(!isTimedReto(mode)){ clock.classList.add('hidden'); return; }
+  clock.classList.remove('hidden');
+  const min=Math.floor(quizSeconds/60), sec=quizSeconds%60;
+  clock.textContent=String(min).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+  clock.dataset.urgency=quizSeconds<=300?'red':(quizSeconds<=720?'amber':'green');
+}
+function startQuizTimer(){
+  stopQuizTimer();
+  if(!isTimedReto(mode)){ renderQuizClock(); return; }
+  quizSeconds=TIMED_RETO_SECONDS;
+  renderQuizClock();
+  quizTimer=setInterval(function(){
+    quizSeconds=Math.max(0,quizSeconds-1);
+    renderQuizClock();
+    if(quizSeconds===0){ stopQuizTimer(); showResult(); }
+  },1000);
+} // FASE 1 — timestamp para medir tiempo por pregunta (pk-storage.js)
 
 // ============================================================
 // CUADERNO DE ERRORES — Persistencia en localStorage
@@ -526,7 +573,38 @@ function startErrorsMode(){
 
 function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
+function buildVocabularyChallenge(kind,max){
+  const dict=window.PK_SINONIMOS || {};
+  const entries=shuffle(Object.values(dict).filter(x=>x && x.termino_oficial && x.contexto));
+  const official=entries.map(x=>x.termino_oficial);
+  const questions=[];
+  entries.forEach(function(entry,index){
+    let prompt,answer;
+    if(kind==='terminos'){
+      prompt='¿Qué término corresponde a esta descripción? '+entry.contexto;
+      answer=entry.termino_oficial;
+    }else{
+      const words=[...(entry.variantes||[]),...(entry.en_ingles||[])].filter(Boolean);
+      if(!words.length) return;
+      const word=words[Math.floor(Math.random()*words.length)];
+      prompt='En el vocabulario del examen, “'+word+'” equivale a:';
+      answer=entry.termino_oficial;
+    }
+    const distractors=shuffle(official.filter(x=>x!==answer)).slice(0,3);
+    const options=shuffle([answer,...distractors]);
+    questions.push({
+      q:prompt,o:options,a:options.indexOf(answer),
+      e:answer+'. '+entry.contexto,
+      concept:answer,area:kind==='terminos'?'terminos':'vocabulario',
+      areaLabel:kind==='terminos'?'Términos':'Vocabulario'
+    });
+  });
+  return shuffle(questions).slice(0,max);
+}
+
 function buildPool(mode, max){
+  if(mode==='reto_terminos') return buildVocabularyChallenge('terminos',max);
+  if(mode==='reto_vocabulario') return buildVocabularyChallenge('vocabulario',max);
   let concepts=[];
   if(mode==='killer_pilot'){
     // FASE 2 — Fuente SEPARADA a propósito: nunca se mezcla con CONCEPTS
@@ -534,6 +612,10 @@ function buildPool(mode, max){
     // arreglo queda vacío y el usuario ve 0 preguntas en vez de que
     // se rellene silenciosamente con preguntas del banco viejo.
     concepts=(window.PK_KILLER_PILOT || []);
+  } else if(mode==='reto_conceptos'){
+    concepts=[...CONCEPTS];
+  } else if(mode==='reto_regulacion'){
+    concepts=CONCEPTS.filter(c=>c.area==='florida');
   } else if(mode==='weak'){
     concepts=CONCEPTS.filter(c=>['suscripcion','florida','retiro','provisiones','salud'].includes(c.area));
   } else if(mode==='all'){
@@ -557,11 +639,15 @@ function buildPool(mode, max){
 function startMode(m, max){
   mode=m; maxQ=max;
   pool=buildPool(m, max);
+  if(pool.length<max){
+    alert('Este bloque solo tiene '+pool.length+' preguntas disponibles en el banco verificado.');
+  }
   idx=0; correct=0; mistakes=[]; answered=false;
   areaStats={};
   document.getElementById('home').classList.add('hidden');
   document.getElementById('result').classList.add('hidden');
   document.getElementById('quiz').classList.remove('hidden');
+  startQuizTimer();
   renderQ();
 }
 
@@ -642,6 +728,7 @@ function nextQ(){
 }
 
 function showResult(){
+  stopQuizTimer();
   document.getElementById('quiz').classList.add('hidden');
   document.getElementById('result').classList.remove('hidden');
   const total=pool.length;
@@ -705,10 +792,12 @@ function retryWeak(){
   idx=0;correct=0;mistakes=[];answered=false;areaStats={};
   document.getElementById('result').classList.add('hidden');
   document.getElementById('quiz').classList.remove('hidden');
+  startQuizTimer();
   renderQ();
 }
 
 function goHome(){
+  stopQuizTimer();
   ['quiz','result'].forEach(id=>document.getElementById(id).classList.add('hidden'));
   document.getElementById('home').classList.remove('hidden');
   renderStatsSummary();
