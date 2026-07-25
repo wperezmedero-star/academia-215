@@ -169,7 +169,7 @@ h1.title-gold{background:linear-gradient(180deg,var(--gold-light),var(--gold-dee
 @keyframes clockPulse{50%{transform:scale(1.04);box-shadow:0 0 16px rgba(239,68,68,.3)}}
 @media(max-width:520px){.retos-grid{grid-template-columns:1fr}.reto-btn{min-height:72px}}
 </style>
-<link rel="stylesheet" href="pearson-modern.css?v=20260725-1"/>
+<link rel="stylesheet" href="pearson-modern.css?v=20260725-2"/>
 </head>
 <body>
 
@@ -241,6 +241,21 @@ h2 .ic{width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.18em}
 
 <div class="wrap">
 
+<aside class="pk-sidebar" aria-label="Navegación de Pearson Killer">
+  <div class="pk-sidebar-mark">2·15</div>
+  <h2>Pearson Killer</h2>
+  <p class="pk-sidebar-sub">Entrenamiento avanzado · 1,106 preguntas verificadas</p>
+  <span class="pk-nav-label">Navegación</span>
+  <nav class="pk-nav">
+    <button type="button" class="active" onclick="document.getElementById('stats-panel').scrollIntoView({behavior:'smooth'})"><svg class="ic"><use href="#ic-home"/></svg>Inicio</button>
+    <button type="button" onclick="document.getElementById('pk-weak').scrollIntoView({behavior:'smooth'})"><svg class="ic"><use href="#ic-fire"/></svg>Áreas débiles</button>
+    <button type="button" onclick="document.getElementById('pk-retos').scrollIntoView({behavior:'smooth'})"><svg class="ic"><use href="#ic-target"/></svg>Retos de 30</button>
+    <button type="button" onclick="document.getElementById('pk-exam').scrollIntoView({behavior:'smooth'})"><svg class="ic"><use href="#ic-bolt"/></svg>Examen real</button>
+    <button type="button" onclick="document.getElementById('pk-areas').scrollIntoView({behavior:'smooth'})"><svg class="ic"><use href="#ic-scroll"/></svg>Por área</button>
+  </nav>
+  <div class="pk-sidebar-foot"><a href="index.html">← Volver a Academia 2-15</a></div>
+</aside>
+
 <!-- HOME -->
 <div id="home">
   <div class="brand" style="padding:14px 0 6px">
@@ -256,7 +271,7 @@ h2 .ic{width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.18em}
     <button class="btn" style="background:linear-gradient(135deg,#7f1d1d,#991b1b);color:#fff" onclick="startErrorsMode()" id="btn-errors"><svg class="ic"><use href="#ic-repeat"/></svg>Solo mis errores</button>
   </div>
 
-  <div class="card" style="border-color:#92400e">
+  <div class="card" id="pk-weak" style="border-color:#92400e">
     <h2 style="color:#fbbf24"><svg class="ic"><use href="#ic-fire"/></svg>Áreas débiles — Prioridad máxima</h2>
     <div style="margin-bottom:12px">
       <span class="concept-tag">Field Underwriting</span>
@@ -270,7 +285,7 @@ h2 .ic{width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.18em}
     <button class="btn btn-purple" onclick="startMode('refuerzo',40)"><svg class="ic"><use href="#ic-target"/></svg>Refuerzo: números y conceptos que confundo (40 preguntas)</button>
   </div>
 
-  <div class="card" style="border-color:#2563eb;background:linear-gradient(180deg,rgba(37,99,235,.12),transparent)">
+  <div class="card" id="pk-retos" style="border-color:#2563eb;background:linear-gradient(180deg,rgba(37,99,235,.12),transparent)">
     <h2 style="color:#93c5fd"><svg class="ic"><use href="#ic-target"/></svg>Retos temáticos — 30 preguntas</h2>
     <p class="muted" style="margin-bottom:12px">Cada reto utiliza el banco verificado de Pearson Killer, muestra aciertos y errores, e incluye un reloj de 36 minutos.</p>
     <div class="retos-grid">
@@ -281,20 +296,20 @@ h2 .ic{width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.18em}
     </div>
   </div>
 
-  <div class="card" style="border-color:#059669;background:linear-gradient(180deg,rgba(5,150,105,.08),transparent)">
+  <div class="card" id="pk-pilot" style="border-color:#059669;background:linear-gradient(180deg,rgba(5,150,105,.08),transparent)">
     <h2 style="color:#34d399"><svg class="ic"><use href="#ic-target"/></svg>🧪 Killer Pilot — Lote nuevo (piloto)</h2>
     <p class="muted" style="margin-bottom:12px">15 preguntas completamente nuevas de Tipos de Pólizas de Salud (HMO, PPO, EPO, POS, HDHP, HSA, FSA, HRA), aisladas del banco de 545 — pendientes de tu revisión humana final antes de pasar a examen.</p>
     <button class="btn" style="background:linear-gradient(135deg,#059669,#047857);color:#fff" onclick="startMode('killer_pilot',15)"><svg class="ic"><use href="#ic-target"/></svg>Probar las 15 (Killer Pilot)</button>
   </div>
 
-  <div class="card">
+  <div class="card" id="pk-exam">
     <h2><svg class="ic"><use href="#ic-bolt"/></svg>Modo Examen Real</h2>
     <p class="muted" style="margin-bottom:12px">Mezcla todos los temas como el Pearson VUE real</p>
     <button class="btn btn-blue" onclick="startMode('all',50)"><svg class="ic"><use href="#ic-bolt"/></svg>Examen rápido (50 preguntas)</button>
     <button class="btn btn-purple" onclick="startMode('all',100)"><svg class="ic"><use href="#ic-trophy"/></svg>Examen completo (100 preguntas)</button>
   </div>
 
-  <div class="card">
+  <div class="card" id="pk-areas">
     <h2><svg class="ic"><use href="#ic-scroll"/></svg>Por área específica</h2>
     <button class="btn btn-sec" onclick="startMode('suscripcion',25)"><svg class="ic"><use href="#ic-clipboard"/></svg>Suscripción en Campo</button>
     <button class="btn btn-sec" onclick="startMode('vida',35)"><svg class="ic"><use href="#ic-heart"/></svg>Seguros de Vida</button>
