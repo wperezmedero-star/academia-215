@@ -234,7 +234,7 @@ const PK_SINONIMOS = {
       "período de reflexión"
     ],
     en_ingles: ["Free Look Period", "Right to Return"],
-    contexto: "VIDA = 10 días. ANUALIDADES < 65 años = 21 días. ANUALIDADES 65+ = 30 días."
+    contexto: "VIDA = 14 días. ANUALIDADES = 14 días. SALUD = 10 días. MEDIGAP y CUIDADO A LARGO PLAZO = 30 días."
   },
 
   "nonforfeiture": {
