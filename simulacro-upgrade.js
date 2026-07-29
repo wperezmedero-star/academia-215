@@ -4,13 +4,13 @@
 (function(){
   'use strict';
 
-  const PK_SCRIPTS = [
+  const PK_BASE_SCRIPTS = [
     'pk-synonyms.js','pk-traps.js','pk-blueprint.js','pk-schema.js','pk-storage.js',
     'pk-data-underwriting.js','pk-data-life.js','pk-data-annuities.js','pk-data-health.js',
     'pk-data-retirement.js','pk-data-florida.js','pk-data-medicare.js','pk-data-ltc.js',
     'pk-data-general.js','pk-data-nivel1.js','pk-data-nivel2.js','pk-data-nivel3.js',
     'pk-data-nivel4.js','pk-data-nivel5.js','pk-data-refuerzo.js','pk-data-disposiciones.js',
-    'pk-data-campo.js','pk-data-killer-hmoppo.js','pk-data-killer-pilot.js','pk-loader.js'
+    'pk-data-campo.js','pk-data-killer-hmoppo.js','pk-data-killer-pilot.js'
   ];
 
   let pkLoadPromise = null;
@@ -43,7 +43,25 @@
   function ensurePearsonBank(){
     if(pkLoadPromise) return pkLoadPromise;
     pkLoadPromise=(async()=>{
-      for(const src of PK_SCRIPTS) await loadScript(src);
+      for(const src of PK_BASE_SCRIPTS) await loadScript(src);
+
+      // El cargador original usa document.write y solo funciona mientras el HTML
+      // se está construyendo. En Academia se carga después, así que aquí cargamos
+      // explícitamente el manifiesto, sus fuentes aprobadas, el registro y el runtime.
+      await loadScript('pk-approved-sources.js');
+      const approvedSources=(window.PK_APPROVED_SOURCE_INDEX &&
+        Array.isArray(window.PK_APPROVED_SOURCE_INDEX.sources))
+        ? window.PK_APPROVED_SOURCE_INDEX.sources
+        : [];
+      for(const source of approvedSources){
+        if(source && source.path) await loadScript(source.path);
+      }
+      await loadScript('pk-approved-registry.js');
+      await loadScript('pk-loader-runtime.js');
+
+      if(!Array.isArray(window.PK_CONCEPTOS_FULL) || window.PK_CONCEPTOS_FULL.length===0){
+        console.error('No se pudo construir el banco completo de Pearson Killer.');
+      }
     })();
     return pkLoadPromise;
   }
@@ -117,20 +135,58 @@
     return unique;
   }
 
-  function selectRotating(pool,count){
-    let previous=[];
-    try{ previous=JSON.parse(localStorage.getItem('sim215_last_keys')||'[]'); }
-    catch(e){ previous=[]; }
-
-    const previousSet=new Set(previous);
-    const fresh=shuffled(pool.filter(q=>!previousSet.has(questionKey(q))));
-    const repeated=shuffled(pool.filter(q=>previousSet.has(questionKey(q))));
-    const selected=[...fresh,...repeated].slice(0,Math.min(count,pool.length));
-    const mixed=shuffled(selected);
-
+  function readStoredArray(key){
     try{
+      const value=JSON.parse(localStorage.getItem(key)||'[]');
+      return Array.isArray(value) ? value : [];
+    }catch(e){ return []; }
+  }
+
+  function selectRotating(pool,count){
+    const uniquePool=uniqueQuestions(pool);
+    const target=Math.min(count,uniquePool.length);
+    const validKeys=new Set(uniquePool.map(questionKey));
+    const seenSet=new Set(
+      readStoredArray('sim215_seen_keys_v2').filter(key=>validKeys.has(key))
+    );
+    const lastSet=new Set(
+      readStoredArray('sim215_last_keys').filter(key=>validKeys.has(key))
+    );
+
+    // Primero toma preguntas que nunca se han presentado en el ciclo actual.
+    // Dentro de ellas, evita también las del simulacro inmediatamente anterior.
+    const unseen=uniquePool.filter(q=>!seenSet.has(questionKey(q)));
+    const unseenNotLast=shuffled(unseen.filter(q=>!lastSet.has(questionKey(q))));
+    const unseenFromLast=shuffled(unseen.filter(q=>lastSet.has(questionKey(q))));
+    let selected=[...unseenNotLast,...unseenFromLast].slice(0,target);
+    let nextSeen=new Set(seenSet);
+    selected.forEach(q=>nextSeen.add(questionKey(q)));
+    let wrappedCycle=false;
+
+    // Si quedan menos de 150 sin ver, termina ese recorrido y completa el
+    // simulacro comenzando un ciclo nuevo, sin duplicar dentro del mismo examen.
+    if(selected.length<target){
+      wrappedCycle=true;
+      const selectedKeys=new Set(selected.map(questionKey));
+      const candidates=uniquePool.filter(q=>!selectedKeys.has(questionKey(q)));
+      const candidatesNotLast=shuffled(candidates.filter(q=>!lastSet.has(questionKey(q))));
+      const candidatesFromLast=shuffled(candidates.filter(q=>lastSet.has(questionKey(q))));
+      const fill=[...candidatesNotLast,...candidatesFromLast].slice(0,target-selected.length);
+      selected=selected.concat(fill);
+      nextSeen=new Set(fill.map(questionKey));
+    }else if(nextSeen.size>=uniquePool.length){
+      // El ciclo terminó exactamente al completar este simulacro.
+      nextSeen=new Set();
+    }
+
+    const mixed=shuffled(selected);
+    try{
+      const previousCycle=parseInt(localStorage.getItem('sim215_rotation_cycle_v2')||'1',10)||1;
+      localStorage.setItem('sim215_seen_keys_v2',JSON.stringify([...nextSeen]));
       localStorage.setItem('sim215_last_keys',JSON.stringify(mixed.map(questionKey)));
-      localStorage.setItem('sim215_last_pool_size',String(pool.length));
+      localStorage.setItem('sim215_last_pool_size',String(uniquePool.length));
+      localStorage.setItem('sim215_rotation_cycle_v2',String(wrappedCycle?previousCycle+1:previousCycle));
+      localStorage.setItem('sim215_rotation_remaining_v2',String(Math.max(0,uniquePool.length-nextSeen.size)));
     }catch(e){}
     return mixed;
   }
