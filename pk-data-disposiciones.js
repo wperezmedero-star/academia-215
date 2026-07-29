@@ -667,20 +667,20 @@ const PK_DISPOSICIONES = [
     {
       nivel: 5,
       tipo_trampa: "SINONIMOS",
-      q: "Al restablecer una póliza de vida, ¿qué sucede generalmente con los períodos de incontestabilidad y suicidio?",
+      q: "Según el manual 2-15, al restablecer una póliza de vida, ¿qué ocurre con la incontestabilidad y la exclusión de suicidio?",
       o: [
         "Se eliminan por completo",
-        "Generalmente se REINICIA un nuevo período (de contestabilidad y a veces suicidio) desde la fecha de restablecimiento",
-        "Nunca cambian",
+        "La incontestabilidad suele reiniciarse, pero la exclusión de suicidio NO vuelve a comenzar por la caducidad",
+        "Ambas vuelven a comenzar siempre desde la fecha de restablecimiento",
         "Se extienden a 10 años"
       ],
       a: 1,
-      trampa: "El restablecimiento generalmente reinicia un nuevo período de contestabilidad (la aseguradora puede volver a investigar declaraciones hechas en la solicitud de restablecimiento) — no continúa como si nada hubiera pasado.",
-      correcto: "Al restablecer, generalmente se REINICIA un nuevo período de contestabilidad (frecuentemente 2 años) desde la fecha de restablecimiento, porque el asegurado hace nuevas declaraciones de asegurabilidad. Esto permite a la aseguradora impugnar esas nuevas declaraciones si fueron fraudulentas. [REQUIERE VERIFICACIÓN — confirmar el tratamiento exacto del período de suicidio al restablecer contra el material del curso]",
+      trampa: "No se deben agrupar las dos cláusulas: el manual les da tratamientos distintos al restablecer.",
+      correcto: "El manual indica que la cláusula de incontestabilidad suele comenzar de nuevo respecto del restablecimiento, pero afirma expresamente que la exclusión de suicidio NO entra en vigor otra vez debido a la caducidad.",
       incorrectos: [
-        "A) No se eliminan — de hecho se reinicia un nuevo período.",
-        "C) SÍ cambian — se reinicia el período de contestabilidad.",
-        "D) No se extienden a 10 años — típicamente el nuevo período es de 2 años."
+        "A) El restablecimiento no elimina ambas cláusulas.",
+        "C) El manual dice expresamente que la exclusión de suicidio no vuelve a comenzar.",
+        "D) El manual no establece una extensión de 10 años."
       ]
     },
     {
@@ -695,7 +695,7 @@ const PK_DISPOSICIONES = [
       ],
       a: 1,
       trampa: "El plazo típico de restablecimiento es de alrededor de 3 años, aunque varía — se confunde con plazos más cortos o con la idea de que es indefinido.",
-      correcto: "El restablecimiento típicamente puede solicitarse dentro de un plazo de aproximadamente 3 AÑOS desde la caducidad (aunque varía según la póliza y compañía). Pasado ese plazo, generalmente ya no se puede restablecer y habría que comprar una póliza nueva. [REQUIERE VERIFICACIÓN — confirmar el plazo exacto contra el material del curso, pues varía]",
+      correcto: "El manual aclara que manda el plazo especificado en la póliza y añade que frecuentemente permite el restablecimiento durante los primeros 3 AÑOS después de la caducidad. Por eso 3 años es una referencia típica, no una regla universal para todo contrato.",
       incorrectos: [
         "A) 30 días es muy corto — ese es más bien el período de gracia.",
         "C) No siempre es 10 años — el plazo típico ronda los 3 años.",
@@ -714,7 +714,7 @@ const PK_DISPOSICIONES = [
       ],
       a: 1,
       trampa: "El período de gracia actúa ANTES de caducar (la póliza sigue viva); el restablecimiento actúa DESPUÉS de caducar (la revive). Momentos distintos.",
-      correcto: "PERÍODO DE GRACIA = tiempo (31 días en vida) para pagar una prima vencida ANTES de que la póliza caduque — la póliza sigue vigente. RESTABLECIMIENTO = proceso para REACTIVAR una póliza que YA caducó (después del período de gracia), con requisitos más estrictos. Uno previene, el otro revive. [VERIFICADO — distinción estándar]",
+      correcto: "PERÍODO DE GRACIA = tiempo para pagar una prima vencida ANTES de que la póliza caduque — en vida individual, un mes y nunca menos de 30 días; en vida de grupo, 31 días. RESTABLECIMIENTO = proceso para REACTIVAR una póliza que YA caducó. Uno previene la caducidad; el otro revive la póliza.",
       incorrectos: [
         "A) NO son lo mismo — actúan en momentos distintos (antes vs después de caducar).",
         "C) Invierte los conceptos.",

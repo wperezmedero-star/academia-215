@@ -300,7 +300,7 @@ const PK_HEALTH = [
     {
       nivel: 5,
       tipo_trampa: "EXCEPCION_LEGAL",
-      q: "¿Cuál de las siguientes situaciones GENERALMENTE NO activa los beneficios de un seguro de discapacidad de ingresos privado y estándar?",
+      q: "¿Cuál de las siguientes situaciones NO activa los beneficios de una póliza de discapacidad expresamente NO OCUPACIONAL?",
       o: [
         "Un accidente automovilístico fuera del trabajo que impide laborar al asegurado durante 6 meses",
         "Una lesión sufrida en el trabajo, mientras el empleado realizaba sus funciones normales laborales",
@@ -308,8 +308,8 @@ const PK_HEALTH = [
         "Un accidente deportivo ocurrido durante el tiempo libre personal del asegurado"
       ],
       a: 1,
-      trampa: "Las lesiones sufridas EN EL TRABAJO generalmente están cubiertas por Workers' Compensation, y por eso suelen estar EXCLUIDAS del seguro de discapacidad privado que opera de forma complementaria.",
-      correcto: "Las lesiones sufridas DURANTE el desempeño de funciones laborales generalmente califican para Workers' Compensation, y por diseño estándar suelen estar EXCLUIDAS del seguro de discapacidad privado — ya que Workers' Comp está diseñado específicamente para cubrir esas situaciones. [VERIFICADO — principio estándar de coordinación entre productos]",
+      trampa: "La palabra decisiva es NO OCUPACIONAL: esa póliza cubre accidentes o enfermedades incapacitantes fuera del trabajo y deja el riesgo laboral a Workers' Compensation.",
+      correcto: "Según el manual, una póliza NO OCUPACIONAL cubre lesiones incapacitantes ocurridas fuera del trabajo. Una póliza OCUPACIONAL puede cubrir tanto lesiones laborales como no laborales; por eso no debe enseñarse que toda póliza privada excluye automáticamente una lesión de trabajo.",
       incorrectos: [
         "A) Un accidente de auto fuera del trabajo SÍ activa típicamente los beneficios de discapacidad privada.",
         "C) Una enfermedad crónica que impide trabajar SÍ activa típicamente los beneficios de discapacidad.",

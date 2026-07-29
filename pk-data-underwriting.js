@@ -427,20 +427,20 @@ const PK_UNDERWRITING = [
     {
       nivel: 1,
       tipo_trampa: "NUMEROS_FECHAS",
-      q: "Cuando un agente reemplaza una póliza de vida existente con una nueva, ¿en cuántos días HÁBILES debe notificar formalmente a la aseguradora que está siendo reemplazada?",
+      q: "Según el manual 2-15, ¿dentro de qué plazo debe la compañía reemplazadora enviar al solicitante el Formulario Comparativo de Información, una vez que la solicitud y el aviso de reemplazo llegan a su oficina?",
       o: [
-        "1 día hábil desde la fecha de la solicitud nueva",
-        "3 días hábiles desde la fecha de la solicitud nueva",
-        "5 días hábiles desde la fecha de la solicitud nueva",
-        "10 días hábiles desde la fecha de la solicitud nueva"
+        "1 día hábil",
+        "3 días hábiles",
+        "5 días hábiles",
+        "10 días hábiles"
       ],
-      a: 1,
-      trampa: "Confundir con plazos de otros procesos regulatorios. La Regla de Reemplazo de Florida establece específicamente 3 días HÁBILES para la notificación.",
-      correcto: "La Regla de Reemplazo de Florida exige notificar a la aseguradora que está siendo reemplazada dentro de 3 DÍAS HÁBILES. El propósito es darle la oportunidad de contactar al cliente y posiblemente retener la póliza.",
+      a: 2,
+      trampa: "No confundir este plazo de 5 días hábiles para la información comparativa con el reenvío del aviso a la aseguradora existente, que el manual exige inmediatamente.",
+      correcto: "Según el manual 2-15, la compañía reemplazadora debe enviar al solicitante el Formulario Comparativo de Información dentro de 5 DÍAS HÁBILES desde que la solicitud y el aviso de reemplazo se reciben en su oficina.",
       incorrectos: [
-        "A) 1 día hábil es insuficiente según la regulación de reemplazo de Florida.",
-        "C) 5 días hábiles excede el plazo máximo requerido y no cumple el procedimiento correcto.",
-        "D) 10 días hábiles viola completamente el plazo de 3 días establecido por la regulación."
+        "A) El manual no establece 1 día hábil para este envío.",
+        "B) El manual no establece 3 días hábiles para este envío.",
+        "D) 10 días hábiles excede el plazo de 5 días indicado en el manual."
       ]
     },
     {
@@ -505,7 +505,7 @@ const PK_UNDERWRITING = [
       tipo_trampa: "VIOLACION",
       q: "¿Cuál de los siguientes escenarios constituye una VIOLACIÓN de las Reglas de Reemplazo de Florida?",
       o: [
-        "Un agente notifica a la aseguradora reemplazada dentro de 3 días hábiles Y entrega al cliente el documento de comparación antes de que firme",
+        "El agente obtiene las declaraciones firmadas, entrega al solicitante el aviso y los materiales usados, y presenta todo con la solicitud a la nueva aseguradora",
         "Un agente reemplaza una póliza sin notificar a la aseguradora reemplazada Y sin entregar ninguna documentación comparativa al cliente",
         "Un agente recomienda un reemplazo genuinamente beneficioso para el cliente y documenta las razones específicas por escrito",
         "Un agente entrega el documento de comparación completo, el cliente lo firma entendiendo las diferencias, y luego procede con el reemplazo"
@@ -514,7 +514,7 @@ const PK_UNDERWRITING = [
       trampa: "La opción B describe exactamente las DOS violaciones simultáneas que la regulación específicamente prohíbe.",
       correcto: "Omitir la notificación a la aseguradora reemplazada Y no entregar documentación comparativa al cliente son DOS violaciones simultáneas e independientes de la Regla de Reemplazo. Ambas son obligatorias.",
       incorrectos: [
-        "A) Este es el procedimiento CORRECTO — notificación oportuna + documento comparativo antes de la firma.",
+        "A) Este es el procedimiento que el manual asigna al agente cuando sabe que puede haber un reemplazo.",
         "C) Recomendar genuinamente y documentar las razones es exactamente lo que la regulación requiere.",
         "D) Entregar el documento, obtener firma de comprensión y proceder es el procedimiento correcto."
       ]

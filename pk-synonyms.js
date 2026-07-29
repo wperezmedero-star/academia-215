@@ -197,7 +197,7 @@ const PK_SINONIMOS = {
       "tiempo adicional para pagar la prima"
     ],
     en_ingles: ["Grace Period"],
-    contexto: "VIDA = 31 días. SALUD semanal = 7 días. SALUD mensual = 10 días. Otros = 31 días."
+    contexto: "VIDA individual = un mes, nunca menos de 30 días. VIDA de grupo = 31 días. SALUD semanal = 7 días; mensual = 10 días; otras modalidades = 31 días."
   },
 
   "incontestabilidad": {

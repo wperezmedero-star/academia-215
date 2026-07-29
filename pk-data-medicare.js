@@ -31,7 +31,7 @@ const PK_MEDICARE = [
       incorrectos: [
         "A) Parte A cubre hospitalización — una función completamente diferente.",
         "B) Parte B cubre servicios médicos ambulatorios — no medicamentos de prescripción.",
-        "C) Parte C (Medicare Advantage) puede INCLUIR cobertura de medicamentos como parte de un plan privado, pero no ES en sí misma la cobertura específica de medicamentos — es un plan privado que reemplaza A+B."
+        "C) Parte C (Medicare Advantage) puede INCLUIR cobertura de medicamentos, pero no ES en sí misma la Parte D. El afiliado conserva Medicare A y B, aunque recibe esos beneficios por medio del plan privado."
       ]
     },
     {
@@ -59,16 +59,16 @@ const PK_MEDICARE = [
       q: "¿Cuál es la diferencia estructural principal entre Medicare Parte B (tradicional) y Medicare Advantage (Parte C)?",
       o: [
         "Son estructuralmente idénticos — Parte B y Parte C son simplemente nombres alternativos para el mismo programa",
-        "Parte B es el componente de Medicare tradicional gubernamental (fee-for-service) para servicios médicos; Parte C es un plan PRIVADO aprobado que generalmente REEMPLAZA la cobertura tradicional combinada (A+B)",
+        "Parte B es el componente médico de Medicare; Parte C es una alternativa PRIVADA aprobada que administra los beneficios de A y B, aunque el afiliado debe conservar su inscripción en ambas partes",
         "Parte C es generalmente un seguro complementario (similar a Medigap) que se añade sobre Medicare tradicional",
         "Parte B cubre medicamentos; Parte C cubre exclusivamente hospitalizaciones"
       ],
       a: 1,
-      trampa: "La Parte C REEMPLAZA estructuralmente las partes tradicionales — no las complementa como lo hace un seguro suplementario tipo Medigap.",
-      correcto: "Parte B = componente del Medicare tradicional gubernamental (fee-for-service) para servicios médicos ambulatorios. Parte C (Medicare Advantage) = plan PRIVADO aprobado por Medicare que generalmente REEMPLAZA la cobertura tradicional A+B (y frecuentemente incluye cobertura de medicamentos). El beneficiario generalmente elige entre Medicare tradicional O Medicare Advantage, no ambos simultáneamente. [VERIFICADO — distinción estructural fundamental y estable]",
+      trampa: "Parte C es una forma privada de recibir los beneficios de A y B; no es un suplemento como Medigap ni elimina la obligación de mantener A y B.",
+      correcto: "Parte B cubre servicios médicos dentro de Medicare. Parte C (Medicare Advantage) es una alternativa privada aprobada para recibir los beneficios de A y B, y con frecuencia incluye medicamentos. Para permanecer en Advantage, el beneficiario debe seguir inscrito en A y B y pagar la prima de B aplicable.",
       incorrectos: [
         "A) NO son estructuralmente idénticos — representan enfoques fundamentalmente diferentes de administración de beneficios.",
-        "C) Medigap (el seguro suplementario tradicional) es conceptualmente diferente de Medicare Advantage — Medigap COMPLEMENTA el Medicare tradicional, mientras Advantage lo reemplaza.",
+        "C) Medigap COMPLEMENTA Medicare Original; Advantage es una vía privada alternativa para recibir los beneficios de A y B.",
         "D) Las funciones descritas están invertidas respecto a la estructura real de cada parte."
       ]
     },
@@ -235,7 +235,7 @@ const PK_MEDICARE = [
       trampa: "Medigap está diseñado estructuralmente para COMPLEMENTAR el Medicare tradicional — es conceptualmente distinto tanto de Medicare Advantage como de un programa gubernamental de medicamentos.",
       correcto: "MEDIGAP = seguro privado diseñado específicamente para llenar las 'brechas' de costo compartido del Medicare tradicional: cubre generalmente los deducibles de las Partes A y B, los coseguros hospitalarios, y otros costos de bolsillo que Medicare tradicional no cubre completamente. NO es Medicare Advantage. [VERIFICADO — propósito estructural fundamental y estable de Medigap]",
       incorrectos: [
-        "A) Medicare Advantage generalmente REEMPLAZA el Medicare tradicional; Medigap, en contraste, lo COMPLEMENTA — son estrategias estructuralmente opuestas.",
+        "A) Medicare Advantage es una vía privada para recibir A y B; Medigap complementa Medicare Original. No son el mismo producto.",
         "C) La cobertura de medicamentos corresponde estructuralmente a la Parte D — Medigap generalmente no está diseñado con ese propósito específico (aunque algunos planes Medigap pueden cubrir ciertos costos relacionados en circunstancias específicas).",
         "D) Medigap está diseñado para personas que YA tienen Medicare tradicional — no para quienes no califican para la cobertura estándar."
       ]
@@ -246,13 +246,13 @@ const PK_MEDICARE = [
       q: "¿Cuál es la diferencia estructural fundamental entre Medicare Advantage (Parte C) y Medigap?",
       o: [
         "Son estructuralmente el mismo producto, simplemente con nombres diferentes según la región geográfica del país",
-        "Medicare Advantage generalmente REEMPLAZA el Medicare tradicional (A+B); Medigap generalmente COMPLEMENTA el Medicare tradicional (A+B) manteniéndolo activo",
-        "Medigap generalmente reemplaza Medicare tradicional; Medicare Advantage generalmente lo complementa",
+        "Medicare Advantage administra A+B mediante un plan privado; Medigap COMPLEMENTA Medicare Original para cubrir parte de sus costos compartidos",
+        "Medigap administra A+B mediante una red privada; Medicare Advantage solo paga deducibles de Medicare Original",
         "Ambos productos pueden generalmente tenerse de forma simultánea sin ninguna restricción estructural"
       ],
       a: 1,
-      trampa: "La distinción entre 'reemplazar' versus 'complementar' es la diferencia estructural fundamental entre ambos productos — son enfoques opuestos.",
-      correcto: "Medicare Advantage = el beneficiario elige un plan privado que generalmente REEMPLAZA el Medicare tradicional A+B (frecuentemente incluyendo también la Parte D). Medigap = el beneficiario mantiene activo el Medicare tradicional A+B y AÑADE un seguro privado adicional para cubrir sus brechas de costo. Estos son generalmente enfoques mutuamente excluyentes entre sí. [VERIFICADO — distinción estructural estable entre ambos productos]",
+      trampa: "La clave es quién administra los beneficios: Advantage es una alternativa privada para A+B; Medigap solo complementa Medicare Original.",
+      correcto: "Medicare Advantage = el beneficiario recibe sus beneficios de A y B mediante un plan privado aprobado y debe conservar A y B. Medigap = mantiene Medicare Original como pagador principal y añade una póliza privada para cubrir ciertas brechas. En general no se usan simultáneamente.",
       incorrectos: [
         "A) No son estructuralmente el mismo producto — difieren fundamentalmente en su diseño, costos y estructura de cobertura.",
         "C) Esta descripción invierte estructuralmente las funciones reales de ambos productos.",
@@ -281,20 +281,20 @@ const PK_MEDICARE = [
     {
       nivel: 4,
       tipo_trampa: "EXCEPCION_LEGAL",
-      q: "Una persona que actualmente tiene Medicare Advantage decide cambiar hacia Medicare tradicional junto con un plan Medigap complementario. ¿Tiene esta persona GENERALMENTE garantía de aceptación en el plan Medigap deseado?",
+      q: "Una persona que actualmente tiene Medicare Advantage decide cambiar a Medicare Original y quiere comprar Medigap. ¿Cuál afirmación es MÁS PRECISA sobre la aceptación garantizada?",
       o: [
-        "Sí — generalmente tiene siempre derecho garantizado a cualquier plan Medigap una vez que posee Medicare, sin ninguna excepción temporal",
-        "Solo generalmente durante el período de inscripción abierta inicial descrito anteriormente — fuera de ese período específico, las aseguradoras generalmente PUEDEN rechazar la solicitud o cobrar más por condiciones preexistentes",
-        "La aceptación depende exclusivamente y en su totalidad del plan Medigap específico particular que la persona elija solicitar",
-        "Únicamente tiene garantía de aceptación si la persona supera los 75 años de edad"
+        "Siempre tiene derecho garantizado a cualquier plan Medigap por el solo hecho de haber tenido Medicare Advantage",
+        "Puede tener emisión garantizada durante la inscripción abierta inicial o bajo derechos especiales —por ejemplo, ciertos derechos de prueba o pérdida involuntaria de cobertura—; fuera de esas situaciones puede aplicarse suscripción médica",
+        "Nunca puede obtener Medigap después de haber estado inscrita en Medicare Advantage",
+        "La emisión garantizada depende únicamente de que la persona tenga más de 75 años"
       ],
       a: 1,
-      trampa: "Fuera del período específico de inscripción abierta inicial, la aceptación en Medigap generalmente NO está garantizada de forma universal.",
-      correcto: "Fuera del período de inscripción abierta inicial de 6 meses, las aseguradoras de Medigap generalmente PUEDEN rechazar la solicitud, cobrar primas más altas, o excluir condiciones preexistentes específicas, dependiendo de las reglas estatales aplicables. La garantía de aceptación generalmente aplica únicamente durante ese período inicial específico. [VERIFICADO — principio estructural general; REQUIERE VERIFICACIÓN de las reglas específicas de garantía de emisión aplicables en Florida, que pueden diferir de otros estados]",
+      trampa: "No conviertas la regla general de suscripción fuera de la inscripción inicial en un absoluto: existen derechos especiales de emisión garantizada.",
+      correcto: "La inscripción abierta inicial de Medigap dura 6 meses, pero no es la única protección posible. La ley federal también reconoce situaciones específicas de emisión garantizada, incluidos ciertos derechos de prueba al salir de Medicare Advantage y determinadas pérdidas de cobertura. Si no existe inscripción abierta ni un derecho especial aplicable, la aseguradora puede usar suscripción médica según las reglas vigentes. [VERIFICADO — Medicare.gov]",
       incorrectos: [
-        "A) El derecho garantizado generalmente solo aplica durante el período de inscripción abierta inicial — no de forma indefinida y sin excepción.",
-        "C) Las reglas de suscripción de Medigap están generalmente reguladas por ley federal y estatal — no son completamente discrecionales de cada plan individual.",
-        "D) No existe generalmente una diferenciación de garantía de aceptación basada específicamente en superar los 75 años de edad."
+        "A) Haber tenido Medicare Advantage no crea por sí solo un derecho perpetuo a cualquier póliza; deben cumplirse las condiciones del derecho aplicable.",
+        "C) Sí puede obtener Medigap al volver a Medicare Original cuando se cumplen las reglas de inscripción o emisión garantizada.",
+        "D) La edad de 75 años no es la condición que determina estos derechos."
       ]
     },
     {
@@ -311,7 +311,7 @@ const PK_MEDICARE = [
       trampa: "Medigap está diseñado estructuralmente para COMPLEMENTAR — no para reemplazar. Su beneficio principal es reducir la exposición a gastos de bolsillo imprevistos.",
       correcto: "El beneficio principal de Medigap para la situación de Pedro es GENERALMENTE cubrir las brechas de costo compartido de Medicare tradicional: deducibles hospitalarios, coseguros del hospital más allá de cierto punto, deducibles de la Parte B, y el coseguro estándar de la Parte B. Esto generalmente hace que los gastos médicos de Pedro sean más predecibles y manejables. [VERIFICADO — propósito estructural fundamental de Medigap]",
       incorrectos: [
-        "A) Medigap generalmente COMPLEMENTA la cobertura de Pedro — no la reemplaza (esa función correspondería a Medicare Advantage).",
+        "A) Medigap COMPLEMENTA Medicare Original; Medicare Advantage es una vía privada alternativa para recibir A y B.",
         "C) Medicare tradicional generalmente ya cubre a cualquier médico que acepte Medicare — Medigap generalmente no amplía específicamente la red de proveedores disponibles.",
         "D) La cobertura de medicamentos corresponde estructuralmente a la Parte D — Medigap generalmente no incluye automáticamente cobertura de medicamentos."
       ]

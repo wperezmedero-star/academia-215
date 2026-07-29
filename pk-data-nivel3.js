@@ -561,12 +561,12 @@ const PK_NIVEL3 = [
         "31 días"
       ],
       a: 1,
-      trampa: "El período de gracia varía específicamente según la frecuencia de pago (semanal, mensual, otros) — el de MENSUAL se confunde fácilmente con el de VIDA (31 días) o el SEMANAL (7 días).",
-      correcto: "Las pólizas de salud con prima MENSUAL deben ofrecer generalmente un período de gracia de al menos 10 DÍAS — distinto del período de 31 días aplicable a seguros de VIDA, y distinto del período de 7 días típicamente aplicable a primas semanales de salud. [VERIFICADO — estructura diferenciada estándar del período de gracia por tipo de producto y frecuencia]",
+      trampa: "El período de gracia de salud varía según la frecuencia de pago: 7 días para prima semanal, 10 para mensual y 31 para otras modalidades.",
+      correcto: "Las pólizas de salud con prima MENSUAL deben ofrecer un período de gracia de al menos 10 DÍAS. En vida individual, el manual expresa el plazo como un mes y nunca menos de 30 días; 31 días corresponde claramente a vida de grupo y a ciertas modalidades de salud.",
       incorrectos: [
         "A) 7 días corresponde típicamente a primas SEMANALES de salud, no mensuales.",
         "C) 21 días no corresponde al período de gracia estándar de salud mensual.",
-        "D) 31 días corresponde típicamente al período de gracia de pólizas de VIDA, no de salud mensual."
+        "D) 31 días corresponde a otras modalidades de pago de salud y a vida de grupo, no a salud con prima mensual."
       ]
     },
     {

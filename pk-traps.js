@@ -113,7 +113,7 @@ const PK_TRAMPAS = {
       nombre: "Trampa de Procedimiento / Proceso",
       descripcion: "La pregunta prueba el procedimiento correcto: pasos, plazos, notificaciones requeridas.",
       señales: ["¿Qué debe hacer", "¿Cuál es el procedimiento", "¿Cómo se maneja", "¿En qué orden"],
-      estrategia: "Conoce los procedimientos clave: Reemplazo=notificar en 3 días hábiles. FCRA=notificar al solicitante. Idoneidad=analizar ANTES de recomendar.",
+      estrategia: "Conoce los procedimientos clave: en reemplazo, el agente entrega aviso y materiales con la solicitud; la compañía reemplazadora envía la comparación en 5 días hábiles y remite inmediatamente el aviso a la aseguradora existente. FCRA=notificar al solicitante. Idoneidad=analizar ANTES de recomendar.",
       ejemplo: "Al reemplazar una póliza, ¿cuál es el procedimiento correcto?"
     },
 
@@ -180,7 +180,7 @@ const PK_TRAMPAS = {
     "INVERSIONES": "⚠️ TRAMPA DE INVERSIÓN: Los conceptos estaban intercambiados. Verifica cada definición cuidadosamente — Pearson VUE frecuentemente invierte conceptos relacionados.",
     "EXCEPCION_LEGAL": "⚠️ TRAMPA DE EXCEPCIÓN: Esta pregunta probó una excepción a la regla general. Conoce las excepciones más importantes: fraude intencional, planes gubernamentales, surplus lines, etc.",
     "QUIEN_PAGA": "⚠️ TRAMPA DE ROLES: Esta pregunta probó quién tiene qué rol. En Key Person, en COBRA, en Buy-Sell — los roles de cada parte son específicos y frecuentemente se intercambian en el examen.",
-    "PROCEDIMIENTO": "⚠️ TRAMPA DE PROCEDIMIENTO: Esta pregunta probó el proceso correcto. Conoce los plazos y pasos obligatorios: 3 días hábiles de reemplazo, 60 días para elegir COBRA, analizar idoneidad ANTES de recomendar.",
+    "PROCEDIMIENTO": "⚠️ TRAMPA DE PROCEDIMIENTO: Esta pregunta probó el proceso correcto. En reemplazo, diferencia los deberes del agente y de la compañía; recuerda 5 días hábiles para la información comparativa y reenvío inmediato del aviso. COBRA da 60 días para elegir; la idoneidad se analiza ANTES de recomendar.",
     "MAS_MENOS": "⚠️ TRAMPA COMPARATIVA: Esta pregunta usó un comparativo (MÁS/MENOS/MEJOR). No busques la opción 'correcta' — busca la 'más correcta' según el atributo que compara.",
     "ESCENARIO": "⚠️ TRAMPA DE ESCENARIO: Esta pregunta presentó un caso específico. Identifica los datos clave (edad, tiempo, tipo de producto) y aplica la regla correcta a esos datos.",
     "VIOLACION": "⚠️ TRAMPA DE VIOLACIÓN: Esta pregunta pedía identificar una práctica ilegal. Conoce las diferencias entre Twisting (diferente compañía), Churning (misma compañía), Rebating (descuento ilegal) y venta no idónea."
@@ -214,7 +214,7 @@ const PK_TRAMPAS = {
     "💡 Cuando veas EXCEPTO → busca la opción que NO pertenece",
     "💡 Cuando veas SIEMPRE o NUNCA → desconfía, casi siempre hay una excepción",
     "💡 Free Look VIDA=14 días. ANUALIDADES=14 días",
-    "💡 Período de gracia VIDA=31 días. SALUD mensual=10 días. SALUD semanal=7 días",
+    "💡 Gracia: VIDA individual=un mes, nunca menos de 30 días; VIDA de grupo=31; SALUD mensual=10; SALUD semanal=7",
     "💡 Incontestabilidad=2 años. Única excepción: FRAUDE INTENCIONAL",
     "💡 Twisting=diferente compañía. Churning=misma compañía",
     "💡 Recibo CONDICIONAL=cubre si hubiera calificado. VINCULANTE=cubre sin condición",

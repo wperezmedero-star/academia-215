@@ -233,7 +233,7 @@ const PK_FLORIDA = [
       ],
       a: 2,
       trampa: "Los límites entre categorías de producto son diferentes entre sí — el límite para vida no coincide con el límite generalmente más alto establecido para salud.",
-      correcto: "La Florida Life and Health Insurance Guaranty Association generalmente establece un límite de $300,000 para beneficios de muerte de VIDA. Las anualidades generalmente también tienen un límite de $300,000. La cobertura de SALUD generalmente tiene un límite más alto. [REQUIERE VERIFICACIÓN — confirmar estos montos exactos contra la estructura vigente actual de la Florida Guaranty Association, ya que estos límites pueden ajustarse legislativamente]",
+      correcto: "La Florida Life and Health Insurance Guaranty Association establece $300,000 por vida para el beneficio de muerte. La ley vigente distingue las anualidades: hasta $250,000 en valor neto de rescate de una anualidad diferida y $300,000 cuando está pagando beneficios. Para gastos médicos mayores y ciertos seguros médicos básicos, el límite es $500,000; LTC permanece dentro del límite general de $300,000.",
       incorrectos: [
         "A) $100,000 no corresponde generalmente al límite establecido para beneficios de vida.",
         "B) $200,000 no corresponde generalmente al límite establecido para beneficios de vida.",
@@ -327,20 +327,20 @@ const PK_FLORIDA = [
     {
       nivel: 1,
       tipo_trampa: "NUMEROS_FECHAS",
-      q: "Cuando un agente en Florida procede a reemplazar una póliza de vida existente, ¿en cuántos días hábiles GENERALMENTE debe notificar formalmente a la aseguradora que está siendo reemplazada?",
+      q: "Según el manual 2-15, cuando una compañía reemplazadora recibe en su oficina la solicitud y el aviso de reemplazo de vida, ¿qué debe hacer con una copia del aviso para la aseguradora existente?",
       o: [
-        "1 día hábil desde la fecha de la nueva solicitud",
-        "3 días hábiles desde la fecha de la nueva solicitud",
-        "5 días hábiles desde la fecha de la nueva solicitud",
-        "10 días hábiles desde la fecha de la nueva solicitud"
+        "Conservarla sin enviarla hasta que se emita la póliza nueva",
+        "Remitirla inmediatamente después de recibirla",
+        "Enviarla exactamente 3 días hábiles después",
+        "Enviarla únicamente si el solicitante vuelve a pedirla"
       ],
       a: 1,
-      trampa: "Es fácil confundir este plazo con otros plazos regulatorios distintos que aplican a procesos diferentes dentro del sistema.",
-      correcto: "La Regla de Reemplazo de Florida generalmente exige notificar a la aseguradora reemplazada dentro de 3 DÍAS HÁBILES. El propósito de este plazo es otorgarle a la aseguradora original una oportunidad razonable de contactar al cliente y potencialmente retener la póliza existente. [REQUIERE VERIFICACIÓN — confirmar este plazo exacto contra la Florida Administrative Code Rule 69B-162 vigente al momento del examen]",
+      trampa: "El manual menciona 5 días hábiles para enviar al solicitante el formulario comparativo; no establece 3 días para este deber distinto.",
+      correcto: "Según el manual 2-15, la compañía reemplazadora debe remitir a la aseguradora existente una copia del aviso de reemplazo INMEDIATAMENTE después de recibirlo en su oficina. El plazo de 5 días hábiles corresponde al envío de la información comparativa al solicitante.",
       incorrectos: [
-        "A) 1 día hábil resultaría generalmente insuficiente según la estructura conocida de esta regulación específica.",
-        "C) 5 días hábiles excedería generalmente el plazo máximo requerido bajo esta regla específica.",
-        "D) 10 días hábiles violaría significativamente el plazo establecido bajo esta regulación específica."
+        "A) El aviso no se retiene hasta la emisión de la póliza nueva.",
+        "C) El manual no fija un plazo de 3 días hábiles para remitir este aviso.",
+        "D) El deber no depende de una segunda solicitud del cliente."
       ]
     },
     {
@@ -449,20 +449,20 @@ const PK_FLORIDA = [
     {
       nivel: 2,
       tipo_trampa: "NUMEROS_FECHAS",
-      q: "Los agentes licenciados en Florida generalmente deben completar Educación Continua (Continuing Education / CE) de forma periódica para mantener su licencia vigente. ¿Cuál es GENERALMENTE la estructura de este requisito?",
+      q: "¿Cuál es el requisito general vigente de Educación Continua (CE) para una licencia 2-15 de Florida por cada ciclo de 2 años?",
       o: [
-        "No existe ningún requisito de educación continua en Florida una vez obtenida la licencia inicial",
-        "Existe generalmente un requisito periódico de horas de educación continua dentro de cada período de renovación de licencia",
-        "La educación continua es generalmente opcional y depende únicamente de la preferencia individual del agente",
-        "El requisito de educación continua aplica generalmente únicamente durante el primer año de licenciamiento"
+        "12 horas, todas dedicadas exclusivamente a ética",
+        "24 horas: 4 de actualización de Ley y Ética 5-215 y 20 electivas, salvo reducción aplicable",
+        "24 horas electivas sin ningún curso de actualización obligatorio",
+        "5 horas de ética como único requisito del ciclo"
       ],
       a: 1,
-      trampa: "Florida generalmente mantiene un requisito estructural de educación continua periódica como condición para la renovación de licencia — no es un requisito único ni opcional.",
-      correcto: "Florida generalmente requiere que los agentes licenciados completen un número determinado de horas de Educación Continua dentro de cada período de renovación de licencia, como condición para mantener la licencia vigente. [REQUIERE VERIFICACIÓN — confirmar el número exacto de horas requeridas y la periodicidad específica vigente contra la regulación actual del DFS]",
+      trampa: "La actualización obligatoria ya no es de 5 horas: para los ciclos vigentes es un curso de 4 horas, incluido dentro de las 24 horas totales.",
+      correcto: "El DFS exige generalmente 24 HORAS por ciclo de 2 años para 2-15: 4 horas de actualización de Ley y Ética con autoridad 5-215 y 20 horas electivas. Pueden existir reducciones autorizadas según experiencia o credenciales.",
       incorrectos: [
-        "A) SÍ existe generalmente un requisito continuo de educación — no se limita a la obtención inicial de la licencia.",
-        "C) La educación continua generalmente NO es opcional — constituye un requisito obligatorio para la renovación de licencia.",
-        "D) El requisito generalmente se extiende de forma periódica y continua — no se limita únicamente al primer año."
+        "A) El requisito general no se limita a 12 horas de ética.",
+        "C) Cuatro de las 24 horas deben satisfacer la actualización específica 5-215.",
+        "D) Cinco horas era la versión anterior del curso de actualización; actualmente son 4 y además se requieren las horas electivas."
       ]
     },
     {
