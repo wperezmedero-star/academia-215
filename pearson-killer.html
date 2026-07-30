@@ -293,6 +293,7 @@ h2 .ic{width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.18em}
       <button class="btn btn-purple reto-btn" onclick="startMode('reto_conceptos',30)"><strong><svg class="ic"><use href="#ic-target"/></svg>Conceptos</strong><small>Comprensión y aplicación</small></button>
       <button class="btn btn-gold reto-btn" onclick="startMode('reto_vocabulario',30)"><strong><svg class="ic"><use href="#ic-scroll"/></svg>Vocabulario</strong><small>Sinónimos español–inglés</small></button>
       <button class="btn btn-red reto-btn" onclick="startMode('reto_regulacion',30)"><strong><svg class="ic"><use href="#ic-palm"/></svg>Regulación</strong><small>Leyes y reglas de Florida</small></button>
+      <button class="btn reto-btn" style="background:linear-gradient(180deg,#059669,#065f46)" onclick="startMode('reto_estatutos',30)"><strong><svg class="ic"><use href="#ic-scale"/></svg>Estatutos de Florida</strong><small>Leyes estatales concentradas</small></button>
     </div>
   </div>
 
@@ -631,6 +632,8 @@ function buildPool(mode, max){
   } else if(mode==='reto_conceptos'){
     concepts=[...CONCEPTS];
   } else if(mode==='reto_regulacion'){
+    concepts=CONCEPTS.filter(c=>c.area==='florida');
+  } else if(mode==='reto_estatutos'){
     concepts=CONCEPTS.filter(c=>c.area==='florida');
   } else if(mode==='weak'){
     concepts=CONCEPTS.filter(c=>['suscripcion','florida','retiro','provisiones','salud'].includes(c.area));
