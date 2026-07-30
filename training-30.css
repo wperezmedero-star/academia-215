@@ -45,7 +45,7 @@
 
 .training-mode-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 10px;
   margin-top: 22px;
 }
@@ -75,6 +75,7 @@
 .training-mode-card[data-tone="violet"] { --training-accent: #a78bfa; }
 .training-mode-card[data-tone="cyan"] { --training-accent: #22d3ee; }
 .training-mode-card[data-tone="gold"] { --training-accent: #fbbf24; }
+.training-mode-card[data-tone="emerald"] { --training-accent: #34d399; }
 
 .training-mode-icon {
   display: grid;
