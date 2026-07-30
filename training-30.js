@@ -35,6 +35,12 @@
       icon: "R",
       tone: "gold",
     },
+    statutes: {
+      title: "Estatutos de Florida",
+      subtitle: "Preguntas concentradas de las leyes estatales del examen 2-15.",
+      icon: "FL",
+      tone: "emerald",
+    },
   };
 
   function lessons() {
@@ -79,6 +85,13 @@
   function isRegulation(question) {
     if (question.lessonIndex === 18 || question.lessonIndex === 19) return true;
     return /(florida|ley\b|regulaci[oó]n|licencia|licenciado|agente|cfo\b|dfs\b|oir\b|naic\b|ilegal|pr[aá]ctica desleal|rebating|twisting|churning|fondo de garant[ií]a|estatuto|departamento de servicios financieros)/i.test(
+      [question.q, question.e].join(" "),
+    );
+  }
+
+  function isFloridaStatute(question) {
+    if (question.lessonIndex === 18 || question.lessonIndex === 19) return true;
+    return /(estatuto|florida statute|ley(?:es)? (?:de|en) florida|c[oó]digo de seguros de florida|dfs\b|oir\b|flahiga|departamento de servicios financieros)/i.test(
       [question.q, question.e].join(" "),
     );
   }
@@ -141,6 +154,9 @@
 
     if (mode === "vocabulary") return vocabularyQuestions();
     if (mode === "regulation") return takeThirty(regulation, questions);
+    if (mode === "statutes") {
+      return takeThirty(questions.filter(isFloridaStatute), regulation);
+    }
     if (mode === "terms") {
       return takeThirty(
         nonRegulation.filter(isTermQuestion),
@@ -395,7 +411,7 @@
     launcher.id = "training-launcher";
     launcher.className = "card training-launcher";
     launcher.innerHTML =
-      '<div class="training-launcher-head"><div><span class="training-kicker">ENTRENAMIENTO TEMÁTICO</span><h2>4 retos de 30 preguntas</h2><p>36 minutos por bloque · marcador inmediato · revisión de errores</p></div><span class="training-120">120</span></div><div class="training-mode-grid"></div>';
+      '<div class="training-launcher-head"><div><span class="training-kicker">ENTRENAMIENTO TEMÁTICO</span><h2>5 retos de 30 preguntas</h2><p>36 minutos por bloque · marcador inmediato · revisión de errores</p></div><span class="training-120">150</span></div><div class="training-mode-grid"></div>';
     const grid = launcher.querySelector(".training-mode-grid");
     Object.keys(MODES).forEach(function (key) {
       const mode = MODES[key];
