@@ -1,7 +1,9 @@
 // ============================================================
 // PEARSON KILLER — pk-data-florida.js
 // Módulo: Leyes, Reglas y Regulaciones de Florida
-// 5 conceptos × 5 variantes = 25 preguntas
+// 6 conceptos × 5 variantes = 30 preguntas
+// (florida_006 agregado 2026-07-31: Florida KidCare — programa paraguas,
+//  MediKids, Florida Healthy Kids, CMS Plan)
 //
 // [VERIFICADO] = mecánica de producto o regla estable ampliamente documentada
 // [REQUIERE VERIFICACIÓN] = cifra específica a confirmar contra Florida Statutes vigente
@@ -520,6 +522,111 @@ const PK_FLORIDA = [
         "A) Generalmente existen procesos administrativos estatales apropiados disponibles antes de considerar una vía judicial federal directa.",
         "C) Aunque reportar a la compañía también puede ser apropiado en ciertos casos, el DFS mantiene la autoridad regulatoria formal sobre la licencia del agente.",
         "D) La NAIC generalmente cumple funciones de coordinación entre estados, pero no es el canal directo para presentar quejas específicas dentro de Florida."
+      ]
+    }
+  ]
+}
+
+,
+
+{
+  id: "florida_006",
+  area: "florida",
+  concepto: "Florida KidCare — Programa Paraguas y sus Cuatro Componentes",
+  variantes: [
+    {
+      nivel: 2,
+      tipo_trampa: "SINONIMOS",
+      q: "El término 'Florida KidCare' se refiere GENERALMENTE a:",
+      o: [
+        "Un único programa específico de seguro médico infantil",
+        "El nombre paraguas que agrupa varios programas estatales de cobertura médica para niños",
+        "Un programa exclusivo para niños con necesidades médicas especiales",
+        "Un descuento federal aplicable únicamente a beneficiarios de Medicare"
+      ],
+      a: 1,
+      trampa: "Se confunde 'KidCare' con un programa único (frecuentemente con Florida Healthy Kids), cuando en realidad es el nombre PARAGUAS que agrupa varios componentes distintos.",
+      correcto: "FLORIDA KIDCARE = nombre paraguas del programa estatal (CHIP de Florida) que agrupa CUATRO componentes: Medicaid para Niños, MediKids, Florida Healthy Kids, y el CMS Plan (Children's Medical Services Network). Cada componente atiende a un grupo distinto según edad e ingreso familiar. [VERIFICADO — floridakidcare.org]",
+      incorrectos: [
+        "A) KidCare no es un programa único — es la marca que agrupa cuatro componentes distintos.",
+        "C) Los niños con necesidades médicas especiales corresponden específicamente al CMS Plan, uno de los CUATRO componentes de KidCare, no a KidCare como concepto general.",
+        "D) KidCare es un programa estatal de Florida (con financiamiento federal vía CHIP) dirigido a NIÑOS, no un descuento de Medicare."
+      ]
+    },
+    {
+      nivel: 3,
+      tipo_trampa: "NUMEROS_FECHAS",
+      q: "Dentro de Florida KidCare, el componente MediKids está dirigido específicamente a niños en qué rango de edad?",
+      o: [
+        "0 a 1 año",
+        "1 a 4 años",
+        "5 a 18 años",
+        "1 a 18 años"
+      ],
+      a: 1,
+      trampa: "Se confunde el rango de edad de MediKids (1-4 años) con el de Florida Healthy Kids (5-18 años), ya que ambos cubren niños cuyo ingreso familiar excede el límite de Medicaid tradicional.",
+      correcto: "MEDIKIDS cubre a niños de 1 A 4 AÑOS cuya familia no califica para Medicaid pero se encuentra dentro de los límites de ingreso de KidCare. Es un programa 'look-alike' de Medicaid, administrado a través de planes de cuidado administrado (managed care). [VERIFICADO — AHCA / floridakidcare.org]",
+      incorrectos: [
+        "A) Los infantes de 0 a 1 año generalmente califican para Medicaid tradicional bajo umbrales de ingreso más altos, no para MediKids.",
+        "C) 5 a 18 años corresponde a Florida Healthy Kids, el componente diseñado para niños en edad escolar.",
+        "D) 1 a 18 años combina incorrectamente los rangos de MediKids y Florida Healthy Kids como si fueran un solo componente."
+      ]
+    },
+    {
+      nivel: 3,
+      tipo_trampa: "CUAL_NO",
+      q: "¿Cuál de los siguientes es el componente de Florida KidCare diseñado ESPECÍFICAMENTE para niños con necesidades médicas especiales o condiciones crónicas que requieren atención especializada coordinada?",
+      o: [
+        "Medicaid para Niños",
+        "MediKids",
+        "Florida Healthy Kids",
+        "CMS Plan (Children's Medical Services Network)"
+      ],
+      a: 3,
+      trampa: "Se confunde con Florida Healthy Kids porque ambos pueden atender edades similares; la diferencia clave es que el CMS Plan está dirigido específicamente a niños con necesidades de salud especiales, no a la población infantil general.",
+      correcto: "El CMS PLAN (Children's Medical Services Network) es el componente de KidCare dirigido específicamente a niños con necesidades médicas especiales o condiciones crónicas que requieren coordinación de atención especializada. Es administrado por el Departamento de Salud de Florida. [VERIFICADO — AHCA / legalclarity.org]",
+      incorrectos: [
+        "A) Medicaid para Niños es el componente de ingreso más bajo, para la población infantil general — no específico a necesidades especiales.",
+        "B) MediKids cubre a niños de 1-4 años de la población general, sin enfoque en necesidades médicas especiales.",
+        "C) Florida Healthy Kids cubre a niños de 5-18 años de la población general, sin enfoque en necesidades médicas especiales."
+      ]
+    },
+    {
+      nivel: 4,
+      tipo_trampa: "ESCENARIO",
+      q: "Una familia en Florida tiene un hijo de 3 años. El ingreso familiar es demasiado alto para calificar para Medicaid, pero está dentro de los límites de ingreso de KidCare. ¿A cuál componente sería dirigido GENERALMENTE este niño?",
+      o: [
+        "Florida Healthy Kids",
+        "MediKids",
+        "CMS Plan",
+        "Medicaid tradicional, sin excepción"
+      ],
+      a: 1,
+      trampa: "La trampa es enfocarse solo en el ingreso e ignorar la edad; a los 3 años, el niño cae dentro del rango específico de MediKids (1-4 años), no de Florida Healthy Kids (5-18 años).",
+      correcto: "MEDIKIDS es el componente que atiende específicamente a niños de 1 a 4 años en esta situación de ingreso (por encima del umbral de Medicaid, dentro del límite de KidCare). Florida Healthy Kids solo aplica a partir de los 5 años.",
+      incorrectos: [
+        "A) Florida Healthy Kids está dirigido a niños de 5 a 18 años — este niño de 3 años aún no califica por edad.",
+        "C) El CMS Plan es para niños con necesidades médicas especiales; el escenario no menciona ninguna condición especial.",
+        "D) El escenario indica explícitamente que el ingreso familiar es demasiado alto para Medicaid tradicional."
+      ]
+    },
+    {
+      nivel: 5,
+      tipo_trampa: "NUMEROS_FECHAS",
+      q: "Según la ley VIGENTE Y ACTUALMENTE IMPLEMENTADA (no la ley aprobada pero aún no ejecutada), ¿hasta qué porcentaje del nivel federal de pobreza (FPL) puede llegar GENERALMENTE el ingreso familiar para que un niño mantenga elegibilidad subsidiada dentro de Florida KidCare?",
+      o: [
+        "100% del FPL",
+        "133% del FPL",
+        "200% del FPL",
+        "300% del FPL"
+      ],
+      a: 2,
+      trampa: "En 2023 la Legislatura de Florida aprobó una ley (HB 121) para expandir el límite de KidCare de 200% a 300% del FPL. Esa expansión NO ha sido implementada (retrasada por litigio administrativo), por lo que el umbral REALMENTE vigente y aplicado sigue siendo 200% del FPL. Es fácil marcar 300% por haber escuchado sobre la ley aprobada sin verificar si ya está en vigor.",
+      correcto: "El umbral GENERAL de ingreso actualmente implementado para elegibilidad subsidiada de KidCare (incluyendo MediKids y Florida Healthy Kids) es 200% del FPL. La expansión a 300% fue aprobada por ley en 2023 pero permanece SIN implementar. [REQUIERE VERIFICACIÓN AL MOMENTO DEL EXAMEN — confirmar contra fuente oficial vigente, ya que este es un tema en desarrollo legislativo/administrativo activo]",
+      incorrectos: [
+        "A) 100% del FPL es aproximadamente el umbral de Medicaid tradicional para ciertos grupos, no el límite general de KidCare.",
+        "B) 133% del FPL se acerca a un umbral parcial de Medicaid para ciertas edades, no el límite general de KidCare.",
+        "D) 300% del FPL corresponde a la expansión APROBADA por ley en 2023, pero que aún NO está implementada en la práctica."
       ]
     }
   ]
