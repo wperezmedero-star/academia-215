@@ -748,6 +748,76 @@ L.push({id:20,title:"L20: Agentes Licenciados — Definiciones y Regulaciones",i
   }
 })();
 
+// KIDCARE_2026_MODULO_1
+// Verificado con Florida KidCare: About Us, FAQs y 2026 Income Guidelines.
+L[0].terms.push(
+  ["Florida KidCare","Nombre paraguas que reúne Medicaid para Niños, MediKids, Florida Healthy Kids y el Children's Medical Services (CMS) Health Plan."],
+  ["MediKids","Componente de Florida KidCare para niños desde 1 año hasta antes de cumplir 5 años (edades 1 a 4)."],
+  ["CMS Health Plan","Componente de Florida KidCare para menores de 19 años con necesidades especiales de atención médica; lo administra el Departamento de Salud de Florida."]
+);
+L[0].questions.push(
+  {
+    q:"¿A qué se refiere el término “Florida KidCare”?",
+    o:[
+      "A un único plan médico estatal para todos los menores",
+      "Al nombre paraguas que agrupa varios programas de cobertura médica para niños",
+      "Exclusivamente al programa Florida Healthy Kids",
+      "A la sección pediátrica de Medicare"
+    ],
+    d:3,
+    a:1,
+    e:"Florida KidCare es el nombre paraguas que reúne cuatro componentes: Medicaid para Niños, MediKids, Florida Healthy Kids y el Children's Medical Services (CMS) Health Plan. No es un programa único."
+  },
+  {
+    q:"¿Para qué rango de edad está diseñado MediKids?",
+    o:[
+      "Desde el nacimiento hasta antes de cumplir 1 año",
+      "Desde 1 año hasta antes de cumplir 5 años",
+      "Desde 5 años hasta antes de cumplir 19 años",
+      "Desde 1 año hasta los 18 años, sin distinción"
+    ],
+    d:3,
+    a:1,
+    e:"MediKids corresponde a edades de 1 a 4 años: desde 1 año hasta antes del quinto cumpleaños. Florida Healthy Kids corresponde generalmente a edades de 5 a 18 años."
+  },
+  {
+    q:"¿Qué componente de Florida KidCare atiende a niños con necesidades especiales de atención médica o condiciones crónicas?",
+    o:[
+      "MediKids Full Pay",
+      "Florida Healthy Kids",
+      "Children's Medical Services (CMS) Health Plan",
+      "Medicare Parte C"
+    ],
+    d:3,
+    a:2,
+    e:"El Children's Medical Services (CMS) Health Plan atiende a menores de 19 años con necesidades especiales de atención médica. Es administrado por el Departamento de Salud de Florida."
+  },
+  {
+    q:"Una familia solicita Florida KidCare para un niño de 3 años. Sus ingresos son demasiado altos para Medicaid, pero cumplen los requisitos del nivel subsidiado de KidCare. ¿A qué componente se encamina normalmente al niño por su edad?",
+    o:[
+      "Florida Healthy Kids",
+      "MediKids",
+      "Medicare",
+      "CMS Health Plan, aunque no tenga necesidades médicas especiales"
+    ],
+    d:3,
+    a:1,
+    e:"Por tener 3 años, el componente apropiado es MediKids. Florida Healthy Kids corresponde a niños desde los 5 años hasta antes de cumplir 19."
+  },
+  {
+    q:"Según la guía oficial de ingresos de Florida KidCare vigente para 2026, ¿hasta qué porcentaje del nivel federal de pobreza (FPL) se muestra actualmente el nivel subsidiado?",
+    o:[
+      "133% del FPL",
+      "200% del FPL",
+      "250% del FPL",
+      "300% del FPL"
+    ],
+    d:3,
+    a:1,
+    e:"La guía oficial de ingresos de 2026 sigue mostrando el nivel subsidiado hasta 200% del FPL. Aunque HB 121 autorizó una expansión hasta 300% sujeta a aprobación e implementación federal, para una pregunta que pida el límite operativo vigente en 2026 la respuesta es 200%."
+  }
+);
+
 let cur=null,Qs=[],qi=0,sc=0,mis=[],ans=false,FC=[],fi=0,fl=false;
 
 function hide(){["home","plan","lesson","quiz","flash","result","stats"].forEach(id=>document.getElementById(id).classList.add("hidden"));}
