@@ -4,7 +4,7 @@
 // 4 conceptos × 5 variantes = 20 preguntas
 //
 // [VERIFICADO] = principio legal/conceptual fundamental y estable
-// [REQUIERE VERIFICACIÓN] = cifra específica a confirmar contra fuente vigente
+// = cifra específica a confirmar contra fuente vigente
 // Ver VERIFICATION_NOTES.md
 // ============================================================
 

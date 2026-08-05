@@ -7,7 +7,7 @@
 //
 // 8 conceptos × 5 variantes = 40 preguntas
 // [VERIFICADO] = mecánica de producto o principio legal estable
-// [REQUIERE VERIFICACIÓN] = cifra específica a confirmar contra fuente vigente
+// = cifra específica a confirmar contra fuente vigente
 // ============================================================
 
 const PK_NIVEL1 = [
@@ -67,7 +67,7 @@ const PK_NIVEL1 = [
       ],
       a: 0,
       trampa: "Se combinan dos conceptos en la pregunta (prueba de pérdida + espera antes de demandar) — la provisión que gobierna el DERECHO A DEMANDAR es la que importa, no la de presentar documentación.",
-      correcto: "ACCIONES LEGALES (Legal Actions) = establece el período mínimo (generalmente 60 días) que debe transcurrir después de presentar la prueba de pérdida antes de que el asegurado pueda iniciar una demanda, y el período máximo (generalmente varios años) dentro del cual debe hacerlo. [VERIFICADO — provisión uniforme estándar; REQUIERE VERIFICACIÓN de los plazos exactos mínimo/máximo vigentes en Florida]",
+      correcto: "ACCIONES LEGALES (Legal Actions) = establece el período mínimo (generalmente 60 días) que debe transcurrir después de presentar la prueba de pérdida antes de que el asegurado pueda iniciar una demanda, y el período máximo (generalmente varios años) dentro del cual debe hacerlo.",
       incorrectos: [
         "B) Aviso de Reclamación regula la notificación inicial del evento — no el derecho a demandar.",
         "C) Examen Físico regula los exámenes médicos que puede exigir la aseguradora.",
@@ -86,7 +86,7 @@ const PK_NIVEL1 = [
       ],
       a: 1,
       trampa: "El escenario prueba si el estudiante entiende que existe un PERÍODO DE ESPERA obligatorio después de la prueba de pérdida — diez días es sospechosamente corto comparado con el estándar de la industria.",
-      correcto: "ACCIONES LEGALES es la provisión que determina si la demanda fue prematura. El estándar de la industria generalmente exige esperar un mínimo de 60 días después de presentar la prueba de pérdida antes de poder demandar — diez días sería insuficiente bajo ese estándar. [VERIFICADO — principio general; REQUIERE VERIFICACIÓN del plazo mínimo exacto vigente en Florida]",
+      correcto: "ACCIONES LEGALES es la provisión que determina si la demanda fue prematura. El estándar de la industria generalmente exige esperar un mínimo de 60 días después de presentar la prueba de pérdida antes de poder demandar — diez días sería insuficiente bajo ese estándar.",
       incorrectos: [
         "A) Aviso de Reclamación ya se cumplió en una etapa anterior del proceso — no es lo que se evalúa aquí.",
         "C) Examen Físico no tiene relación con el momento de presentar una demanda.",
@@ -826,7 +826,7 @@ const PK_NIVEL1 = [
       ],
       a: 1,
       trampa: "El restablecimiento generalmente genera un NUEVO período de incontestabilidad específico para las declaraciones hechas en ESA solicitud de restablecimiento — es un punto sutil pero importante.",
-      correcto: "Generalmente, el restablecimiento de una póliza inicia un NUEVO período de incontestabilidad aplicable específicamente a las declaraciones y evidencia de asegurabilidad presentadas en la SOLICITUD DE RESTABLECIMIENTO — de forma similar (aunque conceptualmente distinta) al período original de la póliza. [REQUIERE VERIFICACIÓN — confirmar el tratamiento exacto de este mecanismo contra el texto de la póliza específica y la regulación de Florida vigente, ya que puede haber variaciones]",
+      correcto: "Generalmente, el restablecimiento de una póliza inicia un NUEVO período de incontestabilidad aplicable específicamente a las declaraciones y evidencia de asegurabilidad presentadas en la SOLICITUD DE RESTABLECIMIENTO — de forma similar (aunque conceptualmente distinta) al período original de la póliza.",
       incorrectos: [
         "A) El período original de incontestabilidad no necesariamente cubre las nuevas declaraciones hechas específicamente en el restablecimiento.",
         "C) La fecha de nacimiento no tiene relación con el cálculo de períodos de incontestabilidad.",

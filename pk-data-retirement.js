@@ -4,7 +4,7 @@
 // 6 conceptos × 5 variantes = 30 preguntas
 //
 // [VERIFICADO] = mecánica de producto o ley federal estable
-// [REQUIERE VERIFICACIÓN] = cifra específica a confirmar contra fuente vigente
+// = cifra específica a confirmar contra fuente vigente
 // Ver VERIFICATION_NOTES.md
 // ============================================================
 
@@ -65,7 +65,7 @@ const PK_RETIREMENT = [
       ],
       a: 2,
       trampa: "La edad de inicio de los RMDs ha cambiado varias veces en años recientes debido a distintas reformas legislativas — el examen puede evaluar la versión más actualizada conocida.",
-      correcto: "El SECURE 2.0 Act (aprobado en 2022) estableció que los RMDs de IRA Tradicional generalmente comienzan a los 73 AÑOS de edad. Anteriormente la edad era 70½ (regla previa a 2019) y luego 72 (bajo el SECURE Act original de 2019). El IRA Roth NO tiene RMDs durante la vida del propietario original. [VERIFICADO al momento del entrenamiento — REQUIERE VERIFICACIÓN de que no haya cambios legislativos posteriores adicionales, ya que la ley establece una futura transición a 75 años en años posteriores]",
+      correcto: "El SECURE 2.0 Act (aprobado en 2022) estableció que los RMDs de IRA Tradicional generalmente comienzan a los 73 AÑOS de edad. Anteriormente la edad era 70½ (regla previa a 2019) y luego 72 (bajo el SECURE Act original de 2019). El IRA Roth NO tiene RMDs durante la vida del propietario original.",
       incorrectos: [
         "A) 70½ años era la regla aplicable antes de la aprobación del SECURE Act de 2019.",
         "B) 72 años fue la edad establecida específicamente bajo el SECURE Act original de 2019, antes del SECURE 2.0.",
@@ -84,7 +84,7 @@ const PK_RETIREMENT = [
       ],
       a: 3,
       trampa: "El límite de contribución anual siendo idéntico para ambos tipos de IRA representa una SIMILITUD entre ellos — no una diferencia.",
-      correcto: "El límite de contribución anual establecido por el IRS ($7,000 base en 2024, $8,000 para mayores de 50 años con catch-up) es EL MISMO para ambos tipos de IRA. Esto representa una IGUALDAD estructural entre los dos productos, no una diferencia. [VERIFICADO — límites establecidos anualmente por el IRS son idénticos para ambos tipos]",
+      correcto: "El límite anual de aportación se comparte entre las IRA Tradicional y Roth; no existe un límite independiente completo para cada una. El monto exacto lo actualiza periódicamente el IRS. Esta es una SIMILITUD estructural, no una diferencia.",
       incorrectos: [
         "A) Esta SÍ es una diferencia real y significativa — deducibilidad del Tradicional versus no deducibilidad del Roth.",
         "B) Esta SÍ es una diferencia real y significativa — presencia de RMDs en el Tradicional versus ausencia en el Roth.",
@@ -158,21 +158,21 @@ const PK_RETIREMENT = [
     },
     {
       nivel: 3,
-      tipo_trampa: "NUMEROS_FECHAS",
-      q: "El límite base de contribución del EMPLEADO a un plan 401(k) para el año 2024 es de aproximadamente $23,000. Los empleados de 50 años o más pueden realizar contribuciones adicionales de 'recuperación' (catch-up contributions) de aproximadamente:",
+      tipo_trampa: "REQUISITO",
+      q: "Ana cumple 50 años en diciembre. Si su plan 401(k) permite catch-up, ¿puede hacer la aportación adicional durante ese año?",
       o: [
-        "$3,000 adicionales sobre el límite base",
-        "$5,000 adicionales sobre el límite base",
-        "$7,500 adicionales sobre el límite base",
-        "$10,000 adicionales sobre el límite base"
+        "No, debe tener 50 años desde el primer día del año",
+        "No, debe esperar hasta el año siguiente",
+        "Sí, porque tendrá 50 años al finalizar el año calendario",
+        "Solo si ya recibe beneficios del Seguro Social"
       ],
       a: 2,
-      trampa: "El monto exacto de contribuciones de recuperación (catch-up) es ajustado periódicamente por el IRS y puede confundirse con otros límites relacionados de diferentes tipos de cuenta.",
-      correcto: "Para el año 2024, la contribución de recuperación (catch-up) para empleados de 50+ años en un 401(k) fue de aproximadamente $7,500 adicionales, resultando en un total combinado de aproximadamente $30,500. [REQUIERE VERIFICACIÓN — estos límites son ajustados anualmente por el IRS; confirmar la cifra exacta vigente al momento del examen contra fuente actualizada del IRS]",
+      trampa: "El catch-up está ligado a la edad y a que el plan permita esa característica; el monto exacto cambia con actualizaciones del IRS.",
+      correcto: "SÍ. Bajo la regla ordinaria, basta con que Ana tenga 50 AÑOS al finalizar el año calendario, siempre que su plan permita las aportaciones de catch-up.",
       incorrectos: [
-        "A) $3,000 no corresponde al monto de catch-up establecido específicamente para el 401(k) en 2024.",
-        "B) $5,000 corresponde más cercanamente al catch-up histórico del IRA — no al del 401(k).",
-        "D) $10,000 excede el monto de catch-up establecido para el 401(k) en el año de referencia."
+        "A) No tiene que haber cumplido 50 años el primer día del año.",
+        "B) No necesita esperar al año siguiente si cumple 50 antes de terminar el actual.",
+        "D) Recibir Seguro Social no es el requisito de elegibilidad para esta aportación."
       ]
     },
     {
@@ -374,7 +374,7 @@ const PK_RETIREMENT = [
       ],
       a: 1,
       trampa: "ERISA establece límites MÁXIMOS específicos para el vesting de contribuciones de match — el empleador puede ofrecer condiciones más favorables, pero no puede imponer períodos más restrictivos que estos máximos.",
-      correcto: "Bajo ERISA, los límites máximos generales establecidos para contribuciones de match son: Cliff máximo de 3 AÑOS (100% después de completar el año 3), o alternativamente Graded máximo de 6 AÑOS (aproximadamente 20% incremental por año, del año 2 al año 6). [REQUIERE VERIFICACIÓN — confirmar estos porcentajes y plazos exactos contra el texto vigente de ERISA y sus reglamentos, ya que pueden existir distinciones adicionales entre distintos tipos de contribución]",
+      correcto: "Bajo ERISA, los límites máximos generales establecidos para contribuciones de match son: Cliff máximo de 3 AÑOS (100% después de completar el año 3), o alternativamente Graded máximo de 6 AÑOS (aproximadamente 20% incremental por año, del año 2 al año 6).",
       incorrectos: [
         "A) 10 años de cliff excedería significativamente el límite máximo permitido bajo ERISA.",
         "C) 5 años de cliff también excedería el límite máximo específico establecido para contribuciones de match.",
@@ -412,7 +412,7 @@ const PK_RETIREMENT = [
       ],
       a: 1,
       trampa: "Las RMDs son obligatorias por ley a partir de cierta edad — no son opcionales incluso si el titular no necesita el dinero para sus gastos actuales.",
-      correcto: "Ana tiene 75 años (mayor a la edad de inicio de RMDs) y está legalmente OBLIGADA a tomar su RMD anual, calculada según su expectativa de vida y el saldo de la cuenta al final del año anterior. La penalidad del IRS por no tomar el RMD requerido es significativa sobre el monto que debió retirarse pero no se retiró. [VERIFICADO — obligación fundamental de RMD bajo el IRC; REQUIERE VERIFICACIÓN del porcentaje exacto de penalidad vigente]",
+      correcto: "Ana tiene 75 años (mayor a la edad de inicio de RMDs) y está legalmente OBLIGADA a tomar su RMD anual, calculada según su expectativa de vida y el saldo de la cuenta al final del año anterior. La penalidad del IRS por no tomar el RMD requerido es significativa sobre el monto que debió retirarse pero no se retiró.",
       incorrectos: [
         "A) NO puede mantener el saldo indefinidamente sin retiro — las RMDs son obligatorias a partir de la edad correspondiente.",
         "C) La conversión a Roth ELIMINARÍA los futuros RMDs, pero la conversión en sí misma es una decisión opcional y genera un evento fiscal — no es automática ni obligatoria.",
@@ -477,7 +477,7 @@ const PK_RETIREMENT = [
       ],
       a: 0,
       trampa: "La permanencia e irreversibilidad de la decisión de jubilación anticipada es el factor más crítico a considerar, dado su impacto de por vida.",
-      correcto: "El factor más importante es que la reducción por jubilación anticipada es PERMANENTE E IRREVERSIBLE. Generalmente el 'punto de equilibrio' entre cobrar antes versus esperar se sitúa alrededor de cierta edad avanzada — si la persona vive más allá de ese punto, esperar resulta financieramente más ventajoso. [VERIFICADO — principio de planificación financiera estable; REQUIERE VERIFICACIÓN del punto de equilibrio exacto, que depende de variables individuales]",
+      correcto: "El factor más importante es que la reducción por jubilación anticipada es PERMANENTE E IRREVERSIBLE. Generalmente el 'punto de equilibrio' entre cobrar antes versus esperar se sitúa alrededor de cierta edad avanzada — si la persona vive más allá de ese punto, esperar resulta financieramente más ventajoso.",
       incorrectos: [
         "B) Las tasas de interés del mercado financiero general no determinan directamente el cálculo del beneficio del Seguro Social.",
         "C) El número de años de contribución ya está incorporado en el cálculo base del beneficio — no es el factor decisivo específico para CUÁNDO comenzar a cobrarlo.",
@@ -515,7 +515,7 @@ const PK_RETIREMENT = [
       ],
       a: 1,
       trampa: "El crédito específico por retraso (Delayed Retirement Credit) es distinto del ajuste general por costo de vida (COLA) — son dos mecanismos completamente diferentes del sistema.",
-      correcto: "CRÉDITO POR RETRASO (Delayed Retirement Credit): el beneficio mensual aumenta aproximadamente un 8% POR CADA AÑO completo de retraso después del FRA, acumulándose hasta la edad de 70 años (después de los 70 no continúa aumentando por este mecanismo específico). Con FRA de 67 y espera hasta 70, serían 3 años adicionales de crédito acumulado. [VERIFICADO — mecánica del Delayed Retirement Credit, estable en su estructura general; REQUIERE VERIFICACIÓN del porcentaje exacto vigente]",
+      correcto: "CRÉDITO POR RETRASO (Delayed Retirement Credit): el beneficio mensual aumenta aproximadamente un 8% POR CADA AÑO completo de retraso después del FRA, acumulándose hasta la edad de 70 años (después de los 70 no continúa aumentando por este mecanismo específico). Con FRA de 67 y espera hasta 70, serían 3 años adicionales de crédito acumulado.",
       incorrectos: [
         "A) SÍ existe un beneficio financiero estructural significativo por esperar — el crédito por retraso acumulado.",
         "C) El 3% corresponde más bien al ajuste general anual por costo de vida (COLA) — un mecanismo completamente distinto al crédito por retraso.",
@@ -580,7 +580,7 @@ const PK_RETIREMENT = [
       ],
       a: 2,
       trampa: "El Seguro Social SÍ tiene un tope salarial anual ajustable — a diferencia de Medicare, que NO tiene ningún tope. Esta es una diferencia estructural clave frecuentemente evaluada.",
-      correcto: "El SEGURO SOCIAL sí tiene un TOPE SALARIAL ANUAL (Social Security Wage Base) que la Administración del Seguro Social ajusta periódicamente cada año. Una vez que los ingresos de un trabajador superan ese tope específico en un año dado, ya no se retienen contribuciones adicionales de Seguro Social para el resto de ese año fiscal. MEDICARE, en contraste, NO tiene ningún tope — aplica sobre la totalidad de los ingresos. [VERIFICADO — existencia estructural del tope es estable; REQUIERE VERIFICACIÓN del monto exacto vigente, ya que se ajusta anualmente]",
+      correcto: "El SEGURO SOCIAL sí tiene un TOPE SALARIAL ANUAL (Social Security Wage Base) que la Administración del Seguro Social ajusta periódicamente cada año. Una vez que los ingresos de un trabajador superan ese tope específico en un año dado, ya no se retienen contribuciones adicionales de Seguro Social para el resto de ese año fiscal. MEDICARE, en contraste, NO tiene ningún tope — aplica sobre la totalidad de los ingresos.",
       incorrectos: [
         "A) El Seguro Social SÍ tiene un tope salarial — esta afirmación es incorrecta respecto a la estructura real del sistema.",
         "B) $50,000 no corresponde al tope real vigente — el tope real es considerablemente más alto y se ajusta anualmente.",
@@ -618,7 +618,7 @@ const PK_RETIREMENT = [
       ],
       a: 1,
       trampa: "El sistema del Seguro Social generalmente realiza automáticamente el cálculo comparativo entre ambas opciones disponibles y otorga el monto mayor resultante — sin que la persona deba elegir manualmente.",
-      correcto: "El Seguro Social generalmente compara automáticamente: 1) El beneficio propio de Ana basado en sus 15 años de contribución personal, versus 2) El beneficio de cónyuge (un porcentaje del beneficio del esposo calculado al FRA de él). El sistema otorga generalmente el MAYOR de los dos montos calculados — el cálculo es automático, sin necesidad de elección manual explícita. [VERIFICADO — mecánica general del sistema de beneficios de cónyuge del Seguro Social; REQUIERE VERIFICACIÓN del porcentaje exacto aplicable al beneficio de cónyuge]",
+      correcto: "El Seguro Social generalmente compara automáticamente: 1) El beneficio propio de Ana basado en sus 15 años de contribución personal, versus 2) El beneficio de cónyuge (un porcentaje del beneficio del esposo calculado al FRA de él). El sistema otorga generalmente el MAYOR de los dos montos calculados — el cálculo es automático, sin necesidad de elección manual explícita.",
       incorrectos: [
         "A) No siempre resulta superior el beneficio propio — con solo 15 años de contribución, el beneficio de cónyuge calculado podría exceder al propio.",
         "C) El beneficio de cónyuge está disponible incluso si la persona trabajó formalmente — no está restringido únicamente a quienes nunca trabajaron.",

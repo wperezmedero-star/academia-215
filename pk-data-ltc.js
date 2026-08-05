@@ -4,7 +4,7 @@
 // 4 conceptos × 5 variantes = 20 preguntas
 //
 // [VERIFICADO] = mecánica de producto o ley estable
-// [REQUIERE VERIFICACIÓN] = cifra específica a confirmar contra fuente vigente
+// = cifra específica a confirmar contra fuente vigente
 // Ver VERIFICATION_NOTES.md
 // ============================================================
 
@@ -149,7 +149,7 @@ const PK_LTC = [
       ],
       a: 1,
       trampa: "El extenso período de tiempo entre la compra típica del LTC y su eventual utilización efectiva es la razón fundamental de la importancia de esta característica.",
-      correcto: "La Protección Contra Inflación se considera generalmente crucial porque el LTC frecuentemente se adquiere alrededor de los 55 años pero puede no utilizarse hasta décadas después. Los costos reales de cuidado a largo plazo históricamente han mostrado incrementos sustanciales y consistentes a lo largo del tiempo. Sin esta protección, un beneficio nominal fijo contratado hoy podría resultar significativamente insuficiente en el futuro. [VERIFICADO — principio fundamental de diseño de producto ampliamente reconocido; REQUIERE VERIFICACIÓN de porcentajes específicos de incremento histórico si se necesita precisión numérica exacta]",
+      correcto: "La Protección Contra Inflación se considera generalmente crucial porque el LTC frecuentemente se adquiere alrededor de los 55 años pero puede no utilizarse hasta décadas después. Los costos reales de cuidado a largo plazo históricamente han mostrado incrementos sustanciales y consistentes a lo largo del tiempo. Sin esta protección, un beneficio nominal fijo contratado hoy podría resultar significativamente insuficiente en el futuro.",
       incorrectos: [
         "A) La inflación en costos de cuidado a largo plazo es generalmente un fenómeno real y consistentemente documentado en la industria.",
         "C) La inflación afecta directamente los COSTOS REALES DE CUIDADO — no exclusivamente el costo de las primas del contrato.",

@@ -9,7 +9,7 @@
 //
 // 8 conceptos × 5 variantes = 40 preguntas
 // [VERIFICADO] = confirmado contra fuente oficial/estatuto
-// [REQUIERE VERIFICACIÓN] = confirmar contra material del curso
+// = confirmar contra material del curso
 // ============================================================
 
 const PK_REFUERZO = [
@@ -262,7 +262,7 @@ const PK_REFUERZO = [
       q: "Empareja correctamente: Conversión de vida de grupo / COBRA / Free look de vida / Período de gracia de vida",
       o: [
         "Conversión 60 / COBRA 31 / Free look 31 / Gracia 10",
-        "Conversión 31 / COBRA 60 / Free look 14 / Gracia 31",
+        "Conversión 31 / COBRA 60 / Free look 14 / Gracia: un mes, nunca menos de 30 días",
         "Conversión 10 / COBRA 31 / Free look 60 / Gracia 31",
         "Todos duran 30 días"
       ],
@@ -695,7 +695,7 @@ const PK_REFUERZO = [
       o: ["15 años", "18 años", "21 años", "No hay mínimo"],
       a: 0,
       trampa: "La edad mínima para firmar (15) es menor que la mayoría de edad general (18), lo cual es contraintuitivo.",
-      correcto: "La edad mínima para firmar una solicitud de seguro de vida es generalmente 15 años — menor que la mayoría de edad general de 18. [REQUIERE VERIFICACIÓN — confirmar contra el estatuto de Florida vigente aplicable a menores]",
+      correcto: "La edad mínima para firmar una solicitud de seguro de vida es generalmente 15 años — menor que la mayoría de edad general de 18.",
       incorrectos: [
         "B) 18 años es la mayoría de edad general, pero no necesariamente la edad mínima específica para esta transacción.",
         "C) 21 años excede el umbral relevante.",
@@ -733,7 +733,7 @@ const PK_REFUERZO = [
       ],
       a: 1,
       trampa: "Aunque parece razonable exigir un diploma de secundaria, muchas jurisdicciones no lo requieren formalmente — la educación pre-licencia específica sustituye ese requisito.",
-      correcto: "Generalmente NO se exige formalmente el diploma de escuela secundaria para el licenciamiento de seguros — el enfoque regulatorio está en completar la educación PRE-LICENCIA del sector y aprobar el examen estatal. [REQUIERE VERIFICACIÓN — confirmar contra los requisitos exactos vigentes del DFS de Florida]",
+      correcto: "Generalmente NO se exige formalmente el diploma de escuela secundaria para el licenciamiento de seguros — el enfoque regulatorio está en completar la educación PRE-LICENCIA del sector y aprobar el examen estatal.",
       incorrectos: [
         "A) Generalmente NO se exige formalmente el diploma de secundaria como prerrequisito específico.",
         "C) No hay tal distinción por línea de seguro para este requisito.",
