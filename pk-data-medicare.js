@@ -4,7 +4,7 @@
 // 5 conceptos × 5 variantes = 25 preguntas
 //
 // [VERIFICADO] = mecánica de producto o ley federal estable
-// [REQUIERE VERIFICACIÓN] = cifra específica a confirmar contra fuente vigente
+// = cifra específica a confirmar contra fuente vigente
 // Ver VERIFICATION_NOTES.md
 // ============================================================
 
@@ -84,7 +84,7 @@ const PK_MEDICARE = [
       ],
       a: 1,
       trampa: "La regla de coordinación de quién paga primero depende estructuralmente del TAMAÑO del empleador — no simplemente del hecho de tener 65 años o más.",
-      correcto: "Bajo las reglas generales de Medicare Secondary Payer: si el empleador tiene un número de empleados igual o superior a cierto umbral establecido (generalmente 20 o más), el plan del empleador generalmente paga PRIMERO y Medicare actúa como pagador SECUNDARIO. Con 25 empleados (superando ese umbral general), el plan del empleador generalmente paga primero. [VERIFICADO — principio estructural de coordinación estable; REQUIERE VERIFICACIÓN del umbral numérico exacto vigente]",
+      correcto: "Bajo las reglas generales de Medicare Secondary Payer: si el empleador tiene un número de empleados igual o superior a cierto umbral establecido (generalmente 20 o más), el plan del empleador generalmente paga PRIMERO y Medicare actúa como pagador SECUNDARIO. Con 25 empleados (superando ese umbral general), el plan del empleador generalmente paga primero.",
       incorrectos: [
         "A) Medicare NO siempre paga primero para personas de 65+ — la regla depende estructuralmente del tamaño del empleador.",
         "C) Con un número de empleados que supera el umbral general establecido, es el plan del empleador el que generalmente paga primero, no Medicare.",
@@ -103,7 +103,7 @@ const PK_MEDICARE = [
       ],
       a: 1,
       trampa: "La penalidad de inscripción tardía de la Parte D es generalmente permanente y se calcula específicamente en función del tiempo transcurrido sin cobertura acreditable equivalente.",
-      correcto: "Medicare generalmente impone una penalidad de inscripción tardía a la Parte D cuando una persona no se inscribe durante su período de elegibilidad inicial y carece de cobertura acreditable equivalente durante ese tiempo. Esta penalidad generalmente se aplica de forma permanente a la prima mensual mientras la persona mantenga cobertura de Parte D. [REQUIERE VERIFICACIÓN — confirmar el método exacto de cálculo de la penalidad vigente contra la estructura actualizada de Medicare]",
+      correcto: "Medicare generalmente impone una penalidad de inscripción tardía a la Parte D cuando una persona no se inscribe durante su período de elegibilidad inicial y carece de cobertura acreditable equivalente durante ese tiempo. Esta penalidad generalmente se aplica de forma permanente a la prima mensual mientras la persona mantenga cobertura de Parte D.",
       incorrectos: [
         "A) Generalmente SÍ existe una penalidad aplicable por inscripción tardía sin cobertura acreditable previa — no es una decisión libre de consecuencias.",
         "C) Puede inscribirse durante períodos de inscripción abierta, pero la penalidad acumulada generalmente continúa aplicando de todas formas.",
@@ -271,7 +271,7 @@ const PK_MEDICARE = [
       ],
       a: 2,
       trampa: "El período de inscripción abierta garantizada de Medigap es generalmente de 6 meses — un plazo distinto a otros períodos regulatorios relacionados con Medicare.",
-      correcto: "El Período de Inscripción Abierta de Medigap generalmente dura 6 MESES, comenzando el mes en que la persona cumple 65 años Y está simultáneamente inscrita en la Parte B. Durante este período, las aseguradoras generalmente NO pueden rechazar la solicitud ni cobrar primas más altas por condiciones preexistentes. [REQUIERE VERIFICACIÓN — confirmar este plazo exacto vigente contra la regulación federal actualizada]",
+      correcto: "El Período de Inscripción Abierta de Medigap generalmente dura 6 MESES, comenzando el mes en que la persona cumple 65 años Y está simultáneamente inscrita en la Parte B. Durante este período, las aseguradoras generalmente NO pueden rechazar la solicitud ni cobrar primas más altas por condiciones preexistentes.",
       incorrectos: [
         "A) 30 días resultaría insuficiente respecto al período generalmente establecido para esta protección.",
         "B) 60 días tampoco corresponde generalmente al período correcto establecido para esta protección específica.",

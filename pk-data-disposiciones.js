@@ -8,7 +8,7 @@
 //
 // 7 conceptos × 5 variantes = 35 preguntas
 // [VERIFICADO] = mecánica de producto estable
-// [REQUIERE VERIFICACIÓN] = cifra específica a confirmar
+// = cifra específica a confirmar
 // ============================================================
 
 const PK_DISPOSICIONES = [
@@ -508,7 +508,7 @@ const PK_DISPOSICIONES = [
       ],
       a: 1,
       trampa: "Los riders de muerte accidental tienen límites típicos: plazo entre accidente y muerte, edad tope, y exclusiones (guerra, aviación privada, actividades peligrosas).",
-      correcto: "Limitaciones típicas del rider de muerte accidental: la muerte debe ocurrir dentro de cierto plazo tras el accidente (frecuentemente 90 días), antes de cierta edad tope, y se excluyen ciertas causas (guerra, suicidio, aviación privada, actividades peligrosas). [REQUIERE VERIFICACIÓN — confirmar los plazos y exclusiones exactas contra el material del curso]",
+      correcto: "Limitaciones típicas del rider de muerte accidental: la muerte debe ocurrir dentro de cierto plazo tras el accidente (frecuentemente 90 días), antes de cierta edad tope, y se excluyen ciertas causas (guerra, suicidio, aviación privada, actividades peligrosas).",
       incorrectos: [
         "A) SÍ hay límites de edad típicamente.",
         "C) SÍ tiene limitaciones (plazo, edad, exclusiones).",
@@ -573,7 +573,7 @@ const PK_DISPOSICIONES = [
       ],
       a: 1,
       trampa: "Las opciones están predefinidas en edades regulares o eventos calificantes — se confunde con una sola oportunidad o disponibilidad ilimitada.",
-      correcto: "Las opciones para ejercer el rider típicamente ocurren en EDADES específicas predeterminadas (frecuentemente cada 3 años: 25, 28, 31, 34, 37, 40) y/o en EVENTOS DE VIDA como matrimonio o el nacimiento de un hijo. [REQUIERE VERIFICACIÓN — confirmar las edades exactas contra el material del curso]",
+      correcto: "Las opciones para ejercer el rider típicamente ocurren en EDADES específicas predeterminadas (frecuentemente cada 3 años: 25, 28, 31, 34, 37, 40) y/o en EVENTOS DE VIDA como matrimonio o el nacimiento de un hijo.",
       incorrectos: [
         "A) No es solo el día del fallecimiento — son opciones en vida.",
         "C) No es solo una vez — hay múltiples opciones a lo largo del tiempo.",

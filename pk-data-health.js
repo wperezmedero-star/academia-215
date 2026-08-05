@@ -4,7 +4,7 @@
 // 6 conceptos × 5 variantes = 30 preguntas
 //
 // [VERIFICADO] = mecánica de producto estable o ley federal estable
-// [REQUIERE VERIFICACIÓN] = cifra específica a confirmar contra fuente vigente
+// = cifra específica a confirmar contra fuente vigente
 // Ver VERIFICATION_NOTES.md
 // ============================================================
 
@@ -290,7 +290,7 @@ const PK_HEALTH = [
       ],
       a: 1,
       trampa: "Los beneficios de discapacidad están intencionalmente diseñados para NO reemplazar el 100% del salario — este diseño busca preservar el incentivo de regresar al trabajo cuando sea médicamente posible.",
-      correcto: "Los seguros de discapacidad de grupo TÍPICAMENTE reemplazan entre 60% y 70% del salario previo. El porcentaje intencionalmente menor al 100% busca preservar el INCENTIVO ECONÓMICO de regresar al trabajo cuando la recuperación lo permita. [VERIFICADO — práctica estándar de diseño de producto, aunque el rango exacto puede variar por plan — REQUIERE VERIFICACIÓN del porcentaje específico contra el manual si se necesita precisión exacta]",
+      correcto: "Los seguros de discapacidad de grupo TÍPICAMENTE reemplazan entre 60% y 70% del salario previo. El porcentaje intencionalmente menor al 100% busca preservar el INCENTIVO ECONÓMICO de regresar al trabajo cuando la recuperación lo permita.",
       incorrectos: [
         "A) Reemplazar el 100% eliminaría el incentivo económico de regresar al trabajo — no es el diseño estándar.",
         "C) El rango de 40-50% sería insuficiente para cubrir gastos básicos en la mayoría de los casos prácticos.",
@@ -477,7 +477,7 @@ const PK_HEALTH = [
       ],
       a: 1,
       trampa: "El tiempo transcurrido entre la compra y el eventual uso del LTC puede extenderse por décadas — período durante el cual los costos reales de cuidado aumentan sustancialmente.",
-      correcto: "La protección contra inflación es crucial porque el LTC frecuentemente se compra alrededor de los 55 años pero puede no utilizarse hasta los 80. Los costos de cuidado a largo plazo históricamente han aumentado consistentemente año tras año. Sin esta protección, un beneficio nominal fijo de hoy podría resultar insuficiente en el futuro. [VERIFICADO — principio fundamental de diseño de producto LTC. El porcentaje exacto histórico de incremento anual REQUIERE VERIFICACIÓN contra fuentes actualizadas]",
+      correcto: "La protección contra inflación es crucial porque el LTC frecuentemente se compra alrededor de los 55 años pero puede no utilizarse hasta los 80. Los costos de cuidado a largo plazo históricamente han aumentado consistentemente año tras año. Sin esta protección, un beneficio nominal fijo de hoy podría resultar insuficiente en el futuro.",
       incorrectos: [
         "A) La inflación en costos médicos y de cuidado a largo plazo es un fenómeno real y consistentemente documentado.",
         "C) La inflación afecta directamente los COSTOS DE CUIDADO reales — no únicamente el costo de las primas.",
@@ -515,7 +515,7 @@ const PK_HEALTH = [
       ],
       a: 1,
       trampa: "Medicare tiene límites estrictos y específicos de días para el cuidado en nursing homes — definitivamente no es una cobertura ilimitada ni indefinida.",
-      correcto: "Medicare Parte A puede cubrir cuidado especializado en nursing home bajo condiciones específicas: cobertura completa los primeros días, copago significativo por día en un rango intermedio, y CERO cobertura después de alcanzar el límite total de días del beneficio — únicamente tras una hospitalización calificante previa de al menos algunos días consecutivos. [REQUIERE VERIFICACIÓN — los números exactos de días y montos de copago deben confirmarse contra la estructura de Medicare vigente al momento del examen, ya que estos valores se ajustan periódicamente]",
+      correcto: "Medicare Parte A puede cubrir cuidado especializado en nursing home bajo condiciones específicas: cobertura completa los primeros días, copago significativo por día en un rango intermedio, y CERO cobertura después de alcanzar el límite total de días del beneficio — únicamente tras una hospitalización calificante previa de al menos algunos días consecutivos.",
       incorrectos: [
         "A) Medicare definitivamente NO cubre de forma ilimitada el nursing home — tiene límites muy específicos y estrictos.",
         "C) El 50% durante todo el primer año no describe correctamente la estructura real de copagos escalonados de Medicare.",

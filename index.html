@@ -744,6 +744,26 @@ L.push({id:20,title:"L20: Agentes Licenciados — Definiciones y Regulaciones",i
       q.a=1;
       q.e="El DFS establece 24 horas por ciclo para 2-15: 4 horas de actualización de Ley y Ética 5-215 y 20 electivas, sujeto a reducciones autorizadas.";
     });
+    const fixControlled=t=>t
+      .replace(/no más del 25-50% del negocio del agente/g,"no puede exceder el negocio similar producido para terceros; en términos prácticos, el negocio controlado no puede ser más del 50%")
+      .replace(/generalmente al 25-50%/g,"de modo que no exceda el negocio similar producido para terceros")
+      .replace(/Limitado al 25-50%\./g,"No puede exceder el negocio similar producido para terceros (máximo práctico de 50%).");
+    licencias.deep=licencias.deep.map(fixControlled);
+    licencias.memory=licencias.memory.map(fixControlled);
+    licencias.terms=licencias.terms.map(t=>[t[0],fixControlled(t[1])]);
+    licencias.examples=licencias.examples.map(x=>({
+      ...x,
+      p:x.t.includes("Controlled Business")
+        ? "Rosa produce 60% de su negocio sobre sí misma y su familia. El negocio similar para terceros es solo 40%, por lo que el controlado lo excede. Florida exige que el negocio similar para terceros sea por lo menos igual al controlado; este caso puede causar disciplina."
+        : x.p
+    }));
+    licencias.questions.forEach(q=>{
+      if(q.q.includes("60% de sus pólizas")){
+        q.e="Es negocio controlado y el 60% excede el negocio similar producido para terceros (40%). Florida exige que el negocio para terceros sea por lo menos igual al controlado; por eso puede resultar en disciplina.";
+      }else{
+        q.e=fixControlled(q.e);
+      }
+    });
   }
 })();
 

@@ -68,7 +68,7 @@ validate(academia, "Academia");
 
 const pearsonKeys = pearson.map((question) => normalize(question.q));
 const uniquePearson = new Set(pearsonKeys);
-if (pearson.length < 1000) failures.push(`Pearson tiene ${pearson.length} preguntas; se requieren al menos 1000`);
+if (pearson.length !== 1111) failures.push(`Pearson tiene ${pearson.length} preguntas; se esperan exactamente 1111`);
 if (uniquePearson.size !== pearson.length) {
   failures.push(`Pearson conserva ${pearson.length - uniquePearson.size} preguntas duplicadas`);
 }
@@ -91,6 +91,39 @@ for (const question of ceQuestions) {
   if (/5\s+horas?\s+de\s+[eé]tica|5\s+de\s+[eé]tica/i.test(correct)) {
     failures.push(`Regla antigua de CE marcada como correcta: ${question.q}`);
   }
+}
+
+const pearsonText = pearson.map((question) => [
+  question.q,
+  ...(question.o || []),
+  question.e,
+  question.correcto,
+  question.trampa,
+  ...(question.incorrectos || []),
+].filter(Boolean).join(" ")).join("\n");
+if (/REQUIERE VERIFICACI[ÓO]N|POR VERIFICAR|CONFIRMAR CONTRA/i.test(pearsonText)) {
+  failures.push("El banco Pearson expone notas internas de verificación");
+}
+if (/fraude material[^\n]{0,180}(?:despu[eé]s|incluso)[^\n]{0,80}incontestabilidad/i.test(pearsonText)) {
+  failures.push("El banco conserva una excepción general de fraude posterior a la incontestabilidad de Florida");
+}
+if (/\b2024\b/.test(pearsonText)) {
+  failures.push("El banco conserva cifras o preguntas ancladas al año 2024");
+}
+
+const academiaText = context.__ACADEMIA_L__.map((lesson) => JSON.stringify(lesson)).join("\n");
+for (const stale of [
+  /licencia se emite por 2 a[nñ]os/i,
+  /renovaci[oó]n\s*=\s*cada 2 a[nñ]os/i,
+  /24 horas[^\n]{0,80}5 horas de [eé]tica/i,
+  /controlled business[^\n]{0,160}25-50%/i,
+]) {
+  if (stale.test(academiaText)) failures.push(`Academia conserva una regla obsoleta: ${stale}`);
+}
+
+const variableLicense = pearson.find((question) => /alcance de la licencia Florida 2-15 respecto de productos variables/i.test(question.q));
+if (!variableLicense || !/registro de valores/i.test(variableLicense.o[variableLicense.a])) {
+  failures.push("La pregunta 2-15 sobre productos variables no exige el registro de valores adicional");
 }
 
 // Ejecuta la implementación real de rotación del simulacro contra todo el

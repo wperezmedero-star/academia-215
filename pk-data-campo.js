@@ -8,7 +8,7 @@
 //
 // 7 conceptos × 5 variantes = 35 preguntas
 // [VERIFICADO] = principio estable
-// [REQUIERE VERIFICACIÓN] = confirmar contra material del curso
+// = confirmar contra material del curso
 // ============================================================
 
 const PK_CAMPO = [
@@ -274,7 +274,7 @@ const PK_CAMPO = [
       ],
       a: 1,
       trampa: "El fraude requiere INTENCIÓN de engañar — una tergiversación no intencional (error honesto) no es fraude, aunque pueda tener otras consecuencias.",
-      correcto: "El FRAUDE se distingue por la INTENCIÓN DELIBERADA de engañar para obtener un beneficio indebido. Una tergiversación no intencional (un error honesto) carece de esa intención dolosa. El fraude tiene consecuencias más graves y, a diferencia de errores honestos, puede permitir anular la póliza incluso después del período de incontestabilidad. [VERIFICADO — elemento distintivo del fraude]",
+      correcto: "El FRAUDE se distingue por la INTENCIÓN DELIBERADA de engañar para obtener un beneficio indebido. Una tergiversación no intencional (un error honesto) carece de esa intención dolosa. En una póliza individual de vida de Florida, las consecuencias también dependen del período de incontestabilidad y de las excepciones expresamente permitidas por la ley.",
       incorrectos: [
         "A) El monto de la prima no distingue el fraude.",
         "C) El tipo de póliza no distingue el fraude.",
@@ -284,20 +284,20 @@ const PK_CAMPO = [
     {
       nivel: 5,
       tipo_trampa: "EXCEPCION_LEGAL",
-      q: "El período de incontestabilidad generalmente impide a la aseguradora impugnar la póliza después de 2 años. ¿Cuál es la excepción importante?",
+      q: "En una póliza individual de vida de Florida, después del período de incontestabilidad de 2 años, ¿qué excepción permite expresamente la ley?",
       o: [
         "Errores de edad",
-        "FRAUDE material (en muchas jurisdicciones, el fraude deliberado puede permitir impugnar incluso después del período)",
+        "Fraude material, aunque la cláusula legal no lo mencione como excepción general",
         "Cambios de dirección",
-        "Pago tardío de primas"
+        "Falta de pago de las primas"
       ],
-      a: 1,
-      trampa: "El fraude deliberado es la excepción clave a la protección de incontestabilidad — a diferencia de errores honestos, el fraude material puede perseguirse incluso después de 2 años en muchas jurisdicciones.",
-      correcto: "El FRAUDE MATERIAL deliberado es la excepción importante — en muchas jurisdicciones, la aseguradora puede impugnar una póliza por fraude intencional incluso DESPUÉS del período de incontestabilidad de 2 años. La incontestabilidad protege errores honestos, no el fraude deliberado. [REQUIERE VERIFICACIÓN — el tratamiento exacto del fraude tras la incontestabilidad varía por jurisdicción; confirmar contra el material de Florida]",
+      a: 3,
+      trampa: "No importes una regla general de otra jurisdicción: la cláusula de Florida exceptúa expresamente la falta de pago de primas y puede exceptuar ciertas disposiciones adicionales específicas.",
+      correcto: "La FALTA DE PAGO DE PRIMAS es una excepción expresa. La ley de Florida exige que la póliza sea incontestable después de 2 años durante la vida del asegurado, salvo por falta de pago y, si la póliza lo dispone, ciertas coberturas adicionales de incapacidad o muerte accidental.",
       incorrectos: [
-        "A) Los errores de edad se ajustan matemáticamente, no son una excepción de impugnación por fraude.",
-        "C) Los cambios de dirección no se relacionan con la incontestabilidad.",
-        "D) El pago tardío de primas no se relaciona con la incontestabilidad."
+        "A) Un error de edad normalmente ajusta el beneficio; no es la excepción general solicitada.",
+        "B) Florida no establece una excepción general de fraude en esta cláusula de incontestabilidad.",
+        "C) Un cambio de dirección no es una excepción a la incontestabilidad."
       ]
     },
     {
@@ -312,7 +312,7 @@ const PK_CAMPO = [
       ],
       a: 1,
       trampa: "Ocultar deliberadamente una enfermedad grave diagnosticada, cuando se preguntó explícitamente, es ocultación material y posible fraude — no un error honesto.",
-      correcto: "Esto constituye OCULTACIÓN DELIBERADA de información material (y posible FRAUDE, dada la intención de engañar). Como el solicitante SABÍA del diagnóstico y la pregunta lo requería explícitamente, la aseguradora podría anular la póliza — potencialmente incluso después del período de incontestabilidad si se prueba el fraude. [VERIFICADO — aplicación a un escenario de ocultación material]",
+      correcto: "Esto constituye OCULTACIÓN DELIBERADA de información material y puede constituir fraude. Puede dar base para rescindir o impugnar la póliza dentro del período contestable; después de ese período deben aplicarse la cláusula de incontestabilidad y las excepciones específicas de la ley de Florida.",
       incorrectos: [
         "A) NO es un error honesto — hubo conocimiento e intención deliberada de omitir.",
         "C) No es una representación válida — es una omisión material deliberada.",

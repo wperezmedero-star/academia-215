@@ -7,7 +7,7 @@
 //
 // 7 conceptos × 5 variantes = 35 preguntas
 // [VERIFICADO] = mecánica de producto estable
-// [REQUIERE VERIFICACIÓN] = cifra específica a confirmar contra fuente vigente
+// = cifra específica a confirmar contra fuente vigente
 // ============================================================
 
 const PK_NIVEL4 = [
@@ -67,7 +67,7 @@ const PK_NIVEL4 = [
       ],
       a: 1,
       trampa: "Ambos productos ofrecen flexibilidad, pero el MECANISMO y la FRECUENCIA de los ajustes difieren — uno tiende a requerir solicitudes más formales por cambio, el otro opera con mayor fluidez continua.",
-      correcto: "Generalmente, la Vida Ajustable requiere que el asegurado SOLICITE formalmente cada cambio específico (como aumentar el beneficio o cambiar el balance término/permanente) para su procesamiento por la aseguradora, mientras la Vida Universal generalmente ofrece mayor flexibilidad CONTINUA y automática (como ajustar el monto de prima mes a mes) dentro de parámetros preestablecidos, sin requerir una solicitud formal separada para cada ajuste menor. [REQUIERE VERIFICACIÓN — esta distinción puede variar según el diseño específico de cada producto y compañía]",
+      correcto: "Generalmente, la Vida Ajustable requiere que el asegurado SOLICITE formalmente cada cambio específico (como aumentar el beneficio o cambiar el balance término/permanente) para su procesamiento por la aseguradora, mientras la Vida Universal generalmente ofrece mayor flexibilidad CONTINUA y automática (como ajustar el monto de prima mes a mes) dentro de parámetros preestablecidos, sin requerir una solicitud formal separada para cada ajuste menor.",
       incorrectos: [
         "A) NO son idénticos — tienen mecanismos y grados de flexibilidad diferentes en su diseño típico.",
         "C) La Vida Universal SÍ permite ajustes continuos — esa es precisamente su característica definitoria principal.",
@@ -311,7 +311,7 @@ const PK_NIVEL4 = [
       ],
       a: 2,
       trampa: "Se confunde con el BENEFICIO decreciente característico del producto (el monto de cobertura disminuye conforme se paga la hipoteca) — pero la PRIMA misma generalmente permanece NIVELADA (constante), aunque el beneficio de muerte disminuya.",
-      correcto: "Las pólizas de Protección Hipotecaria generalmente tienen PRIMA NIVELADA (constante durante toda la vigencia), AUNQUE el BENEFICIO DE MUERTE sea decreciente (disminuyendo conforme el saldo de la hipoteca disminuye con el tiempo) — es importante distinguir que lo que decrece es el beneficio, no necesariamente la prima que el asegurado paga. [REQUIERE VERIFICACIÓN — este diseño puede variar según el producto específico ofrecido por diferentes aseguradoras; algunos diseños de mercado pueden estructurar primas decrecientes también]",
+      correcto: "Las pólizas de Protección Hipotecaria generalmente tienen PRIMA NIVELADA (constante durante toda la vigencia), AUNQUE el BENEFICIO DE MUERTE sea decreciente (disminuyendo conforme el saldo de la hipoteca disminuye con el tiempo) — es importante distinguir que lo que decrece es el beneficio, no necesariamente la prima que el asegurado paga.",
       incorrectos: [
         "A) Prima Modificada tiene un patrón específico de dos niveles (bajo luego alto) — no es la estructura típica de Protección Hipotecaria.",
         "B) Prima Flexible es característica del Universal Life con control activo del asegurado — no es la estructura típica de este producto especializado.",
@@ -620,7 +620,7 @@ const PK_NIVEL4 = [
       ],
       a: 1,
       trampa: "Es fácil sobre-simplificar hacia un extremo (sin consecuencia) o el otro (delito de máxima gravedad automático) — la realidad regulatoria generalmente involucra consecuencias significativas pero con gradación según las circunstancias específicas, no necesariamente la clasificación penal más severa en todos los casos.",
-      correcto: "Contratar con un asegurador NO AUTORIZADO para seguros regulares generalmente conlleva consecuencias regulatorias significativas (multas, sanciones a la licencia del agente facilitador, responsabilidad civil), aunque la clasificación penal específica (como si constituye o no un delito de primer grado) depende de las circunstancias particulares del caso — no es automáticamente la clasificación penal de mayor gravedad en todos los casos bajo cualquier circunstancia. [REQUIERE VERIFICACIÓN — confirmar la clasificación penal específica exacta contra el Florida Statute vigente aplicable a este tipo de violación]",
+      correcto: "Contratar con un asegurador NO AUTORIZADO para seguros regulares generalmente conlleva consecuencias regulatorias significativas (multas, sanciones a la licencia del agente facilitador, responsabilidad civil), aunque la clasificación penal específica (como si constituye o no un delito de primer grado) depende de las circunstancias particulares del caso — no es automáticamente la clasificación penal de mayor gravedad en todos los casos bajo cualquier circunstancia.",
       incorrectos: [
         "A) SÍ existen consecuencias regulatorias significativas — no es una práctica sin restricciones.",
         "C) No es automáticamente la clasificación penal de mayor gravedad sin ninguna gradación — las consecuencias específicas dependen de las circunstancias del caso particular.",

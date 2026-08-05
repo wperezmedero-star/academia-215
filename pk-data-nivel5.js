@@ -7,7 +7,7 @@
 //
 // 7 conceptos × 5 variantes = 35 preguntas
 // [VERIFICADO] = principio legal o mecánica estable
-// [REQUIERE VERIFICACIÓN] = cifra específica a confirmar contra fuente vigente
+// = cifra específica a confirmar contra fuente vigente
 // ============================================================
 
 const PK_NIVEL5 = [
@@ -29,7 +29,7 @@ const PK_NIVEL5 = [
       ],
       a: 1,
       trampa: "Se confunde con la necesidad de una licencia completamente nueva — en realidad, el mecanismo correcto es registrar el nombre comercial (DBA) asociado a la licencia YA EXISTENTE, no obtener una licencia adicional separada.",
-      correcto: "DBA (Doing Business As) = registro del nombre comercial bajo el cual el agente opera, diferente de su nombre legal personal. Este registro debe generalmente presentarse ante las autoridades correspondientes (a menudo tanto a nivel estatal/condado como ante el regulador de seguros) para operar legalmente bajo ese nombre comercial. [REQUIERE VERIFICACIÓN — confirmar el proceso exacto de registro de DBA aplicable a agentes de seguros en Florida contra la regulación vigente del DFS]",
+      correcto: "DBA (Doing Business As) = registro del nombre comercial bajo el cual el agente opera, diferente de su nombre legal personal. Este registro debe generalmente presentarse ante las autoridades correspondientes (a menudo tanto a nivel estatal/condado como ante el regulador de seguros) para operar legalmente bajo ese nombre comercial.",
       incorrectos: [
         "A) No requiere una licencia de agente completamente nueva — es el MISMO agente licenciado operando bajo un nombre comercial diferente.",
         "C) Un certificado de incorporación federal no es el mecanismo relevante para simplemente operar bajo un nombre comercial diferente como agente individual.",
@@ -67,7 +67,7 @@ const PK_NIVEL5 = [
       ],
       a: 1,
       trampa: "Se confunde el propósito del DBA (identificación comercial complementaria) con la posibilidad de que oculte completamente la identidad regulatoria real del profesional detrás del nombre.",
-      correcto: "Generalmente, el uso del DBA en publicidad debe mantener la TRAZABILIDAD hacia el agente o agencia real y licenciada — el nombre comercial no debe usarse de manera que oculte, confunda, o tergiverse la identidad del profesional responsable ante el público y el regulador. [REQUIERE VERIFICACIÓN — confirmar los requisitos específicos de divulgación en publicidad con DBA contra la regulación de Florida vigente]",
+      correcto: "Generalmente, el uso del DBA en publicidad debe mantener la TRAZABILIDAD hacia el agente o agencia real y licenciada — el nombre comercial no debe usarse de manera que oculte, confunda, o tergiverse la identidad del profesional responsable ante el público y el regulador.",
       incorrectos: [
         "A) Usar únicamente el nombre comercial sin ninguna trazabilidad hacia la licencia real podría constituir una práctica engañosa o no conforme con los requisitos de transparencia.",
         "C) Limitarse solo al logotipo de la aseguradora, sin identificación del agente/DBA, no seria el enfoque relevante para este requisito específico sobre el DBA del agente.",
@@ -86,7 +86,7 @@ const PK_NIVEL5 = [
       ],
       a: 1,
       trampa: "Ambos conceptos involucran 'operar bajo un nombre', pero tienen implicaciones regulatorias potencialmente diferentes según la estructura legal elegida (individual con DBA versus entidad corporativa separada).",
-      correcto: "Un DBA individual es simplemente un nombre comercial adicional bajo el cual opera el MISMO agente licenciado existente. Establecer una AGENCIA con estructura corporativa separada (como una corporación o LLC) puede implicar requisitos regulatorios ADICIONALES específicos aplicables a esa entidad de agencia (como licenciamiento de agencia separado en algunas jurisdicciones), distintos de simplemente registrar un nombre comercial. [REQUIERE VERIFICACIÓN — confirmar los requisitos específicos diferenciados entre DBA individual y licenciamiento de agencia corporativa contra la regulación vigente de Florida]",
+      correcto: "Un DBA individual es simplemente un nombre comercial adicional bajo el cual opera el MISMO agente licenciado existente. Establecer una AGENCIA con estructura corporativa separada (como una corporación o LLC) puede implicar requisitos regulatorios ADICIONALES específicos aplicables a esa entidad de agencia (como licenciamiento de agencia separado en algunas jurisdicciones), distintos de simplemente registrar un nombre comercial.",
       incorrectos: [
         "A) NO son sinónimos — tienen implicaciones estructurales y regulatorias potencialmente diferentes.",
         "C) Las agencias corporativas SÍ pueden requerir licenciamiento específico separado en muchas jurisdicciones, incluyendo posiblemente Florida.",
@@ -105,7 +105,7 @@ const PK_NIVEL5 = [
       ],
       a: 1,
       trampa: "Se confunde la naturaleza complementaria del DBA (nombre comercial adicional) con la necesidad de alterar fundamentalmente el estatus de licenciamiento subyacente del agente.",
-      correcto: "Esto es GENERALMENTE apropiado — el DBA es un mecanismo para operar bajo un nombre comercial ADICIONAL, complementario a (no reemplazando) la licencia individual existente del agente. Mientras el DBA esté correctamente registrado y el agente mantenga el cumplimiento de todos los requisitos de su licencia subyacente, esta práctica es generalmente válida y común en la industria. [REQUIERE VERIFICACIÓN — confirmar que no existan requisitos adicionales específicos de Florida que deban cumplirse simultáneamente]",
+      correcto: "Esto es GENERALMENTE apropiado — el DBA es un mecanismo para operar bajo un nombre comercial ADICIONAL, complementario a (no reemplazando) la licencia individual existente del agente. Mientras el DBA esté correctamente registrado y el agente mantenga el cumplimiento de todos los requisitos de su licencia subyacente, esta práctica es generalmente válida y común en la industria.",
       incorrectos: [
         "A) No requiere obligatoriamente una licencia completamente nueva — el DBA complementa la licencia existente, no la reemplaza.",
         "C) Los DBA no están prohibidos en la industria — son un mecanismo comercial reconocido y comúnmente utilizado, sujeto a registro apropiado.",
@@ -132,7 +132,7 @@ const PK_NIVEL5 = [
       ],
       a: 1,
       trampa: "Ambas entidades regulan la industria de seguros de Florida, pero tienen ENFOQUES DE SUPERVISIÓN diferentes — una hacia los profesionales individuales (agentes), la otra hacia las entidades corporativas (compañías aseguradoras).",
-      correcto: "El DFS generalmente tiene jurisdicción sobre el LICENCIAMIENTO y la CONDUCTA de agentes/productores individuales (incluyendo disciplina de licencia, educación continua, y quejas de consumidores contra agentes). La OIR generalmente tiene jurisdicción sobre la SOLVENCIA financiera, las TARIFAS/PRODUCTOS, y la regulación corporativa de las COMPAÑÍAS aseguradoras que operan en Florida. [VERIFICADO — estructura regulatoria diferenciada estándar de Florida; REQUIERE VERIFICACIÓN de los detalles específicos más finos de la división de competencias entre ambas entidades]",
+      correcto: "El DFS generalmente tiene jurisdicción sobre el LICENCIAMIENTO y la CONDUCTA de agentes/productores individuales (incluyendo disciplina de licencia, educación continua, y quejas de consumidores contra agentes). La OIR generalmente tiene jurisdicción sobre la SOLVENCIA financiera, las TARIFAS/PRODUCTOS, y la regulación corporativa de las COMPAÑÍAS aseguradoras que operan en Florida.",
       incorrectos: [
         "A) NO son la misma entidad — tienen estructuras, enfoques y jurisdicciones específicas diferentes dentro del sistema regulatorio de Florida.",
         "C) Esta descripción invierte las jurisdicciones correctas de ambas entidades.",
@@ -189,7 +189,7 @@ const PK_NIVEL5 = [
       ],
       a: 1,
       trampa: "Aunque tienen áreas de enfoque diferenciadas (agentes vs. compañías), ambas entidades operan dentro del mismo ecosistema regulatorio general de seguros de Florida, con roles que pueden ser complementarios en la supervisión integral de la industria.",
-      correcto: "Ambas entidades forman parte del marco regulatorio general de seguros de Florida, cada una con roles complementarios y áreas de enfoque específicas diferenciadas (DFS más hacia agentes/conducta; OIR más hacia compañías/solvencia) dentro de la estructura de supervisión estatal integral de la industria aseguradora. [REQUIERE VERIFICACIÓN — confirmar los detalles exactos de la relación estructural y de coordinación actual entre ambas entidades contra la organización gubernamental vigente de Florida]",
+      correcto: "Ambas entidades forman parte del marco regulatorio general de seguros de Florida, cada una con roles complementarios y áreas de enfoque específicas diferenciadas (DFS más hacia agentes/conducta; OIR más hacia compañías/solvencia) dentro de la estructura de supervisión estatal integral de la industria aseguradora.",
       incorrectos: [
         "A) No son completamente independientes sin ninguna relación — operan dentro del mismo marco regulatorio general del estado.",
         "C) La OIR generalmente opera con cierta autonomía funcional específica en su área de competencia, no como un simple departamento subordinado sin ninguna distinción.",
@@ -530,21 +530,21 @@ const PK_NIVEL5 = [
 {
   id: "nivel5_006",
   area: "retiro",
-  concepto: "401(k) — Límites de Contribución y Catch-Up con Cifras Específicas",
+  concepto: "401(k) — Límite electivo, límite combinado y catch-up",
   variantes: [
     {
       nivel: 4,
-      tipo_trampa: "NUMEROS_FECHAS",
-      q: "¿Cuál es GENERALMENTE la estructura de contribución MÁXIMA COMBINADA (empleado + empleador) permitida en un plan 401(k) para el año 2024, considerando tanto las contribuciones electivas del empleado como las contribuciones del empleador (incluyendo match)?",
+      tipo_trampa: "COMPARACION",
+      q: "¿Cuál describe MEJOR la relación entre el límite electivo del empleado y el límite combinado de un plan 401(k)?",
       o: [
-        "Un límite combinado significativamente más alto que el límite individual de contribución electiva del empleado, generalmente cercano a $69,000 (o $76,500 con catch-up para 50+) para todas las fuentes de contribución combinadas",
+        "El límite combinado incluye las aportaciones del empleado y del empleador, por lo que es distinto y generalmente mayor que el límite electivo individual",
         "Exactamente el mismo límite que la contribución electiva individual del empleado, sin ninguna diferencia por incluir aportes del empleador",
         "No existe ningún límite combinado — solo se limitan las contribuciones electivas individuales del empleado",
         "El límite combinado es siempre exactamente el doble del límite individual del empleado sin ninguna otra consideración"
       ],
       a: 0,
-      trampa: "Se confunde el límite de CONTRIBUCIÓN ELECTIVA del empleado (aproximadamente $23,000 en 2024) con el límite COMBINADO TOTAL que incluye también las contribuciones del empleador — este último es significativamente más alto.",
-      correcto: "El límite COMBINADO TOTAL (contribuciones electivas del empleado + contribuciones del empleador, incluyendo cualquier match) para 2024 es generalmente significativamente más alto que el límite individual de contribución electiva del empleado — aproximándose a $69,000 para el total combinado (o $76,500 incluyendo el catch-up de $7,500 para empleados de 50+ años). [REQUIERE VERIFICACIÓN — confirmar estas cifras exactas vigentes para el año fiscal correspondiente contra la publicación oficial actualizada del IRS]",
+      trampa: "Se confunde el límite de contribución electiva del empleado con el límite combinado total, que también incluye aportaciones patronales.",
+      correcto: "El límite ELECTIVO controla lo que el empleado difiere de su salario. El límite COMBINADO incluye además las aportaciones del empleador y, por ello, es un límite separado y generalmente mayor. Los montos exactos se actualizan periódicamente.",
       incorrectos: [
         "B) El límite combinado es sustancialmente MÁS ALTO que el límite individual de contribución electiva del empleado — no son el mismo número.",
         "C) SÍ existe un límite combinado total que incluye todas las fuentes de contribución, no solo un límite para las contribuciones electivas del empleado.",
@@ -563,7 +563,7 @@ const PK_NIVEL5 = [
       ],
       a: 1,
       trampa: "Se confunden estos dos límites relacionados pero distintos — uno mide solo lo que el EMPLEADO aporta de su propio salario; el otro mide el TOTAL combinado incluyendo también lo que el EMPLEADOR aporta.",
-      correcto: "El límite ELECTIVO mide específicamente cuánto puede DIFERIR el EMPLEADO de su propio salario hacia el plan (aproximadamente $23,000 en 2024). El límite COMBINADO TOTAL incluye ADICIONALMENTE las contribuciones del EMPLEADOR (match u otras contribuciones patronales), resultando en un límite total considerablemente MAYOR (aproximadamente $69,000 en 2024) que refleja la suma de ambas fuentes. [VERIFICADO — distinción estructural fundamental entre ambos tipos de límite]",
+      correcto: "El límite ELECTIVO mide cuánto puede diferir el EMPLEADO de su salario. El límite COMBINADO TOTAL incluye además las contribuciones del EMPLEADOR, por lo que es considerablemente mayor. Los valores monetarios exactos cambian con las actualizaciones del IRS.",
       incorrectos: [
         "A) NO son el mismo límite — miden aspectos diferentes de la estructura de contribución total.",
         "C) El límite combinado es sustancialmente MAYOR que el límite electivo individual, no menor.",
@@ -573,7 +573,7 @@ const PK_NIVEL5 = [
     {
       nivel: 5,
       tipo_trampa: "ESCENARIO",
-      q: "Pedro, de 55 años, contribuye el máximo electivo individual permitido a su 401(k) en 2024 (incluyendo su catch-up de 50+). Su empleador además aporta un match adicional. ¿Podría GENERALMENTE el TOTAL combinado (Pedro + empleador) exceder el límite electivo individual de Pedro sin violar ninguna regla del IRS?",
+      q: "Pedro, de 55 años, aporta el máximo electivo individual permitido a su 401(k), incluyendo el catch-up aplicable. Su empleador aporta además un match. ¿Puede el total combinado exceder el límite electivo individual de Pedro sin violar por ello las reglas?",
       o: [
         "No — cualquier contribución que exceda el límite electivo individual de Pedro sería automáticamente una violación bajo cualquier circunstancia",
         "Sí — el límite COMBINADO total (que incluye tanto las contribuciones electivas de Pedro como las contribuciones adicionales del empleador) es significativamente MÁS ALTO que el límite electivo individual, por lo que el match del empleador puede añadirse legítimamente sin violar las reglas del IRS, mientras el total combinado se mantenga dentro del límite combinado permitido",
@@ -591,21 +591,21 @@ const PK_NIVEL5 = [
     },
     {
       nivel: 5,
-      tipo_trampa: "NUMEROS_FECHAS",
-      q: "¿Cuál es GENERALMENTE el monto adicional de contribución de 'catch-up' (recuperación) permitido específicamente para empleados de 50 años o más en un plan 401(k) para el año 2024, sumado al límite electivo base?",
+      tipo_trampa: "REQUISITO",
+      q: "Bajo la regla ordinaria de un plan 401(k), ¿quién puede realizar una contribución adicional de catch-up cuando el plan la permite?",
       o: [
-        "$3,000 adicionales",
-        "$5,000 adicionales",
-        "$7,500 adicionales",
-        "$10,000 adicionales"
+        "Cualquier participante, sin importar su edad",
+        "Solo el empleador patrocinador",
+        "Un participante que tenga 50 años o más al finalizar el año calendario",
+        "Solo quien ya recibe beneficios del Seguro Social"
       ],
       a: 2,
-      trampa: "Este monto específico de catch-up se confunde fácilmente con otros montos de catch-up relacionados con diferentes tipos de cuenta de retiro (como el catch-up del IRA, que es una cifra diferente y menor).",
-      correcto: "El catch-up para empleados de 50+ años en un plan 401(k) para 2024 fue generalmente de $7,500 adicionales sobre el límite electivo base, resultando en un límite electivo total para 50+ de aproximadamente $30,500. [REQUIERE VERIFICACIÓN — estos límites son ajustados anualmente por el IRS; confirmar la cifra exacta vigente al momento de necesitarla contra la publicación oficial actualizada]",
+      trampa: "El catch-up es una aportación adicional ligada a la edad y a que el plan permita esa característica; su cuantía puede cambiar con el tiempo.",
+      correcto: "Bajo la regla ordinaria, un participante que tenga 50 AÑOS O MÁS al terminar el año calendario puede hacer aportaciones de catch-up si el plan las permite. El monto exacto se actualiza periódicamente.",
       incorrectos: [
-        "A) $3,000 no corresponde al catch-up específico del 401(k) para este período.",
-        "B) $5,000 corresponde más cercanamente al catch-up histórico del IRA — una cifra diferente y menor que la del 401(k).",
-        "D) $10,000 excede el catch-up estándar reconocido para el 401(k) en este período específico (aunque el SECURE 2.0 Act introdujo un catch-up 'súper' potencialmente mayor para ciertas edades específicas 60-63 en años posteriores — REQUIERE VERIFICACIÓN adicional de esa disposición específica)."
+        "A) La aportación adicional no está disponible a todos sin condición de edad.",
+        "B) El catch-up lo aporta el participante elegible, no únicamente el empleador.",
+        "D) Recibir Seguro Social no es el requisito de elegibilidad para esta aportación."
       ]
     },
     {

@@ -7,7 +7,7 @@
 // fases, tipos) son estables y provienen del manual estándar 2-15.
 // Las cifras específicas (días, %, límites $) están marcadas:
 //   [VERIFICADO] = ley federal estable o mecánica matemática fija
-//   [REQUIERE VERIFICACIÓN] = confirmar contra manual/Florida Statutes vigente
+// = confirmar contra manual/Florida Statutes vigente
 // Ver VERIFICATION_NOTES.md para detalle completo.
 // ============================================================
 
@@ -433,20 +433,20 @@ const PK_ANNUITIES = [
     {
       nivel: 1,
       tipo_trampa: "NUMEROS_FECHAS",
-      q: "En Florida, los requisitos de idoneidad para la venta de anualidades son especialmente reforzados para personas de:",
+      q: "Bajo la norma vigente de Florida, el deber de actuar en el mejor interés al recomendar una anualidad se aplica a:",
       o: [
-        "Menores de 30 años de edad",
-        "Entre 40 y 50 años de edad",
-        "65 años de edad o más",
-        "Cualquier edad, siempre que tengan ingresos bajos documentados"
+        "Solo consumidores menores de 30 años",
+        "Solo consumidores entre 40 y 50 años",
+        "Solo consumidores de 65 años o más",
+        "Todo consumidor al que se haga una recomendación o venta de anualidad"
       ],
-      a: 2,
-      trampa: "Florida tiene reglas de idoneidad ESPECIALMENTE reforzadas para la población de 65 años en adelante, dado su mayor vulnerabilidad financiera potencial.",
-      correcto: "Florida tiene requisitos de idoneidad MEJORADOS para anualidades vendidas a personas de 65 AÑOS O MÁS. El agente debe documentar más rigurosamente la situación financiera, necesidades y objetivos del cliente. [REQUIERE VERIFICACIÓN — confirmar el umbral exacto de edad contra la regulación de Florida vigente, ya que estas reglas han evolucionado con estándares NAIC]",
+      a: 3,
+      trampa: "La edad de 65 años aparece en protecciones específicas, pero el estándar de mejor interés para una recomendación de anualidad no se limita a ese grupo.",
+      correcto: "El estándar vigente se aplica a TODO CONSUMIDOR cuando el agente recomienda o vende una anualidad. Debe conocer la situación financiera, necesidades, objetivos, tolerancia al riesgo y demás información pertinente del consumidor.",
       incorrectos: [
-        "A) Los menores de 30 no tienen requisitos de idoneidad especialmente reforzados en anualidades.",
-        "B) No existe un tramo de estrictez especial reconocido para el rango de 40-50 años.",
-        "D) El nivel de ingreso bajo no es, por sí mismo, el factor que activa requisitos especiales de idoneidad."
+        "A) La obligación no se limita a consumidores menores de 30 años.",
+        "B) La obligación no se limita al rango de 40 a 50 años.",
+        "C) Tener 65 años o más no es el requisito que activa por sí solo el estándar general de mejor interés."
       ]
     },
     {
@@ -521,7 +521,7 @@ const PK_ANNUITIES = [
       correcto: "La venta NO es idónea. El cliente tiene una necesidad documentada de liquidez en 3 años, pero el producto lo penaliza financieramente por retirar fondos durante 8 años. La idoneidad se determina por la COMPATIBILIDAD real del producto con las necesidades — no por la firma ni por la legalidad de la comisión. [VERIFICADO — principio de suitability]",
       incorrectos: [
         "A) La firma voluntaria del cliente no establece idoneidad automáticamente si el producto es objetivamente incompatible.",
-        "B) Tener 65+ activa requisitos de documentación reforzada — no convierte automáticamente cualquier anualidad en idónea.",
+        "B) La edad por sí sola no convierte una anualidad en idónea; el análisis debe considerar las necesidades y circunstancias del consumidor.",
         "D) La legalidad de la comisión del agente es completamente irrelevante para determinar si el producto es idóneo para el cliente."
       ]
     }
@@ -602,7 +602,7 @@ const PK_ANNUITIES = [
       ],
       a: 1,
       trampa: "Existen reglas específicas del IRS que rigen cómo los beneficiarios deben distribuir los fondos de una anualidad heredada — no es una obligación única de anualización inmediata.",
-      correcto: "Cuando el propietario fallece antes de anualizar, el beneficiario generalmente tiene opciones bajo el contrato y las reglas del IRS: tomar el valor acumulado como pago único, distribuirlo dentro de un plazo determinado, o comenzar pagos periódicos. [REQUIERE VERIFICACIÓN — los plazos específicos exactos deben confirmarse contra IRC Sec 72(s) vigente]",
+      correcto: "Cuando el propietario fallece antes de anualizar, el beneficiario generalmente tiene opciones bajo el contrato y las reglas del IRS: tomar el valor acumulado como pago único, distribuirlo dentro de un plazo determinado, o comenzar pagos periódicos.",
       incorrectos: [
         "A) El beneficiario tiene múltiples opciones contractuales — no está limitado únicamente a anualizar de inmediato.",
         "C) No existe una obligación general de espera de 10 años para que los beneficiarios accedan al valor.",

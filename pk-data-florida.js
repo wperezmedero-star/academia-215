@@ -6,7 +6,7 @@
 //  MediKids, Florida Healthy Kids, CMS Plan)
 //
 // [VERIFICADO] = mecánica de producto o regla estable ampliamente documentada
-// [REQUIERE VERIFICACIÓN] = cifra específica a confirmar contra Florida Statutes vigente
+// = cifra específica a confirmar contra Florida Statutes vigente
 // Ver VERIFICATION_NOTES.md
 // ============================================================
 
@@ -122,21 +122,21 @@ const PK_FLORIDA = [
   variantes: [
     {
       nivel: 1,
-      tipo_trampa: "NUMEROS_FECHAS",
-      q: "Los requisitos de idoneidad para la venta de anualidades en Florida generalmente imponen documentación MÁS RIGUROSA para personas de:",
+      tipo_trampa: "ESCENARIO",
+      q: "Un agente recomienda una anualidad a una consumidora de 45 años. ¿Debe cumplir el estándar vigente de mejor interés de Florida?",
       o: [
-        "Menores de 30 años de edad",
-        "Entre 40 y 50 años de edad",
-        "65 años de edad o más",
-        "Cualquier edad, siempre que declaren ingresos por debajo de cierto umbral"
+        "No, porque la consumidora todavía no tiene 65 años",
+        "No, salvo que declare ingresos bajos",
+        "Sí, pero únicamente si la anualidad es variable",
+        "Sí, porque el estándar se aplica al consumidor de cualquier edad cuando se hace la recomendación o venta"
       ],
-      a: 2,
-      trampa: "Florida generalmente impone requisitos de documentación de idoneidad especialmente reforzados para la población de 65 años en adelante, reconociendo su potencial mayor vulnerabilidad financiera.",
-      correcto: "Florida generalmente establece requisitos de idoneidad MEJORADOS y documentación más rigurosa para anualidades vendidas a personas de 65 AÑOS O MÁS. [REQUIERE VERIFICACIÓN — confirmar el umbral exacto de edad y los requisitos específicos vigentes contra la regulación actual de Florida y los estándares NAIC adoptados]",
+      a: 3,
+      trampa: "La edad de 65 años aparece en protecciones específicas, pero el estándar general de mejor interés no se limita a ese grupo.",
+      correcto: "El estándar vigente se aplica a TODO CONSUMIDOR cuando el agente recomienda o vende una anualidad. La recomendación debe reflejar las necesidades y circunstancias documentadas del consumidor.",
       incorrectos: [
-        "A) Los menores de 30 años generalmente no están sujetos a requisitos de idoneidad especialmente reforzados en este contexto.",
-        "B) No existe generalmente un tramo de estrictez especial reconocido específicamente para el rango de 40-50 años.",
-        "D) El nivel de ingreso declarado no es, por sí mismo, generalmente el factor que activa requisitos especiales de documentación reforzada."
+        "A) La obligación no comienza a los 65 años.",
+        "B) El ingreso bajo no es el único activador de la obligación.",
+        "C) El deber no se limita a las anualidades variables."
       ]
     },
     {
@@ -498,7 +498,7 @@ const PK_FLORIDA = [
       ],
       a: 0,
       trampa: "La distinción tradicional de representación (agente-aseguradora versus broker-cliente) es un principio estructural clásico del derecho de seguros, aunque las líneas prácticas pueden diferir según el contexto específico.",
-      correcto: "Conceptualmente, un AGENTE generalmente representa los intereses y actúa en nombre de la aseguradora que lo designó. Un BROKER generalmente representa los intereses del cliente/asegurado, buscando las mejores opciones disponibles en el mercado para ese cliente específico. [REQUIERE VERIFICACIÓN — esta distinción conceptual clásica puede tener matices y excepciones específicas en la práctica regulatoria moderna de Florida que ameritan confirmación adicional]",
+      correcto: "Conceptualmente, un AGENTE generalmente representa los intereses y actúa en nombre de la aseguradora que lo designó. Un BROKER generalmente representa los intereses del cliente/asegurado, buscando las mejores opciones disponibles en el mercado para ese cliente específico.",
       incorrectos: [
         "B) Esta descripción invierte la distinción conceptual tradicionalmente establecida entre ambos roles.",
         "C) Aunque en la práctica cotidiana los términos a veces se usan de forma coloquial intercambiable, conceptualmente representan roles de representación distintos.",
@@ -622,7 +622,7 @@ const PK_FLORIDA = [
       ],
       a: 2,
       trampa: "En 2023 la Legislatura de Florida aprobó una ley (HB 121) para expandir el límite de KidCare de 200% a 300% del FPL. Esa expansión NO ha sido implementada (retrasada por litigio administrativo), por lo que el umbral REALMENTE vigente y aplicado sigue siendo 200% del FPL. Es fácil marcar 300% por haber escuchado sobre la ley aprobada sin verificar si ya está en vigor.",
-      correcto: "El umbral GENERAL de ingreso actualmente implementado para elegibilidad subsidiada de KidCare (incluyendo MediKids y Florida Healthy Kids) es 200% del FPL. La expansión a 300% fue aprobada por ley en 2023 pero permanece SIN implementar. [REQUIERE VERIFICACIÓN AL MOMENTO DEL EXAMEN — confirmar contra fuente oficial vigente, ya que este es un tema en desarrollo legislativo/administrativo activo]",
+      correcto: "El umbral GENERAL de ingreso actualmente implementado para elegibilidad subsidiada de KidCare (incluyendo MediKids y Florida Healthy Kids) es 200% del FPL. La expansión a 300% fue aprobada por ley en 2023 pero permanece SIN implementar.",
       incorrectos: [
         "A) 100% del FPL es aproximadamente el umbral de Medicaid tradicional para ciertos grupos, no el límite general de KidCare.",
         "B) 133% del FPL se acerca a un umbral parcial de Medicaid para ciertas edades, no el límite general de KidCare.",

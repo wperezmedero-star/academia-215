@@ -270,20 +270,20 @@ const PK_KILLER_HMOPPO = [
     {
       nivel: 5,
       tipo_trampa: "COMPARACION",
-      q: "Un paciente de Florida recibe una factura sorpresa de una ambulancia TERRESTRE tras un traslado de emergencia. Su vecino, en otro estado, recibió una protección similar cuando le pasó lo mismo, sin importar el tipo de plan que tuviera. ¿Qué distingue la protección de Florida en este tipo específico de caso?",
+      q: "Un paciente recibe una factura de una ambulancia TERRESTRE fuera de la red y supone que la No Surprises Act federal le da la misma protección que frente a una ambulancia aérea. ¿Cuál afirmación es MÁS PRECISA?",
       o: [
-        "Florida no ofrece ninguna protección para facturación sorpresa de ambulancia terrestre bajo ninguna circunstancia",
-        "En Florida, las protecciones actuales contra facturación sorpresa de ambulancia terrestre aplican ÚNICAMENTE si el paciente tiene un plan tipo HMO — no se extienden automáticamente a otros tipos de plan",
-        "Florida ofrece la misma protección universal que todos los demás estados, sin ninguna distinción por tipo de plan",
-        "La protección de Florida aplica solo a ambulancias aéreas, nunca a ambulancias terrestres"
+        "La ley federal siempre prohíbe el balance billing de toda ambulancia terrestre",
+        "La No Surprises Act federal no cubre los servicios de ambulancia terrestre; deben revisarse las protecciones estatales y los términos del plan aplicable",
+        "Toda ambulancia terrestre se considera automáticamente dentro de la red",
+        "La ley federal solo protege ambulancias terrestres, no ambulancias aéreas"
       ],
       a: 1,
-      trampa: "El paciente asume (por la experiencia de su vecino en otro estado) que la protección es universal por tipo de servicio (ambulancia terrestre), sin notar que en Florida la protección actual está limitada por TIPO DE PLAN — una particularidad real y poco conocida del estado.",
-      correcto: "Florida es uno de los pocos estados (junto con Virginia Occidental, que expandirá su protección a partir de 2027) donde las protecciones actuales contra facturación sorpresa de ambulancia terrestre aplican únicamente a asegurados con planes tipo HMO, y no se extienden automáticamente a PPO, EPO o POS. [VERIFICADO — healthinsurance.org, citando BillTrack50, consultado 14/07/2026]",
+      trampa: "La protección federal para ambulancias AÉREAS no debe extenderse automáticamente a las ambulancias TERRESTRES.",
+      correcto: "La No Surprises Act federal NO se aplica a servicios de ambulancia terrestre. Ante una factura de ese tipo deben revisarse por separado la ley estatal aplicable y las condiciones del plan de salud.",
       incorrectos: [
-        "A) Florida sí ofrece protección — pero está limitada a un tipo específico de plan, no ausente por completo.",
-        "C) Es precisamente lo contrario de la particularidad de Florida — no es una protección universal sin distinción de plan.",
-        "D) La distinción real en Florida es por tipo de PLAN (HMO vs. otros), no por tipo de ambulancia (terrestre vs. aérea)."
+        "A) La protección federal no incluye de forma general la ambulancia terrestre.",
+        "C) Un proveedor fuera de la red no se convierte automáticamente en participante.",
+        "D) La No Surprises Act sí contiene protecciones para ambulancias aéreas."
       ]
     }
   ]

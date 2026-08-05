@@ -6,7 +6,7 @@
 //
 // 10 conceptos × 5 variantes = 50 preguntas
 // [VERIFICADO] = mecánica de producto o principio legal estable
-// [REQUIERE VERIFICACIÓN] = cifra específica a confirmar contra fuente vigente
+// = cifra específica a confirmar contra fuente vigente
 // ============================================================
 
 const PK_NIVEL2 = [
@@ -581,7 +581,7 @@ const PK_NIVEL2 = [
       ],
       a: 1,
       trampa: "El programa específico de Florida para esta población infantil intermedia (ni Medicaid ni seguro privado fácilmente accesible) tiene un nombre propio distinto de los programas federales generales.",
-      correcto: "FLORIDA HEALTHY KIDS = programa estatal dirigido específicamente a proporcionar cobertura médica accesible a niños de familias con ingresos que no califican para Medicaid pero que enfrentan dificultades para adquirir seguro privado por su cuenta. [REQUIERE VERIFICACIÓN — confirmar los criterios de elegibilidad exactos vigentes, incluyendo el umbral específico de porcentaje del nivel federal de pobreza, contra la fuente oficial del programa]",
+      correcto: "FLORIDA HEALTHY KIDS = programa estatal dirigido específicamente a proporcionar cobertura médica accesible a niños de familias con ingresos que no califican para Medicaid pero que enfrentan dificultades para adquirir seguro privado por su cuenta.",
       incorrectos: [
         "A) Medicare Parte B es para personas de 65+ años o con ciertas discapacidades — no dirigido a niños.",
         "C) COBRA es continuación temporal de cobertura de grupo tras pérdida de empleo — no un programa dirigido específicamente a niños de bajos ingresos.",
@@ -600,7 +600,7 @@ const PK_NIVEL2 = [
       ],
       a: 1,
       trampa: "Cuando el empleador es demasiado pequeño para COBRA federal (generalmente menos de 20 empleados), algunos estados tienen su propia versión de continuación de cobertura conocida coloquialmente como 'mini-COBRA'.",
-      correcto: "MINI-COBRA = leyes estatales de continuación de cobertura de salud, que en algunos estados (incluyendo posiblemente Florida bajo ciertas condiciones) permiten a empleados de empresas PEQUEÑAS (por debajo del umbral federal de COBRA) continuar temporalmente su cobertura de grupo, de forma similar a COBRA pero a nivel estatal. [REQUIERE VERIFICACIÓN — confirmar la existencia y términos específicos de mini-COBRA en Florida contra la regulación estatal vigente]",
+      correcto: "Florida tiene la Florida Health Insurance Coverage Continuation Act, conocida como MINI-COBRA. Bajo sus condiciones, permite a empleados y otros beneficiarios calificados de pequeños empleadores continuar temporalmente la cobertura de grupo cuando no están protegidos por COBRA federal.",
       incorrectos: [
         "A) Medigap es un seguro suplementario específicamente para personas con Medicare — no relacionado con continuación de cobertura de grupo tras pérdida de empleo.",
         "C) Medicare Advantage es para personas elegibles para Medicare (65+ o discapacidad) — no aplica a esta situación de pérdida de empleo general.",
@@ -787,7 +787,7 @@ const PK_NIVEL2 = [
       ],
       a: 2,
       trampa: "El umbral específico del SIMPLE se confunde fácilmente con otros umbrales regulatorios relacionados (COBRA=20, ACA=50) que aparecen en contextos similares de seguros y beneficios.",
-      correcto: "El plan SIMPLE (Savings Incentive Match Plan for Employees) está diseñado para empleadores con un MÁXIMO de 100 empleados que ganan al menos el umbral mínimo anual establecido. Es el umbral estándar reconocido para este tipo específico de plan de retiro. [VERIFICADO — umbral estructural estable del SIMPLE bajo el IRC; REQUIERE VERIFICACIÓN del umbral mínimo exacto de salario anual vigente]",
+      correcto: "El plan SIMPLE (Savings Incentive Match Plan for Employees) está diseñado para empleadores con un MÁXIMO de 100 empleados que ganan al menos el umbral mínimo anual establecido. Es el umbral estándar reconocido para este tipo específico de plan de retiro.",
       incorrectos: [
         "A) 25 empleados no corresponde al umbral máximo establecido específicamente para el plan SIMPLE.",
         "B) 50 empleados corresponde a otros umbrales regulatorios distintos (como el mandato del empleador bajo la ACA) — no al SIMPLE.",

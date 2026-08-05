@@ -6,7 +6,7 @@
 //
 // 8 conceptos × 5 variantes = 40 preguntas
 // [VERIFICADO] = principio legal o mecánica estable
-// [REQUIERE VERIFICACIÓN] = cifra específica a confirmar contra fuente vigente
+// = cifra específica a confirmar contra fuente vigente
 // ============================================================
 
 const PK_NIVEL3 = [
@@ -28,7 +28,7 @@ const PK_NIVEL3 = [
       ],
       a: 1,
       trampa: "Se espera que la solicitud contenga información del SOLICITANTE — la dirección y teléfono específicamente del AGENTE no es un requisito estándar de contenido de la solicitud misma.",
-      correcto: "La dirección y número de teléfono DEL AGENTE no es generalmente un requisito de contenido obligatorio dentro de la solicitud misma — la solicitud se enfoca en recopilar información del SOLICITANTE (identidad, salud, firma) para la evaluación de suscripción. [REQUIERE VERIFICACIÓN — confirmar contra el formato estándar de solicitud aprobado por la OIR de Florida]",
+      correcto: "La dirección y número de teléfono DEL AGENTE no es generalmente un requisito de contenido obligatorio dentro de la solicitud misma — la solicitud se enfoca en recopilar información del SOLICITANTE (identidad, salud, firma) para la evaluación de suscripción.",
       incorrectos: [
         "A) La firma del solicitante SÍ es un requisito fundamental de cualquier solicitud de seguro.",
         "C) Las preguntas sobre salud SÍ son contenido estándar requerido para la evaluación de suscripción.",
@@ -234,7 +234,7 @@ const PK_NIVEL3 = [
       ],
       a: 2,
       trampa: "Aunque parece razonable esperar un diploma de escuela secundaria, muchas jurisdicciones NO exigen formalmente ese diploma específico como prerrequisito de licenciamiento de seguros — la educación pre-licencia específica del sector sustituye ese requisito.",
-      correcto: "Ser graduado de la escuela secundaria como requisito FORMAL ESPECÍFICO generalmente NO es un prerrequisito exigido para el licenciamiento de agentes de seguros — el enfoque regulatorio está en la educación PRE-LICENCIA específica del sector y la aprobación del examen, no en credenciales educativas generales previas. [REQUIERE VERIFICACIÓN — confirmar contra los requisitos exactos vigentes del DFS de Florida]",
+      correcto: "Ser graduado de la escuela secundaria como requisito FORMAL ESPECÍFICO generalmente NO es un prerrequisito exigido para el licenciamiento de agentes de seguros — el enfoque regulatorio está en la educación PRE-LICENCIA específica del sector y la aprobación del examen, no en credenciales educativas generales previas.",
       incorrectos: [
         "A) Aprobar el examen estatal SÍ es un requisito previo estándar y fundamental.",
         "B) Completar la educación pre-licencia requerida SÍ es un requisito previo estándar.",
@@ -253,7 +253,7 @@ const PK_NIVEL3 = [
       ],
       a: 0,
       trampa: "La edad mínima para FIRMAR una solicitud puede ser menor que la edad de mayoría de edad general (18), lo cual resulta contraintuitivo para muchos estudiantes.",
-      correcto: "La edad mínima generalmente reconocida para que una persona pueda firmar una solicitud de seguro de vida es 15 años, según las disposiciones específicas de la ley de seguros aplicable — una edad menor a la mayoría de edad general. [REQUIERE VERIFICACIÓN — confirmar esta edad específica contra el Florida Statute vigente aplicable a solicitudes de menores]",
+      correcto: "La edad mínima generalmente reconocida para que una persona pueda firmar una solicitud de seguro de vida es 15 años, según las disposiciones específicas de la ley de seguros aplicable — una edad menor a la mayoría de edad general.",
       incorrectos: [
         "B) 18 años es la mayoría de edad general, pero no necesariamente la edad mínima específica para ESTA transacción particular bajo la ley de seguros.",
         "C) 21 años excede significativamente cualquier umbral relevante para este contexto específico.",
@@ -291,7 +291,7 @@ const PK_NIVEL3 = [
       ],
       a: 1,
       trampa: "Este plazo específico de notificación administrativa se confunde fácilmente con otros plazos regulatorios de días similares que aplican a contextos completamente diferentes.",
-      correcto: "Un titular de licencia generalmente debe notificar al DFS sobre un cambio de dirección dentro de 30 DÍAS del cambio — es un requisito administrativo de mantenimiento de licencia. [REQUIERE VERIFICACIÓN — confirmar este plazo exacto contra la regulación vigente del DFS de Florida]",
+      correcto: "Un titular de licencia generalmente debe notificar al DFS sobre un cambio de dirección dentro de 30 DÍAS del cambio — es un requisito administrativo de mantenimiento de licencia.",
       incorrectos: [
         "A) 10 días es insuficiente respecto al plazo estándar generalmente reconocido para este trámite administrativo.",
         "C) 60 días excede el plazo estándar generalmente reconocido para esta notificación.",
@@ -533,21 +533,21 @@ const PK_NIVEL3 = [
   variantes: [
     {
       nivel: 4,
-      tipo_trampa: "NUMEROS_FECHAS",
-      q: "¿Se requiere generalmente un aviso de cuántos días al titular de la póliza para que cualquier aseguradora de salud que desee CANCELAR una póliza de seguro de salud pueda hacerlo?",
+      tipo_trampa: "COMPARACION",
+      q: "¿Cuál describe correctamente una póliza de salud GARANTIZADA RENOVABLE frente a una NO CANCELABLE?",
       o: [
-        "15 días",
-        "30 días",
-        "45 días",
-        "60 días"
+        "Ambas permiten cancelar individualmente al asegurado en cualquier momento",
+        "La garantizada renovable permite aumentar primas por clase; la no cancelable mantiene tanto la cobertura como la prima mientras se pague puntualmente",
+        "La no cancelable permite aumentar la prima individual por enfermedad",
+        "La garantizada renovable solo dura 45 días"
       ],
-      a: 2,
-      trampa: "Existen varios plazos de notificación relacionados con seguros de salud en Florida que se confunden fácilmente entre sí — este específicamente para CANCELACIÓN es distinto de otros plazos de gracia o restablecimiento.",
-      correcto: "Se requiere generalmente un aviso de 45 DÍAS al titular de la póliza para que una aseguradora de salud pueda cancelar la póliza — un plazo específico de notificación previa establecido para proteger al consumidor de cancelaciones abruptas. [REQUIERE VERIFICACIÓN — confirmar este plazo exacto contra la regulación de Florida vigente]",
+      a: 1,
+      trampa: "No confundas el derecho a ajustar primas de toda una clase con el derecho a cancelar selectivamente a una persona.",
+      correcto: "GARANTIZADA RENOVABLE: la aseguradora debe renovar, aunque puede ajustar primas para una clase completa. NO CANCELABLE: mientras se paguen las primas, no puede cancelar ni aumentar la prima durante el período garantizado.",
       incorrectos: [
-        "A) 15 días es insuficiente respecto al plazo estándar reconocido para este tipo específico de notificación.",
-        "B) 30 días no corresponde al plazo específico reconocido para cancelación de pólizas de salud en este contexto.",
-        "D) 60 días excede el plazo estándar reconocido para esta notificación específica."
+        "A) Ninguna de las dos permite una cancelación individual arbitraria mientras se cumplan sus condiciones.",
+        "C) La característica no cancelable impide ese aumento individual durante el período garantizado.",
+        "D) Cuarenta y cinco días no define una póliza garantizada renovable."
       ]
     },
     {
@@ -656,20 +656,20 @@ const PK_NIVEL3 = [
     {
       nivel: 4,
       tipo_trampa: "NUMEROS_FECHAS",
-      q: "Una aseguradora Medigap NO puede generalmente denegar una solicitud de cobertura si esta se presenta dentro de cuántos meses después de que el solicitante haya cumplido 65 años?",
+      q: "¿Cuánto dura el período federal de inscripción abierta de Medigap y cuándo comienza?",
       o: [
-        "3 meses",
-        "6 meses",
-        "9 meses",
-        "12 meses"
+        "3 meses desde el cumpleaños 65, aunque no tenga Parte B",
+        "6 meses desde el primer mes en que la persona tiene Medicare Parte B y 65 años o más",
+        "9 meses desde la inscripción en Parte A solamente",
+        "12 meses desde cualquier inscripción en Medicare Advantage"
       ],
       a: 1,
-      trampa: "Este es el período de inscripción abierta garantizada de Medigap — se confunde con otros plazos relacionados con Medicare que tienen duraciones diferentes.",
-      correcto: "Durante el período de INSCRIPCIÓN ABIERTA de Medigap, generalmente de 6 MESES a partir de que el solicitante cumple 65 años (y está inscrito en Parte B), la aseguradora NO puede denegar la solicitud por condiciones preexistentes ni cobrar primas más altas por ese motivo. [VERIFICADO — protección regulatoria estándar de inscripción abierta de Medigap]",
+      trampa: "Cumplir 65 años por sí solo no inicia el período si la persona todavía no tiene la Parte B.",
+      correcto: "La inscripción abierta de Medigap dura 6 MESES y comienza el primer mes en que la persona tiene Medicare Parte B y tiene 65 años o más. Durante ese período existen protecciones federales de compra.",
       incorrectos: [
-        "A) 3 meses es menor al período estándar de inscripción abierta garantizada de Medigap.",
-        "C) 9 meses no corresponde al período estándar reconocido de 6 meses.",
-        "D) 12 meses excede el período estándar reconocido de inscripción abierta garantizada."
+        "A) No dura 3 meses y el cumpleaños sin Parte B no basta.",
+        "C) La Parte A sola no inicia este período de 6 meses.",
+        "D) Medicare Advantage no establece por sí solo un período general de 12 meses."
       ]
     },
     {
@@ -703,7 +703,7 @@ const PK_NIVEL3 = [
       ],
       a: 2,
       trampa: "El umbral específico de porcentaje del nivel de pobreza para programas de salud infantil estatal se confunde con otros umbrales relacionados con Medicaid u otros programas de asistencia.",
-      correcto: "La elegibilidad para Florida Healthy Kids generalmente requiere que la familia esté dentro del 200% del nivel federal de pobreza — un umbral diseñado para capturar a familias que no califican para Medicaid pero que enfrentan dificultades económicas para el seguro privado. [REQUIERE VERIFICACIÓN — confirmar este porcentaje exacto contra la fuente oficial actualizada del programa Florida Healthy Kids Corporation]",
+      correcto: "La elegibilidad para Florida Healthy Kids generalmente requiere que la familia esté dentro del 200% del nivel federal de pobreza — un umbral diseñado para capturar a familias que no califican para Medicaid pero que enfrentan dificultades económicas para el seguro privado.",
       incorrectos: [
         "A) 100% sería un umbral más restrictivo del que generalmente se reconoce para este programa específico.",
         "B) 150% no corresponde al umbral específicamente reconocido para Florida Healthy Kids.",
@@ -806,7 +806,7 @@ const PK_NIVEL3 = [
       ],
       a: 1,
       trampa: "El cálculo requiere sumar el período mínimo de espera estándar (aproximadamente 60 días) a la fecha de presentación de la prueba de siniestro — un error común es calcular incorrectamente el período de 60 días desde el 1 de septiembre.",
-      correcto: "Sumando aproximadamente 60 días (el período mínimo estándar de espera bajo Acciones Legales) a la fecha de presentación (1 de septiembre), el resultado aproximado es el 1 de NOVIEMBRE (septiembre tiene 30 días restantes desde el 1, más 30 días adicionales de octubre completo, totalizando aproximadamente 60 días). [VERIFICADO — aplicación del cálculo estándar; REQUIERE VERIFICACIÓN del plazo exacto de 60 días vigente en la póliza/regulación específica de Florida]",
+      correcto: "Sumando aproximadamente 60 días (el período mínimo estándar de espera bajo Acciones Legales) a la fecha de presentación (1 de septiembre), el resultado aproximado es el 1 de NOVIEMBRE (septiembre tiene 30 días restantes desde el 1, más 30 días adicionales de octubre completo, totalizando aproximadamente 60 días).",
       incorrectos: [
         "A) 1 de octubre sería solo aproximadamente 30 días después — insuficiente para cumplir el período mínimo estándar de 60 días.",
         "C) 1 de diciembre excedería el período mínimo de 60 días, representando un cálculo con margen adicional innecesario respecto al mínimo legal.",
@@ -825,7 +825,7 @@ const PK_NIVEL3 = [
       ],
       a: 2,
       trampa: "Este plazo administrativo específico para procesar solicitudes de restablecimiento se confunde con otros plazos regulatorios similares aplicables a diferentes trámites.",
-      correcto: "Una compañía de seguros generalmente debe actuar sobre una solicitud de restablecimiento de seguro de A&S dentro de 45 DÍAS — un plazo administrativo específico que evita que las solicitudes de restablecimiento queden indefinidamente pendientes sin resolución. [REQUIERE VERIFICACIÓN — confirmar este plazo exacto contra la regulación vigente de Florida]",
+      correcto: "Una compañía de seguros generalmente debe actuar sobre una solicitud de restablecimiento de seguro de A&S dentro de 45 DÍAS — un plazo administrativo específico que evita que las solicitudes de restablecimiento queden indefinidamente pendientes sin resolución.",
       incorrectos: [
         "A) 15 días es insuficiente respecto al plazo estándar reconocido para este trámite específico.",
         "B) 30 días no corresponde al plazo estándar específico reconocido para restablecimiento de A&S.",

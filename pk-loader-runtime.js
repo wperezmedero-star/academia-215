@@ -90,6 +90,21 @@
   const approvedMigrationConcepts = Array.from(approvedById.values());
   conceptosUnificados = conceptosUnificados.concat(approvedMigrationConcepts);
 
+  // Correcciones regulatorias aplicadas al material importado aprobado.
+  const licenciaVariable = conceptosUnificados.find(function(c){ return c.id === 'sim_b2_042'; });
+  if(licenciaVariable && licenciaVariable.variantes && licenciaVariable.variantes[0]){
+    const v = licenciaVariable.variantes[0];
+    v.q = '¿Qué afirmación describe correctamente el alcance de la licencia Florida 2-15 respecto de productos variables?';
+    v.o = [
+      'Autoriza solo propiedad y accidentes',
+      'Autoriza vida y salud, pero nunca anualidades',
+      'Incluye autoridad de seguros para vida, salud y anualidades; para vender productos variables se requiere además el registro de valores correspondiente',
+      'La licencia 2-15 por sí sola sustituye todo requisito de valores'
+    ];
+    v.a = 2;
+    v.e = 'La 2-15 comprende vida, salud y anualidades dentro de su autoridad de seguros. Los productos variables también son valores, por lo que exigen el registro o autorización de valores correspondiente.';
+  }
+
   // Elimina preguntas repetidas entre todos los bancos antes de crear simulacros.
   // Se compara el texto normalizado para detectar diferencias solo de mayúsculas,
   // espacios o signos. Se conserva la primera versión encontrada.
