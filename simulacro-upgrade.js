@@ -66,6 +66,11 @@
     return pkLoadPromise;
   }
 
+  // Contrato público para que los demás simulacros de la Academia esperen
+  // exactamente la misma carga verificada antes de construir sus bloques.
+  window.ensurePearsonBank = ensurePearsonBank;
+  window.PK_BANK_READY = ensurePearsonBank();
+
   function normalizeText(value){
     return String(value||'')
       .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
@@ -83,6 +88,15 @@
       [a[i],a[j]]=[a[j],a[i]];
     }
     return a;
+  }
+
+  function shuffleQuestionOptions(question){
+    const copy={...question};
+    const options=(question.o||[]).map((text,index)=>({text,index}));
+    const mixed=shuffled(options);
+    copy.o=mixed.map(item=>item.text);
+    copy.a=mixed.findIndex(item=>item.index===question.a);
+    return copy;
   }
 
   function academiaQuestions(){
@@ -179,7 +193,7 @@
       nextSeen=new Set();
     }
 
-    const mixed=shuffled(selected);
+    const mixed=shuffled(selected).map(shuffleQuestionOptions);
     try{
       const previousCycle=parseInt(localStorage.getItem('sim215_rotation_cycle_v2')||'1',10)||1;
       localStorage.setItem('sim215_seen_keys_v2',JSON.stringify([...nextSeen]));

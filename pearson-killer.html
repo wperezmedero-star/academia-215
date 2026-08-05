@@ -590,6 +590,40 @@ function startErrorsMode(){
 
 function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
+function questionKey(q){
+  return String(q&&q.q||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+}
+
+function shuffleQuestionOptions(q){
+  const entries=shuffle((q.o||[]).map((text,index)=>({text,index})));
+  return {...q,o:entries.map(x=>x.text),a:entries.findIndex(x=>x.index===q.a)};
+}
+
+function rotatingQuestions(items,max,mode){
+  const unique=[]; const known=new Set();
+  items.forEach(q=>{const key=questionKey(q);if(key&&!known.has(key)){known.add(key);unique.push(q);}});
+  const storageKey='pk_seen_'+mode+'_v2';
+  let seen=[];
+  try{seen=JSON.parse(localStorage.getItem(storageKey)||'[]');if(!Array.isArray(seen))seen=[];}catch(e){seen=[];}
+  const validKeys=new Set(unique.map(questionKey));
+  const seenSet=new Set(seen.filter(key=>validKeys.has(key)));
+  let candidates=shuffle(unique.filter(q=>!seenSet.has(questionKey(q))));
+  if(candidates.length<max){
+    const firstKeys=new Set(candidates.map(questionKey));
+    candidates=candidates.concat(shuffle(unique.filter(q=>!firstKeys.has(questionKey(q)))));
+    seenSet.clear();
+  }
+  const selected=candidates.slice(0,max);
+  selected.forEach(q=>seenSet.add(questionKey(q)));
+  if(seenSet.size>=unique.length)seenSet.clear();
+  try{
+    localStorage.setItem(storageKey,JSON.stringify([...seenSet]));
+    localStorage.setItem('pk_pool_'+mode,String(unique.length));
+  }catch(e){}
+  return selected.map(shuffleQuestionOptions);
+}
+
 function buildVocabularyChallenge(kind,max){
   const dict=window.PK_SINONIMOS || {};
   const entries=shuffle(Object.values(dict).filter(x=>x && x.termino_oficial && x.contexto));
@@ -616,12 +650,12 @@ function buildVocabularyChallenge(kind,max){
       areaLabel:kind==='terminos'?'Términos':'Vocabulario'
     });
   });
-  return shuffle(questions).slice(0,max);
+  return shuffle(questions);
 }
 
 function buildPool(mode, max){
-  if(mode==='reto_terminos') return buildVocabularyChallenge('terminos',max);
-  if(mode==='reto_vocabulario') return buildVocabularyChallenge('vocabulario',max);
+  if(mode==='reto_terminos') return rotatingQuestions(buildVocabularyChallenge('terminos',max),max,mode);
+  if(mode==='reto_vocabulario') return rotatingQuestions(buildVocabularyChallenge('vocabulario',max),max,mode);
   let concepts=[];
   if(mode==='killer_pilot'){
     // FASE 2 — Fuente SEPARADA a propósito: nunca se mezcla con CONCEPTS
@@ -652,7 +686,7 @@ function buildPool(mode, max){
     });
   });
   shuffle(questions);
-  return questions.slice(0, max);
+  return rotatingQuestions(questions,max,mode);
 }
 
 function startMode(m, max){
