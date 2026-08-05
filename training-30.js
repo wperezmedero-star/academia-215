@@ -1,6 +1,6 @@
 /*
  * Academia 2-15 — Entrenamientos temáticos de 30 preguntas.
- * Usa exclusivamente preguntas y términos ya existentes en L.
+ * Combina el contenido de Academia (L) con el banco completo de Pearson Killer.
  */
 (function () {
   "use strict";
@@ -73,16 +73,31 @@
   }
 
   function allQuestions() {
-    return uniqueQuestions(
-      lessons().flatMap(function (lesson, lessonIndex) {
+    const academia = lessons().flatMap(function (lesson, lessonIndex) {
         return (lesson.questions || []).map(function (question) {
-          return Object.assign({}, question, { lessonIndex: lessonIndex });
+          return Object.assign({}, question, {
+            lessonIndex: lessonIndex,
+            source: "academia",
+            sourceArea: "academia",
+          });
         });
-      }),
-    );
+      });
+    const pearson = (Array.isArray(window.PK_CONCEPTOS_FULL) ? window.PK_CONCEPTOS_FULL : [])
+      .flatMap(function (concept) {
+        return (concept.variantes || concept.variants || []).map(function (question) {
+          return Object.assign({}, question, {
+            lessonIndex: null,
+            source: "pearson",
+            sourceArea: concept.area || "generales",
+            concept: concept.concepto || concept.concept || concept.id || "Pearson Killer",
+          });
+        });
+      });
+    return uniqueQuestions(academia.concat(pearson));
   }
 
   function isRegulation(question) {
+    if (question.sourceArea === "florida") return true;
     if (question.lessonIndex === 18 || question.lessonIndex === 19) return true;
     return /(florida|ley\b|regulaci[oó]n|licencia|licenciado|agente|cfo\b|dfs\b|oir\b|naic\b|ilegal|pr[aá]ctica desleal|rebating|twisting|churning|fondo de garant[ií]a|estatuto|departamento de servicios financieros)/i.test(
       [question.q, question.e].join(" "),
@@ -90,6 +105,7 @@
   }
 
   function isFloridaStatute(question) {
+    if (question.sourceArea === "florida") return true;
     if (question.lessonIndex === 18 || question.lessonIndex === 19) return true;
     return /(estatuto|florida statute|ley(?:es)? (?:de|en) florida|c[oó]digo de seguros de florida|dfs\b|oir\b|flahiga|departamento de servicios financieros)/i.test(
       [question.q, question.e].join(" "),
@@ -102,9 +118,57 @@
     );
   }
 
-  function takeThirty(primary, fallback) {
+  function questionKey(question) {
+    return String(question.q || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
+  }
+
+  function shuffleOptions(question) {
+    const entries = randomize(
+      (question.o || []).map(function (text, index) {
+        return { text: text, index: index };
+      }),
+    );
+    const copy = Object.assign({}, question);
+    copy.o = entries.map(function (entry) { return entry.text; });
+    copy.a = entries.findIndex(function (entry) { return entry.index === question.a; });
+    return copy;
+  }
+
+  function takeThirty(mode, primary, fallback) {
     const merged = uniqueQuestions(primary.concat(fallback || []));
-    return randomize(merged).slice(0, TOTAL);
+    const storageKey = "training30_seen_" + mode + "_v2";
+    let seen = [];
+    try {
+      seen = JSON.parse(localStorage.getItem(storageKey) || "[]");
+      if (!Array.isArray(seen)) seen = [];
+    } catch (error) {
+      seen = [];
+    }
+    const validKeys = new Set(merged.map(questionKey));
+    const seenSet = new Set(seen.filter(function (key) { return validKeys.has(key); }));
+    let candidates = randomize(merged.filter(function (question) {
+      return !seenSet.has(questionKey(question));
+    }));
+    if (candidates.length < TOTAL) {
+      const firstKeys = new Set(candidates.map(questionKey));
+      candidates = candidates.concat(randomize(merged.filter(function (question) {
+        return !firstKeys.has(questionKey(question));
+      })));
+      seenSet.clear();
+    }
+    const selected = candidates.slice(0, TOTAL);
+    selected.forEach(function (question) { seenSet.add(questionKey(question)); });
+    if (seenSet.size >= merged.length) seenSet.clear();
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(Array.from(seenSet)));
+      localStorage.setItem("training30_pool_" + mode, String(merged.length));
+    } catch (error) {}
+    return selected.map(shuffleOptions);
   }
 
   function vocabularyQuestions() {
@@ -122,9 +186,7 @@
       });
     });
 
-    return randomize(entries)
-      .slice(0, TOTAL)
-      .map(function (entry) {
+    return randomize(entries).map(function (entry) {
         const distractors = randomize(
           entries.filter(function (candidate) {
             return candidate.term !== entry.term && candidate.definition !== entry.definition;
@@ -152,18 +214,20 @@
       return !isRegulation(question);
     });
 
-    if (mode === "vocabulary") return vocabularyQuestions();
-    if (mode === "regulation") return takeThirty(regulation, questions);
+    if (mode === "vocabulary") return takeThirty(mode, vocabularyQuestions(), []);
+    if (mode === "regulation") return takeThirty(mode, regulation, questions);
     if (mode === "statutes") {
-      return takeThirty(questions.filter(isFloridaStatute), regulation);
+      return takeThirty(mode, questions.filter(isFloridaStatute), regulation);
     }
     if (mode === "terms") {
       return takeThirty(
+        mode,
         nonRegulation.filter(isTermQuestion),
         nonRegulation,
       );
     }
     return takeThirty(
+      mode,
       nonRegulation.filter(function (question) {
         return !isTermQuestion(question);
       }),
@@ -363,7 +427,12 @@
     document.querySelector("[data-training-home]").addEventListener("click", returnHome);
   }
 
-  function startTraining(mode) {
+  async function startTraining(mode) {
+    if (window.PK_BANK_READY && typeof window.PK_BANK_READY.then === "function") {
+      await window.PK_BANK_READY;
+    } else if (typeof window.ensurePearsonBank === "function") {
+      await window.ensurePearsonBank();
+    }
     const questions = buildBank(mode);
     if (questions.length < TOTAL) {
       window.alert("No hay suficientes preguntas existentes para formar este bloque.");
@@ -411,7 +480,7 @@
     launcher.id = "training-launcher";
     launcher.className = "card training-launcher";
     launcher.innerHTML =
-      '<div class="training-launcher-head"><div><span class="training-kicker">ENTRENAMIENTO TEMÁTICO</span><h2>5 retos de 30 preguntas</h2><p>36 minutos por bloque · marcador inmediato · revisión de errores</p></div><span class="training-120">150</span></div><div class="training-mode-grid"></div>';
+      '<div class="training-launcher-head"><div><span class="training-kicker">PEARSON KILLER INTEGRADO</span><h2>5 retos de 30 preguntas</h2><p>Banco completo de la Academia + Pearson Killer · sin repetir hasta recorrer cada categoría</p></div><span class="training-120">150</span></div><div class="training-mode-grid"></div>';
     const grid = launcher.querySelector(".training-mode-grid");
     Object.keys(MODES).forEach(function (key) {
       const mode = MODES[key];

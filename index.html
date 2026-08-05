@@ -148,6 +148,7 @@ th{color:#bfdbfe;}
       <button class="btn blu" onclick="startMixed()">⚡ Examen mixto</button>
       <button class="btn sec" onclick="showStats()">📊 Progreso</button>
       <button class="btn" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;" onclick="startSimulacro()">🎯 Simulacro</button>
+      <button class="btn" style="background:linear-gradient(135deg,#2563eb,#1e40af);color:#fff;" onclick="goHome();setTimeout(()=>document.getElementById('training-launcher')?.scrollIntoView({behavior:'smooth'}),50)">🧩 Pearson Killer</button>
     </div>
   </div>
 </header>
@@ -253,7 +254,8 @@ th{color:#bfdbfe;}
       <div class="box" style="margin:10px 0">
         <h4>📋 Instrucciones del simulacro</h4>
         <ul style="color:#e2e8f0;font-size:.85rem;padding-left:16px;line-height:1.8">
-          <li>Las 150 preguntas se seleccionan aleatoriamente de todas las lecciones.</li>
+          <li>Las 150 preguntas se seleccionan del banco unificado de Academia y Pearson Killer.</li>
+          <li>No se repiten hasta recorrer el banco completo; después comienza un ciclo nuevo.</li>
           <li>El cronómetro corre desde que inicias — igual que el examen real.</li>
           <li>Después de cada respuesta se actualiza el marcador de correctas e incorrectas.</li>
           <li>Al terminar ves tu resultado, porcentaje y análisis por lección.</li>
@@ -1216,8 +1218,8 @@ function goHome(){
 
 </script>
 
-<script src="simulacro-upgrade.js?v=20260729-1"></script>
+<script src="simulacro-upgrade.js?v=20260804-2"></script>
 <script src="ui-modern.js?v=20260724-8"></script>
-<script src="training-30.js?v=20260730-1"></script>
+<script src="training-30.js?v=20260804-2"></script>
 </body>
 </html>
