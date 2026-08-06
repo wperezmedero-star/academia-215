@@ -244,10 +244,10 @@ th{color:#bfdbfe;}
     <div class="card">
       <button class="btn sec" onclick="goHome()">← Volver</button>
       <h2 style="margin:14px 0 8px;font-size:1.3rem">🎯 Simulacro Oficial 2-15 Florida</h2>
-      <p style="color:var(--muted);font-size:.88rem;margin-bottom:14px">Replica el formato del examen real del estado. 150 preguntas, 3 horas y 30 minutos. Necesitas el 70% (105 correctas) para aprobar.</p>
+      <p style="color:var(--muted);font-size:.88rem;margin-bottom:14px">Replica el formato del examen real del estado. 150 preguntas, 2 horas y 45 minutos. Necesitas el 70% (105 correctas) para aprobar.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;">
         <div class="box" style="text-align:center"><div style="font-size:2rem;font-weight:900;color:#a78bfa">150</div><div style="color:var(--muted);font-size:.8rem">Preguntas</div></div>
-        <div class="box" style="text-align:center"><div style="font-size:2rem;font-weight:900;color:#a78bfa">3:30</div><div style="color:var(--muted);font-size:.8rem">Horas límite</div></div>
+        <div class="box" style="text-align:center"><div style="font-size:2rem;font-weight:900;color:#a78bfa">2:45</div><div style="color:var(--muted);font-size:.8rem">Horas límite</div></div>
         <div class="box" style="text-align:center"><div style="font-size:2rem;font-weight:900;color:#22c55e">70%</div><div style="color:var(--muted);font-size:.8rem">Para aprobar</div></div>
         <div class="box" style="text-align:center"><div style="font-size:2rem;font-weight:900;color:#f59e0b">20</div><div style="color:var(--muted);font-size:.8rem">Lecciones cubiertas</div></div>
       </div>
@@ -265,7 +265,7 @@ th{color:#bfdbfe;}
       </div>
       <div class="box" style="background:#0a1628;border-color:#4f46e5">
         <h4 style="color:#a78bfa">⚠️ Antes de empezar</h4>
-        <p style="color:#c4b5fd;font-size:.85rem">Busca un lugar tranquilo, sin distracciones. El simulacro replica las condiciones del examen real. Tienes 1.4 minutos por pregunta en promedio.</p>
+        <p style="color:#c4b5fd;font-size:.85rem">Busca un lugar tranquilo, sin distracciones. El simulacro replica las condiciones del examen real. Tienes 1.1 minutos por pregunta en promedio.</p>
       </div>
       <div class="row" style="margin-top:14px">
         <button class="btn" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;font-weight:800;font-size:1rem;padding:14px 24px;" onclick="launchSimulacro()">🚀 Iniciar Simulacro</button>
@@ -284,7 +284,7 @@ th{color:#bfdbfe;}
           <span id="sim-q-count" style="font-size:.8rem;color:var(--muted)"></span>
         </div>
         <div style="display:flex;align-items:center;gap:10px">
-          <div id="sim-timer" style="background:#1a0a2e;border:2px solid #7c3aed;border-radius:10px;padding:6px 12px;font-weight:900;font-size:1rem;color:#a78bfa;font-variant-numeric:tabular-nums;min-width:80px;text-align:center">3:30:00</div>
+          <div id="sim-timer" style="background:#1a0a2e;border:2px solid #7c3aed;border-radius:10px;padding:6px 12px;font-weight:900;font-size:1rem;color:#a78bfa;font-variant-numeric:tabular-nums;min-width:80px;text-align:center">2:45:00</div>
           <button class="btn red" onclick="confirmEndSimulacro()" style="font-size:.8rem;padding:7px 10px">Terminar</button>
         </div>
       </div>
@@ -969,9 +969,9 @@ renderGrid();
 
 
 // ============================================================
-// SIMULACRO OFICIAL — 150 preguntas, 3h 30min
+// SIMULACRO OFICIAL — 150 preguntas, 2h 45min
 // ============================================================
-let simQs=[], simAnswers=[], simCurrent=0, simTimer=null, simTimeLeft=210*60, simRunning=false;
+let simQs=[], simAnswers=[], simCurrent=0, simTimer=null, simTimeLeft=165*60, simRunning=false;
 
 function hide(){["home","plan","lesson","quiz","flash","result","stats",
   "simulacro-menu","simulacro-exam","simulacro-result","simulacro-history"
@@ -990,7 +990,7 @@ function launchSimulacro(){
   simQs=pool.slice(0,Math.min(150,pool.length));
   simAnswers=new Array(simQs.length).fill(null);
   simCurrent=0;
-  simTimeLeft=210*60; // 3h 30min in seconds
+  simTimeLeft=165*60; // 2h 45min in seconds
   simRunning=true;
   hide();
   document.getElementById("simulacro-exam").classList.remove("hidden");
@@ -1120,7 +1120,7 @@ function finishSimulacro(timedOut){
   });
   const pct=Math.round((correct/simQs.length)*100);
   const passed=pct>=70;
-  const timeUsed=210*60-simTimeLeft;
+  const timeUsed=165*60-simTimeLeft;
   const th=Math.floor(timeUsed/3600);
   const tm=Math.floor((timeUsed%3600)/60);
   const ts=timeUsed%60;
@@ -1238,7 +1238,7 @@ function goHome(){
 
 </script>
 
-<script src="simulacro-upgrade.js?v=20260804-2"></script>
+<script src="simulacro-upgrade.js?v=20260806-1"></script>
 <script src="ui-modern.js?v=20260724-8"></script>
 <script src="training-30.js?v=20260804-2"></script>
 </body>
