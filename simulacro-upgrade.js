@@ -10,7 +10,7 @@
     'pk-data-retirement.js','pk-data-florida.js','pk-data-medicare.js','pk-data-ltc.js',
     'pk-data-general.js','pk-data-nivel1.js','pk-data-nivel2.js','pk-data-nivel3.js',
     'pk-data-nivel4.js','pk-data-nivel5.js','pk-data-refuerzo.js','pk-data-disposiciones.js',
-    'pk-data-campo.js','pk-data-killer-hmoppo.js','pk-data-killer-pilot.js'
+    'pk-data-campo.js','pk-data-killer-hmoppo.js','pk-data-killer-pilot.js','pk-data-sim128.js'
   ];
 
   let pkLoadPromise = null;
@@ -261,7 +261,7 @@
     simQs=selected;
     simAnswers=new Array(simQs.length).fill(null);
     simCurrent=0;
-    simTimeLeft=210*60;
+    simTimeLeft=165*60;
     simRunning=true;
 
     if(startButton){startButton.disabled=false;startButton.innerHTML=originalText;}
@@ -286,6 +286,31 @@
   };
   window.simPick=simPick;
 
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ensurePearsonBank,{once:true});
-  else ensurePearsonBank();
+  async function refreshBankStatus(){
+    await ensurePearsonBank();
+    const total=uniqueQuestions([...academiaQuestions(),...pearsonQuestions()]).length;
+    try{ localStorage.setItem('sim215_last_pool_size',String(total)); }catch(e){}
+    const menu=document.getElementById('simulacro-menu');
+    if(!menu) return total;
+    let badge=document.getElementById('sim-bank-status');
+    if(!badge){
+      badge=document.createElement('div');
+      badge.id='sim-bank-status';
+      badge.className='box';
+      badge.style.cssText='margin-top:14px;border-color:#22c55e;color:#d1fae5;font-weight:800';
+      const row=menu.querySelector('.row');
+      if(row) row.insertAdjacentElement('beforebegin',badge);
+      else menu.appendChild(badge);
+    }
+    badge.textContent='✅ Banco verificado: '+total.toLocaleString('es-US')+' preguntas únicas disponibles';
+    return total;
+  }
+
+  async function initializeBank(){
+    try{ await refreshBankStatus(); }
+    catch(err){ console.warn('No se pudo verificar el tamaño del banco:',err); }
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initializeBank,{once:true});
+  else initializeBank();
 })();
