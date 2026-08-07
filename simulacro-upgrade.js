@@ -212,6 +212,11 @@
     panel=document.createElement('div');
     panel.id='sim-live-score';
     panel.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0 10px;';
+    panel.innerHTML=
+      '<div><div>✅ <span id="sim-correct">0</span></div><div>Correctas</div></div>'+
+      '<div><div>❌ <span id="sim-incorrect">0</span></div><div>Incorrectas</div></div>'+
+      '<div><div>📝 <span id="sim-answered-live">0</span></div><div>Respondidas</div></div>'+
+      '<div><div>📊 <span id="sim-percent">0%</span></div><div>Rendimiento</div></div>';
 
     const progress=document.querySelector('#simulacro-exam .prog');
     if(progress && progress.parentNode) progress.parentNode.insertBefore(panel,progress);
@@ -220,8 +225,7 @@
 
   function updateLiveScore(){
     if(typeof simQs==='undefined' || typeof simAnswers==='undefined') return;
-    const panel=ensureLiveScorePanel();
-    if(!panel) return;
+    if(!ensureLiveScorePanel()) return;
 
     let answered=0, correct=0;
     simAnswers.forEach((answer,i)=>{
@@ -233,11 +237,18 @@
     const pct=answered ? Math.round((correct/answered)*100) : 0;
     const pctColor=pct>=70?'#22c55e':pct>=60?'#f59e0b':'#ef4444';
 
-    panel.innerHTML=
-      '<div style="background:#092313;border:1px solid #166534;border-radius:9px;padding:7px 4px;text-align:center"><div style="font-size:1rem;font-weight:900;color:#22c55e">✅ <span id="sim-correct">'+correct+'</span></div><div style="font-size:.64rem;color:#86efac">Correctas</div></div>'+
-      '<div style="background:#2a0909;border:1px solid #991b1b;border-radius:9px;padding:7px 4px;text-align:center"><div style="font-size:1rem;font-weight:900;color:#ef4444">❌ <span id="sim-incorrect">'+incorrect+'</span></div><div style="font-size:.64rem;color:#fca5a5">Incorrectas</div></div>'+
-      '<div style="background:#111d36;border:1px solid #334155;border-radius:9px;padding:7px 4px;text-align:center"><div style="font-size:1rem;font-weight:900;color:#93c5fd">📝 <span id="sim-answered-live">'+answered+'</span></div><div style="font-size:.64rem;color:#94a3b8">Respondidas</div></div>'+
-      '<div style="background:#1b1230;border:1px solid #6d28d9;border-radius:9px;padding:7px 4px;text-align:center"><div style="font-size:1rem;font-weight:900;color:'+pctColor+'">📊 <span id="sim-percent">'+pct+'%</span></div><div style="font-size:.64rem;color:#c4b5fd">Rendimiento</div></div>';
+    const setText=(id,value)=>{
+      const element=document.getElementById(id);
+      if(element) element.textContent=String(value);
+    };
+    setText('sim-correct',correct);
+    setText('sim-incorrect',incorrect);
+    setText('sim-answered-live',answered);
+    setText('sim-answered',answered+' de '+simQs.length+' respondidas');
+    setText('sim-percent',pct+'%');
+
+    const percent=document.getElementById('sim-percent');
+    if(percent) percent.style.color=pctColor;
   }
 
   async function upgradedLaunchSimulacro(){
@@ -278,13 +289,39 @@
   launchSimulacro=upgradedLaunchSimulacro;
   window.launchSimulacro=upgradedLaunchSimulacro;
 
-  // Actualiza el marcador incluso cuando el usuario cambia una respuesta anterior.
-  const originalSimPick=simPick;
+  // Registra cada selección antes de volver a dibujar la interfaz.
+  // El marcador se actualiza en finally para que un fallo visual no pierda la respuesta.
   simPick=function(i){
-    originalSimPick(i);
-    updateLiveScore();
+    const question=simQs[simCurrent];
+    if(!question || !Number.isInteger(i) || i<0 || i>=question.o.length) return;
+    simAnswers[simCurrent]=i;
+    try{
+      renderSimQ();
+      renderSimNav();
+    }finally{
+      updateLiveScore();
+    }
   };
   window.simPick=simPick;
+
+  // Si el usuario vuelve a una pregunta ya contestada, "Siguiente" lo lleva
+  // directamente a la próxima pendiente, en vez de recorrer otra vez las respondidas.
+  const originalSimNext=simNext;
+  simNext=function(){
+    const nextPending=simAnswers.findIndex((answer,index)=>
+      index>simCurrent && (answer===null || answer===undefined)
+    );
+    if(nextPending!==-1){
+      simCurrent=nextPending;
+      renderSimQ();
+      renderSimNav();
+      updateLiveScore();
+      return;
+    }
+    originalSimNext();
+    updateLiveScore();
+  };
+  window.simNext=simNext;
 
   async function refreshBankStatus(){
     await ensurePearsonBank();
