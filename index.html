@@ -130,6 +130,7 @@ th{color:#bfdbfe;}
 </style>
 <link rel="stylesheet" href="ui-modern.css?v=20260724-9"/>
 <link rel="stylesheet" href="training-30.css?v=20260730-1"/>
+<link rel="stylesheet" href="academia-pro.css?v=20260809-1"/>
 </head>
 <body>
   <div id="splash">
@@ -142,23 +143,43 @@ th{color:#bfdbfe;}
 </div>
 <header>
   <div class="hi">
-    <div><h1>📚 Academia Personal 2-15 Florida</h1><div class="sub">20 lecciones activas · Explicación fácil · Ejemplos reales · Quiz · Frases para memorizar</div></div>
+    <div class="pro-brand"><span class="pro-brand-mark" aria-hidden="true">2·15</span><div><h1>📚 Academia Personal 2-15 Florida</h1><div class="sub">Preparación especializada · Florida Life, Health &amp; Annuities</div></div></div>
     <div class="nav">
       <button class="btn sec" onclick="goHome()">🏠 Inicio</button>
       <button class="btn blu" onclick="startMixed()">⚡ Examen mixto</button>
       <button class="btn sec" onclick="showStats()">📊 Progreso</button>
       <button class="btn" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;" onclick="startSimulacro()">🎯 Simulacro</button>
       <button class="btn" style="background:linear-gradient(135deg,#2563eb,#1e40af);color:#fff;" onclick="goHome();setTimeout(()=>document.getElementById('training-launcher')?.scrollIntoView({behavior:'smooth'}),50)">🧩 Pearson Killer</button>
+      <a class="btn pro-nav-link" href="pro.html">✨ Academia Pro</a>
     </div>
   </div>
 </header>
 <div class="wrap">
   <section id="home">
-    <div class="card">
-      <h2 style="margin-bottom:8px">Tu academia para el examen 2-15 — 20 lecciones activas</h2>
-      <p style="color:var(--muted);font-size:.86rem">Entra a una lección, lee la explicación, los ejemplos y las frases. Luego haz el quiz. Si fallas algo, repásalo solo.</p>
-      <div class="row"><button class="btn pri" onclick="startMixed()">⚡ Examen mixto</button><button class="btn yel" onclick="showPlan()">📋 Plan de estudio</button></div>
+    <div class="card pro-hero-card">
+      <div class="pro-hero-copy">
+        <span class="pro-kicker">ACADEMIA 2-15 · FLORIDA</span>
+        <h2 style="margin-bottom:8px">Entrena con intención. Llega al examen con confianza.</h2>
+        <p style="color:var(--muted);font-size:.86rem">Tu preparación completa para la licencia 2-15: 20 lecciones, práctica inteligente, refuerzo de errores y simulacro oficial en una sola ruta.</p>
+        <div class="row pro-hero-actions"><button class="btn pri" onclick="startMixed()">⚡ Continuar repasando</button><button class="btn yel" onclick="showPlan()">📋 Ver mi plan</button></div>
+        <div class="pro-trust-row" aria-label="Características principales"><span>✓ Progreso conservado</span><span>✓ Enfoque Florida</span><span>✓ Acceso fundador</span></div>
+      </div>
+      <div class="pro-hero-visual" aria-hidden="true">
+        <span class="pro-orbit pro-orbit-one"></span><span class="pro-orbit pro-orbit-two"></span>
+        <div class="pro-trophy"><span>FL</span><strong>2·15</strong><small>READY</small></div>
+        <div class="pro-float-card pro-float-top"><b>20</b><span>lecciones activas</span></div>
+        <div class="pro-float-card pro-float-bottom"><b>150</b><span>preguntas del simulacro</span></div>
+      </div>
     </div>
+    <div id="pro-progress-overview" class="pro-progress-overview" aria-label="Resumen de tu actividad"></div>
+    <div class="pro-section-heading"><div><span>RUTA DE PREPARACIÓN</span><h2>Todo lo que necesitas para dominar Florida 2-15</h2></div><p>Avanza en cuatro movimientos claros, sin perder tu historial ni cambiar el contenido.</p></div>
+    <div class="pro-path-grid">
+      <button type="button" class="pro-path-card" onclick="document.getElementById('grid')?.scrollIntoView({behavior:'smooth'})"><span class="pro-path-number">01</span><b>Aprende</b><small>20 lecciones organizadas con explicación, ejemplos y vocabulario.</small></button>
+      <button type="button" class="pro-path-card" onclick="startMixed()"><span class="pro-path-number">02</span><b>Practica</b><small>Examen mixto para comprobar comprensión y detectar errores.</small></button>
+      <button type="button" class="pro-path-card" onclick="startSimulacro()"><span class="pro-path-number">03</span><b>Simula</b><small>150 preguntas con reloj y condiciones cercanas al examen.</small></button>
+      <button type="button" class="pro-path-card" onclick="showStats()"><span class="pro-path-number">04</span><b>Corrige</b><small>Revisa resultados y vuelve directamente a tus puntos débiles.</small></button>
+    </div>
+    <div class="pro-lessons-heading"><span>CONTENIDO ACTIVO</span><h2>Las 20 lecciones de tu academia</h2></div>
     <div class="grid" id="grid"></div>
   </section>
   <section id="plan" class="hidden">
@@ -342,7 +363,7 @@ th{color:#bfdbfe;}
       <div id="sim-history-content" style="margin-top:14px"></div>
     </div>
   </section>
-<div class="footer">Academia personal de apoyo. Siempre revisa tu manual oficial para máxima exactitud.</div>
+<div class="footer"><strong>Academia Personal 2-15 Florida</strong><span>Herramienta independiente de preparación. Siempre revisa tu manual oficial para máxima exactitud.</span><a href="pro.html">Conocer Academia Pro →</a></div>
 <script>
 const L=[
 {id:1,title:"L1: Fundamentos del Seguro",intro:"Propósito del seguro, tipos de riesgo, aseguradoras y regulación en Florida.",
@@ -1241,5 +1262,6 @@ function goHome(){
 <script src="simulacro-upgrade.js?v=20260807-1"></script>
 <script src="ui-modern.js?v=20260724-8"></script>
 <script src="training-30.js?v=20260804-2"></script>
+<script src="academia-pro.js?v=20260809-1"></script>
 </body>
 </html>
