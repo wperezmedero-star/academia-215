@@ -473,7 +473,7 @@
     document.querySelectorAll("header .nav > .btn").forEach(function (button) {
       const action = button.getAttribute("onclick") || "";
       const matches =
-        (active === "home" && action.includes("goHome")) ||
+        (active === "home" && action.trim() === "goHome()") ||
         (active === "stats" && action.includes("showStats")) ||
         (active === "simulacro" && action.includes("startSimulacro")) ||
         (active === "mixed" && action.includes("startMixed"));
