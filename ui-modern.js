@@ -403,12 +403,13 @@
 
   function cleanIconLabel(text) {
     return String(text || "")
-      .replace(/^[\s←🏠⚡📊🎯📋✏️🔥🃏🔊📚🛡️⏱️🧠]+/u, "")
+      .replace(/^[\s←🏠⚡📊🎯📋✏️🔥🃏🔊📚🛡️⏱️🧠🧩✨]+/u, "")
       .trim();
   }
 
   function decorateVectorIcons() {
     const actionIcons = [
+      ["training-launcher", "brain"],
       ["startSimulacro", "target"],
       ["startMixed", "zap"],
       ["showStats", "chart"],
@@ -472,7 +473,7 @@
     document.querySelectorAll("header .nav > .btn").forEach(function (button) {
       const action = button.getAttribute("onclick") || "";
       const matches =
-        (active === "home" && action.includes("goHome")) ||
+        (active === "home" && action.trim() === "goHome()") ||
         (active === "stats" && action.includes("showStats")) ||
         (active === "simulacro" && action.includes("startSimulacro")) ||
         (active === "mixed" && action.includes("startMixed"));
