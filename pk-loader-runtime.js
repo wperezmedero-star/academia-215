@@ -16,6 +16,7 @@
     ['medicare', window.PK_MEDICARE],
     ['ltc', window.PK_LTC],
     ['general', window.PK_GENERAL],
+    ['material_filtrado', window.PK_MATERIAL_FILTRADO],
     ['nivel1', window.PK_NIVEL1],
     ['nivel2', window.PK_NIVEL2],
     ['nivel3', window.PK_NIVEL3],
@@ -188,6 +189,6 @@
     loadedSources:migrationSources.length,
     missingSources:missingSources,
     autoIntegrationPolicy:approvedRegistry.policy || null,
-    version:'3.2'
+    version:'3.3-material-filtrado'
   };
 })();

@@ -8,7 +8,7 @@
     'pk-synonyms.js','pk-traps.js','pk-blueprint.js','pk-schema.js','pk-storage.js',
     'pk-data-underwriting.js','pk-data-life.js','pk-data-annuities.js','pk-data-health.js',
     'pk-data-retirement.js','pk-data-florida.js','pk-data-medicare.js','pk-data-ltc.js',
-    'pk-data-general.js','pk-data-nivel1.js','pk-data-nivel2.js','pk-data-nivel3.js',
+    'pk-data-general.js','pk-data-material-filtrado.js','pk-data-nivel1.js','pk-data-nivel2.js','pk-data-nivel3.js',
     'pk-data-nivel4.js','pk-data-nivel5.js','pk-data-refuerzo.js','pk-data-disposiciones.js',
     'pk-data-campo.js','pk-data-killer-hmoppo.js','pk-data-killer-pilot.js','pk-data-sim128.js'
   ];
@@ -57,7 +57,7 @@
         if(source && source.path) await loadScript(source.path);
       }
       await loadScript('pk-approved-registry.js');
-      await loadScript('pk-loader-runtime.js');
+      await loadScript('pk-loader-runtime.js?v=20260810-2');
 
       if(!Array.isArray(window.PK_CONCEPTOS_FULL) || window.PK_CONCEPTOS_FULL.length===0){
         console.error('No se pudo construir el banco completo de Pearson Killer.');
