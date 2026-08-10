@@ -403,12 +403,13 @@
 
   function cleanIconLabel(text) {
     return String(text || "")
-      .replace(/^[\s←🏠⚡📊🎯📋✏️🔥🃏🔊📚🛡️⏱️🧠]+/u, "")
+      .replace(/^[\s←🏠⚡📊🎯📋✏️🔥🃏🔊📚🛡️⏱️🧠🧩✨]+/u, "")
       .trim();
   }
 
   function decorateVectorIcons() {
     const actionIcons = [
+      ["training-launcher", "brain"],
       ["startSimulacro", "target"],
       ["startMixed", "zap"],
       ["showStats", "chart"],
