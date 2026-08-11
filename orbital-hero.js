@@ -25,22 +25,18 @@
     const elapsed = stationary ? 0 : elapsedBeforePause + (time - start) / 1000;
     const radiusX = Math.max(102, Math.min(width * .37, 205));
     const radiusY = Math.max(72, Math.min(height * .3, 116));
-    const depthRange = Math.max(72, Math.min(width * .18, 125));
-
     nodes.forEach(function (node, index) {
       const phase = (index / nodes.length) * Math.PI * 2 - Math.PI / 2;
       const angle = phase + elapsed * .34;
       const x = Math.cos(angle) * radiusX;
       const y = Math.sin(angle) * radiusY;
       const depth = (Math.sin(angle) + 1) / 2;
-      const z = (depth - .5) * depthRange * 2;
       const scale = .72 + depth * .34;
       const opacity = .5 + depth * .5;
       const blur = (1 - depth) * .75;
 
       node.style.transform =
-        "translate3d(-50%, -50%, 0) translate3d(" +
-        x.toFixed(2) + "px," + y.toFixed(2) + "px," + z.toFixed(2) + "px) scale(" + scale.toFixed(3) + ")";
+        "translate(-50%, -50%) translate3d(" +\n        x.toFixed(2) + "px," + y.toFixed(2) + "px,0) scale(" + scale.toFixed(3) + ")";
       node.style.opacity = opacity.toFixed(3);
       node.style.filter = "blur(" + blur.toFixed(2) + "px) brightness(" + (.82 + depth * .28).toFixed(2) + ")";
       node.style.zIndex = String(3 + Math.round(depth * 7));
