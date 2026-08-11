@@ -63,6 +63,12 @@
   }
 
   function uniqueQuestions(items) {
+    if (window.QUESTION_ROTATION) {
+      return window.QUESTION_ROTATION.dedupeItems(items).filter(function (item) {
+        return Array.isArray(item.o) && item.o.length >= 2 &&
+          Number.isInteger(item.a) && item.a >= 0 && item.a < item.o.length;
+      });
+    }
     const seen = new Set();
     return items.filter(function (item) {
       const key = String(item.q || "").trim().toLowerCase();
@@ -140,8 +146,28 @@
   }
 
   function takeThirty(mode, primary, fallback) {
-    const merged = uniqueQuestions(primary.concat(fallback || []));
+    const cleanPrimary = uniqueQuestions(primary);
+    // El respaldo solo se usa si la categoría no alcanza 30 preguntas. Antes
+    // se mezclaba desde el principio y diluía Términos, Regulación y Estatutos.
+    const merged = cleanPrimary.length >= TOTAL
+      ? cleanPrimary
+      : uniqueQuestions(cleanPrimary.concat(fallback || []));
     const storageKey = "training30_seen_" + mode + "_v2";
+    if (window.QUESTION_ROTATION) {
+      const selected = window.QUESTION_ROTATION.select(merged, TOTAL, {
+        storageKey: storageKey,
+        lastStorageKey: "training30_last_" + mode + "_v3",
+        itemStorageKey: "training30_items_" + mode + "_v3",
+        shuffleQuestions: true,
+        shuffleOptions: true,
+      });
+      try {
+        localStorage.setItem("training30_pool_" + mode, String(
+          new Set(merged.map(window.QUESTION_ROTATION.promptKey)).size,
+        ));
+      } catch (error) {}
+      return selected;
+    }
     let seen = [];
     try {
       seen = JSON.parse(localStorage.getItem(storageKey) || "[]");
@@ -215,7 +241,7 @@
     });
 
     if (mode === "vocabulary") return takeThirty(mode, vocabularyQuestions(), []);
-    if (mode === "regulation") return takeThirty(mode, regulation, questions);
+    if (mode === "regulation") return takeThirty(mode, regulation, []);
     if (mode === "statutes") {
       return takeThirty(mode, questions.filter(isFloridaStatute), regulation);
     }
