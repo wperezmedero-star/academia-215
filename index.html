@@ -919,11 +919,22 @@ function openLesson(id){
 function startLQ(hardOnly){
   const items=hardOnly?cur.questions.filter(q=>q.d===3):cur.questions;
   if(hardOnly&&!items.length){alert("No hay preguntas difíciles aún en esta lección.");return;}
-  startQuiz([...items],cur.title+(hardOnly?" — Solo difíciles":""));
+  const cleanItems=window.QUESTION_ROTATION
+    ? window.QUESTION_ROTATION.dedupePrompts(items)
+    : [...items];
+  startQuiz(cleanItems,cur.title+(hardOnly?" — Solo difíciles":""));
 }
 function startMixed(){
   let all=[];L.filter(l=>!l.intro.includes("Próximamente")).forEach(l=>l.questions.forEach(q=>all.push({...q})));
-  startQuiz(shuffle(all).slice(0,Math.min(35,all.length)),"Examen mixto — 10 lecciones");
+  const selected=window.QUESTION_ROTATION
+    ? window.QUESTION_ROTATION.select(all,35,{
+        storageKey:"mixed35_seen_prompts_v3",
+        lastStorageKey:"mixed35_last_prompts_v3",
+        shuffleQuestions:true,
+        shuffleOptions:false
+      })
+    : shuffle(all).slice(0,Math.min(35,all.length));
+  startQuiz(selected,"Examen mixto — 10 lecciones");
 }
 function startQuiz(items,title){
   Qs=shuffle(items);qi=0;sc=0;mis=[];ans=false;
@@ -1281,9 +1292,10 @@ function goHome(){
 
 </script>
 
-<script src="simulacro-upgrade.js?v=20260810-2"></script>
+<script src="question-rotation.js?v=20260811-1"></script>
+<script src="simulacro-upgrade.js?v=20260811-3"></script>
 <script src="ui-modern.js?v=20260811-1"></script>
-<script src="training-30.js?v=20260804-2"></script>
+<script src="training-30.js?v=20260811-3"></script>
 <script src="academia-pro.js?v=20260809-1"></script>
 <script src="orbital-hero.js?v=20260811-5"></script>
 <script src="interaction-fx.js?v=20260810-1"></script>

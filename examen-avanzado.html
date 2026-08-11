@@ -154,6 +154,7 @@
   <button class="btn btn-primary" onclick="location.reload()" style="width:100%;padding:16px;font-size:16px;">Nueva Sesión</button>
 </div>
 
+<script src="question-rotation.js?v=20260811-1"></script>
 <script>
 const Q = [
 
@@ -327,12 +328,22 @@ function shuffle(arr) {
 
 function startExam() {
   showFeedback = MODE === 50;
-  let pool = shuffle(Q);
-  if (MODE === 50) {
-    questions = pool.slice(0, 50);
-  } else {
-    while (pool.length < 150) pool = pool.concat(shuffle(Q));
-    questions = pool.slice(0, 150);
+  const adapted=Q.map((question,index)=>({
+    q:question.q,o:question.a,a:question.c,__legacyIndex:index
+  }));
+  if(window.QUESTION_ROTATION){
+    const selected=window.QUESTION_ROTATION.select(adapted,MODE,{
+      storageKey:'advanced_exam_seen_'+MODE+'_v3',
+      lastStorageKey:'advanced_exam_last_'+MODE+'_v3',
+      shuffleQuestions:true,
+      shuffleOptions:false
+    });
+    questions=selected.map(item=>Q[item.__legacyIndex]);
+  }else{
+    questions=shuffle(Q).slice(0,Math.min(MODE,Q.length));
+  }
+  if(questions.length<MODE){
+    alert('Este banco contiene '+questions.length+' preguntas únicas. Se mostrarán todas sin repetir.');
   }
   secondsLeft = MODE === 50 ? 0 : 3 * 3600 + 30 * 60;
   startTime = Date.now();

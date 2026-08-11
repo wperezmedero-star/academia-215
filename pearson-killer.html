@@ -400,6 +400,7 @@ h2 .ic{width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.18em}
      que nunca se mezcle automáticamente con las 545 preguntas existentes) -->
 <script src="pk-data-killer-pilot.js"></script>
 <script src="pk-loader.js"></script>
+<script src="question-rotation.js?v=20260811-1"></script>
 
 <script>
 // ============================================================
@@ -470,8 +471,30 @@ function startQuizTimer(){
 const PK_STORAGE_KEY = 'pk_errors_v1';
 const PK_STATS_KEY = 'pk_stats_v1';
 
+function errorAsQuestion(error){
+  return {
+    q:error.pregunta,
+    o:error.opciones,
+    a:error.respuestaCorrecta
+  };
+}
+
 function loadErrorBook(){
-  try{ return JSON.parse(localStorage.getItem(PK_STORAGE_KEY) || '[]'); }
+  try{
+    const stored=JSON.parse(localStorage.getItem(PK_STORAGE_KEY) || '[]');
+    if(!Array.isArray(stored)) return [];
+    const seen=new Set();
+    // Conserva el intento más reciente de cada pregunta y limpia duplicados
+    // históricos sin alterar las estadísticas acumuladas.
+    return stored.slice().reverse().filter(error=>{
+      const key=window.QUESTION_ROTATION
+        ? window.QUESTION_ROTATION.itemKey(errorAsQuestion(error))
+        : questionKey(errorAsQuestion(error));
+      if(!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    }).reverse();
+  }
   catch(e){ return []; }
 }
 
@@ -490,10 +513,10 @@ function saveStats(stats){
   catch(e){}
 }
 
-// Registra un error nuevo en el cuaderno (evita duplicados exactos recientes)
+// Registra un error nuevo conservando una sola copia de cada pregunta.
 function recordError(q, userAnswerIdx){
   const errors = loadErrorBook();
-  errors.push({
+  const fresh={
     ts: Date.now(),
     concept: q.concept,
     area: q.area,
@@ -504,8 +527,18 @@ function recordError(q, userAnswerIdx){
     respuestaElegida: userAnswerIdx,
     tipoTrampa: q.tipo_trampa || null,
     explicacion: q.e || q.correcto || ''
+  };
+  const freshKey=window.QUESTION_ROTATION
+    ? window.QUESTION_ROTATION.itemKey(errorAsQuestion(fresh))
+    : questionKey(q);
+  const withoutPrevious=errors.filter(error=>{
+    const key=window.QUESTION_ROTATION
+      ? window.QUESTION_ROTATION.itemKey(errorAsQuestion(error))
+      : questionKey(errorAsQuestion(error));
+    return key!==freshKey;
   });
-  saveErrorBook(errors);
+  withoutPrevious.push(fresh);
+  saveErrorBook(withoutPrevious);
 
   // Actualizar estadísticas de trampas
   const stats = loadStats();
@@ -575,11 +608,12 @@ function startErrorsMode(){
   const errors = loadErrorBook();
   if(errors.length===0){ alert('Todavía no tienes errores guardados. ¡Completa un quiz primero!'); return; }
   // Convertir errores guardados al formato de pregunta del motor
-  pool = shuffle([...errors]).slice(0,50).map(e=>({
+  const errorQuestions=errors.map(e=>({
     q: e.pregunta, o: e.opciones, a: e.respuestaCorrecta,
     e: e.explicacion, concept: e.concept, area: e.area, areaLabel: e.areaLabel,
     tipo_trampa: e.tipoTrampa
   }));
+  pool=rotatingQuestions(errorQuestions,Math.min(50,errorQuestions.length),'errors');
   mode='errors'; maxQ=pool.length;
   idx=0; correct=0; mistakes=[]; answered=false;
   areaStats={};
@@ -602,6 +636,15 @@ function shuffleQuestionOptions(q){
 }
 
 function rotatingQuestions(items,max,mode){
+  if(window.QUESTION_ROTATION){
+    return window.QUESTION_ROTATION.select(items,max,{
+      storageKey:'pk_seen_'+mode+'_v2',
+      lastStorageKey:'pk_last_'+mode+'_v3',
+      itemStorageKey:'pk_items_'+mode+'_v3',
+      shuffleQuestions:true,
+      shuffleOptions:true
+    });
+  }
   const unique=[]; const known=new Set();
   items.forEach(q=>{const key=questionKey(q);if(key&&!known.has(key)){known.add(key);unique.push(q);}});
   const storageKey='pk_seen_'+mode+'_v2';

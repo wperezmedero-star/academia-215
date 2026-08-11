@@ -17,7 +17,7 @@ const baseScripts = [
   "pk-synonyms.js", "pk-traps.js", "pk-blueprint.js", "pk-schema.js", "pk-storage.js",
   "pk-data-underwriting.js", "pk-data-life.js", "pk-data-annuities.js", "pk-data-health.js",
   "pk-data-retirement.js", "pk-data-florida.js", "pk-data-medicare.js", "pk-data-ltc.js",
-  "pk-data-general.js", "pk-data-nivel1.js", "pk-data-nivel2.js", "pk-data-nivel3.js",
+  "pk-data-general.js", "pk-data-material-filtrado.js", "pk-data-nivel1.js", "pk-data-nivel2.js", "pk-data-nivel3.js",
   "pk-data-nivel4.js", "pk-data-nivel5.js", "pk-data-refuerzo.js", "pk-data-disposiciones.js",
   "pk-data-campo.js", "pk-data-killer-hmoppo.js", "pk-data-killer-pilot.js",
 ];
@@ -27,6 +27,7 @@ load("pk-approved-sources.js");
 context.PK_APPROVED_SOURCE_INDEX.sources.forEach((source) => load(source.path));
 load("pk-approved-registry.js");
 load("pk-loader-runtime.js");
+load("question-rotation.js");
 
 const normalize = (value) => String(value || "")
   .normalize("NFD")
@@ -68,7 +69,7 @@ validate(academia, "Academia");
 
 const pearsonKeys = pearson.map((question) => normalize(question.q));
 const uniquePearson = new Set(pearsonKeys);
-if (pearson.length !== 1111) failures.push(`Pearson tiene ${pearson.length} preguntas; se esperan exactamente 1111`);
+if (pearson.length !== 1141) failures.push(`Pearson tiene ${pearson.length} preguntas; se esperan exactamente 1141`);
 if (uniquePearson.size !== pearson.length) {
   failures.push(`Pearson conserva ${pearson.length - uniquePearson.size} preguntas duplicadas`);
 }
@@ -84,6 +85,28 @@ for (const question of [...academia, ...pearson]) {
   combinedKeys.add(key);
   combined.push(question);
 }
+
+const isRegulation = (question) => question.area === "florida" ||
+  /(florida|ley\b|regulaci[oó]n|licencia|licenciado|agente|cfo\b|dfs\b|oir\b|naic\b|ilegal|pr[aá]ctica desleal|rebating|twisting|churning|fondo de garant[ií]a|estatuto|departamento de servicios financieros)/i.test(
+    [question.q, question.e].join(" "),
+  );
+const isFloridaStatute = (question) => question.area === "florida" ||
+  /(estatuto|florida statute|ley(?:es)? (?:de|en) florida|c[oó]digo de seguros de florida|dfs\b|oir\b|flahiga|departamento de servicios financieros)/i.test(
+    [question.q, question.e].join(" "),
+  );
+const isTermQuestion = (question) =>
+  /(___|glosario|se define|significa|se llama|t[eé]rmino|nombre recibe|conoce como|\/|en ingl[eé]s|cu[aá]l describe)/i.test(question.q);
+const itemUnique = context.QUESTION_ROTATION.dedupeItems([...academia, ...pearson]);
+const nonRegulation = itemUnique.filter((question) => !isRegulation(question));
+const trainingPrimaryPools = {
+  terms: nonRegulation.filter(isTermQuestion).length,
+  concepts: nonRegulation.filter((question) => !isTermQuestion(question)).length,
+  regulation: itemUnique.filter(isRegulation).length,
+  statutes: itemUnique.filter(isFloridaStatute).length,
+};
+Object.entries(trainingPrimaryPools).forEach(([mode, count]) => {
+  if (count < 30) failures.push(`El reto ${mode} solo tiene ${count} preguntas temáticas primarias`);
+});
 
 const ceQuestions = academia.filter((question) => /educaci[oó]n continua|continuing education|\bce\b/i.test(question.q));
 for (const question of ceQuestions) {
@@ -183,8 +206,9 @@ const report = {
   approvedSources: `${context.PK_LOADER_STATUS.loadedSources}/${context.PK_LOADER_STATUS.registeredSources}`,
   approvedImportedQuestions: context.PK_LOADER_STATUS.approvedMigrationQuestions,
   duplicatesRemovedByLoader: context.PK_LOADER_STATUS.preguntasDuplicadasEliminadas,
+  trainingPrimaryPools,
   firstTenSimulacrosWithoutRepeats: firstCycleKeys.size >= 1500,
-  fullBankReachedOnSimulacro: 11,
+  fullBankReachedOnSimulacro: Math.ceil(combined.length / 150),
   failures,
 };
 

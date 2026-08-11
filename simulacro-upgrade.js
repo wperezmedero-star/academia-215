@@ -138,6 +138,9 @@
   }
 
   function uniqueQuestions(items){
+    if(window.QUESTION_ROTATION){
+      return window.QUESTION_ROTATION.dedupeItems(items);
+    }
     const seen=new Set();
     const unique=[];
     for(const q of items){
@@ -157,6 +160,16 @@
   }
 
   function selectRotating(pool,count){
+    if(window.QUESTION_ROTATION){
+      return window.QUESTION_ROTATION.select(pool,count,{
+        storageKey:'sim215_seen_keys_v2',
+        lastStorageKey:'sim215_last_keys',
+        itemStorageKey:'sim215_seen_items_v3',
+        cycleStorageKey:'sim215_rotation_cycle_v2',
+        shuffleQuestions:true,
+        shuffleOptions:true
+      });
+    }
     const uniquePool=uniqueQuestions(pool);
     const target=Math.min(count,uniquePool.length);
     const validKeys=new Set(uniquePool.map(questionKey));
@@ -325,7 +338,10 @@
 
   async function refreshBankStatus(){
     await ensurePearsonBank();
-    const total=uniqueQuestions([...academiaQuestions(),...pearsonQuestions()]).length;
+    const combined=uniqueQuestions([...academiaQuestions(),...pearsonQuestions()]);
+    const total=window.QUESTION_ROTATION
+      ? window.QUESTION_ROTATION.dedupePrompts(combined).length
+      : combined.length;
     try{ localStorage.setItem('sim215_last_pool_size',String(total)); }catch(e){}
     const menu=document.getElementById('simulacro-menu');
     if(!menu) return total;
