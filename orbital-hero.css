@@ -17,6 +17,14 @@
     linear-gradient(150deg, rgba(3, 10, 24, .38), rgba(15, 23, 42, .08));
 }
 
+/* ui-modern.css aplica flex a la primera tarjeta con una regla más específica.
+   La portada orbital necesita conservar sus dos columnas para tener ancho real. */
+body.ui-ultra #home > .pro-hero-card {
+  display: grid !important;
+  align-items: center;
+  justify-content: stretch;
+}
+
 .orbital-label {
   position: absolute;
   top: 16px;
