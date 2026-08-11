@@ -9,7 +9,9 @@
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let frame = 0;
   let start = performance.now();
+  let elapsedBeforePause = 0;
   let visible = true;
+  let userPaused = false;
   let width = 0;
   let height = 0;
 
@@ -20,7 +22,7 @@
   }
 
   function positionNodes(time, stationary) {
-    const elapsed = stationary ? 0 : (time - start) / 1000;
+    const elapsed = stationary ? 0 : elapsedBeforePause + (time - start) / 1000;
     const radiusX = Math.max(102, Math.min(width * .37, 205));
     const radiusY = Math.max(72, Math.min(height * .3, 116));
     const depthRange = Math.max(72, Math.min(width * .18, 125));
@@ -47,19 +49,22 @@
 
   function tick(time) {
     frame = 0;
-    if (!visible || document.hidden || reduceMotion.matches) return;
+    if (!visible || document.hidden || reduceMotion.matches || userPaused) return;
     positionNodes(time, false);
     frame = requestAnimationFrame(tick);
   }
 
   function resume() {
-    if (frame || !visible || document.hidden || reduceMotion.matches) return;
+    if (frame || !visible || document.hidden || reduceMotion.matches || userPaused) return;
     start = performance.now();
     frame = requestAnimationFrame(tick);
   }
 
   function pause() {
-    if (frame) cancelAnimationFrame(frame);
+    if (frame) {
+      elapsedBeforePause += Math.max(0, performance.now() - start) / 1000;
+      cancelAnimationFrame(frame);
+    }
     frame = 0;
   }
 
@@ -83,6 +88,28 @@
     const control = event.target.closest("[data-orbital-action]");
     if (!control || !system.contains(control)) return;
     activate(control.dataset.orbitalAction);
+  });
+
+  system.addEventListener("pointerenter", function (event) {
+    if (event.pointerType === "touch") return;
+    userPaused = true;
+    pause();
+  });
+
+  system.addEventListener("pointerleave", function (event) {
+    if (event.pointerType === "touch") return;
+    userPaused = false;
+    resume();
+  });
+
+  system.addEventListener("focusin", function () {
+    userPaused = true;
+    pause();
+  });
+
+  system.addEventListener("focusout", function () {
+    userPaused = false;
+    resume();
   });
 
   dimensions();
