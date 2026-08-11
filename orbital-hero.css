@@ -14,6 +14,37 @@
     linear-gradient(150deg, rgba(3, 10, 24, .38), rgba(15, 23, 42, .08));
 }
 
+.orbital-label {
+  position: absolute;
+  top: 16px;
+  left: 18px;
+  z-index: 14;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 1px solid rgba(103, 232, 249, .3);
+  border-radius: 999px;
+  background: rgba(6, 18, 38, .72);
+  color: #e6fbff;
+  box-shadow: 0 8px 24px rgba(2, 8, 23, .22), inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  pointer-events: none;
+}
+
+.orbital-label span {
+  color: #67e8f9;
+  font-size: .48rem;
+  font-weight: 950;
+  letter-spacing: .15em;
+}
+
+.orbital-label strong {
+  font-size: .65rem;
+  font-weight: 900;
+}
+
 .orbital-grid {
   position: absolute;
   inset: 0;
@@ -310,7 +341,15 @@ html[data-theme="light"] .orbital-hint { color: #075985 !important; }
 }
 
 @media (max-width: 900px) {
-  .orbital-hero { width: min(100%, 610px); min-height: 370px; margin-inline: auto; }
+  .pro-hero-card > .orbital-hero {
+    order: -1;
+    display: block !important;
+    width: min(100%, 610px);
+    min-height: 370px;
+    margin-inline: auto;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
 }
 
 @media (max-width: 720px) {
@@ -326,6 +365,8 @@ html[data-theme="light"] .orbital-hint { color: #075985 !important; }
 
 @media (max-width: 420px) {
   .orbital-hero { min-height: 300px; }
+  .orbital-label { top: 10px; left: 10px; padding: 6px 8px; }
+  .orbital-label strong { font-size: .58rem; }
   .orbital-core { width: 106px; }
   .orbital-node { width: 78px; min-height: 78px; }
   .orbital-node-icon { width: 17px; height: 17px; }
