@@ -36,7 +36,8 @@
       const blur = (1 - depth) * .75;
 
       node.style.transform =
-        "translate(-50%, -50%) translate3d(" +\n        x.toFixed(2) + "px," + y.toFixed(2) + "px,0) scale(" + scale.toFixed(3) + ")";
+        "translate(-50%, -50%) translate3d(" +
+        x.toFixed(2) + "px," + y.toFixed(2) + "px,0) scale(" + scale.toFixed(3) + ")";
       node.style.opacity = opacity.toFixed(3);
       node.style.filter = "blur(" + blur.toFixed(2) + "px) brightness(" + (.82 + depth * .28).toFixed(2) + ")";
       node.style.zIndex = String(3 + Math.round(depth * 7));
