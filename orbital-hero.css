@@ -5,8 +5,7 @@
   --orbital-violet: #8b5cf6;
   min-height: 390px;
   perspective: 900px;
-  transform-style: preserve-3d;
-  isolation: isolate;
+  /* Safari/iPad puede ocultar descendientes interactivos cuando el propio\n     grid item conserva el plano 3D. La profundidad visual se calcula con\n     escala, velocidad, opacidad y z-index, que es más estable y ligera. */\n  transform-style: flat;\n  isolation: isolate;
   overflow: hidden;
   border-radius: 28px;
   background:
@@ -91,10 +90,7 @@
   border: 1px solid rgba(34, 211, 238, .26);
   border-radius: 50%;
   pointer-events: none;
-  transform-style: preserve-3d;
-}
-
-.orbital-ring::after {
+  transform-style: flat;\n}\n\n.orbital-ring::after {
   content: "";
   position: absolute;
   inset: -1px;
@@ -106,14 +102,14 @@
 .orbital-ring-a {
   width: 84%;
   height: 53%;
-  transform: translate3d(-50%, -50%, -72px) rotateX(63deg) rotateZ(-9deg);
+  transform: translate(-50%, -50%) rotateX(63deg) rotateZ(-9deg);
 }
 
 .orbital-ring-b {
   width: 66%;
   height: 74%;
   border-color: rgba(139, 92, 246, .21);
-  transform: translate3d(-50%, -50%, -92px) rotateX(71deg) rotateZ(64deg);
+  transform: translate(-50%, -50%) rotateX(71deg) rotateZ(64deg);
 }
 
 .orbital-core,
@@ -125,10 +121,7 @@
   font-family: inherit;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transform-style: preserve-3d;
-}
-
-.orbital-core {
+  transform-style: flat;\n  -webkit-backface-visibility: visible;\n  backface-visibility: visible;\n}\n\n.orbital-core {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -149,7 +142,7 @@
     0 0 13px rgba(224, 252, 255, .75),
     0 0 38px rgba(34, 211, 238, .55),
     0 0 82px rgba(59, 130, 246, .3);
-  transform: translate3d(-50%, -50%, 30px);
+  transform: translate(-50%, -50%);
   transition: filter 180ms ease, box-shadow 180ms ease;
 }
 
@@ -236,10 +229,7 @@
     0 0 9px rgba(224, 252, 255, .55),
     0 0 28px rgba(34, 211, 238, .42);
   will-change: transform, opacity, filter;
-  transition: box-shadow 160ms ease, border-color 160ms ease;
-}
-
-.orbital-node::before {
+  transition: box-shadow 160ms ease, border-color 160ms ease;\n}\n\n/* Posiciones visibles incluso antes de que cargue JavaScript. El motor de\n   órbita sustituye estas transformaciones en el primer frame. */\n.orbital-node-lessons {\n  transform: translate(-50%, -50%) translate(-165px, -82px) scale(.82);\n}\n\n.orbital-node-killer {\n  transform: translate(-50%, -50%) translate(150px, -72px) scale(.92);\n}\n\n.orbital-node-sim {\n  transform: translate(-50%, -50%) translate(158px, 80px) scale(1);\n}\n\n.orbital-node-progress {\n  transform: translate(-50%, -50%) translate(-155px, 82px) scale(.78);\n}\n\n.orbital-node::before {
   content: "";
   position: absolute;
   inset: 7px;
@@ -340,8 +330,7 @@ html[data-theme="light"] .orbital-hint { color: #075985 !important; }
   to { transform: translate3d(18px, -14px, 0) scale(1.25); }
 }
 
-@media (max-width: 900px) {
-  .pro-hero-card > .orbital-hero {
+/* El iPad horizontal tiene 1024 CSS px, pero la barra lateral deja menos de\n   760 px para el contenido. A este ancho la escena necesita una fila propia. */\n@media (max-width: 1180px) {\n  .pro-hero-card {\n    grid-template-columns: minmax(0, 1fr) !important;\n  }\n\n  .pro-hero-card > .orbital-hero {
     order: -1;
     display: block !important;
     width: min(100%, 610px);
@@ -352,7 +341,7 @@ html[data-theme="light"] .orbital-hint { color: #075985 !important; }
   }
 }
 
-@media (max-width: 720px) {
+@supports (-webkit-touch-callout: none) {\n  .orbital-hero {\n    -webkit-transform: translateZ(0);\n    transform: translateZ(0);\n  }\n\n  .orbital-core,\n  .orbital-node {\n    -webkit-transform-style: flat;\n    transform-style: flat;\n  }\n}\n\n@media (max-width: 720px) {
   .orbital-hero { min-height: 330px; border-radius: 22px; }
   .orbital-core { width: 118px; }
   .orbital-core strong { font-size: 1.8rem; }
