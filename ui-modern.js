@@ -11,6 +11,7 @@
   const THEME_KEY = "ui215-theme-v1";
   const FONT_KEY = "ui215-font-v1";
   const SOUND_KEY = "ui215-intro-sound-v1";
+  let activeIntroAudio = null;
   const ICONS = {
     home: '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/>',
     zap: '<path d="m13 2-9 12h7l-1 8 9-12h-7z"/>',
@@ -80,13 +81,36 @@
     }, delay || 0);
   }
 
+  function finishMotivationalTheme(result, error) {
+    const active = activeIntroAudio;
+    if (!active) return;
+    activeIntroAudio = null;
+
+    active.audio.pause();
+    active.audio.removeAttribute("src");
+    active.audio.load();
+    URL.revokeObjectURL(active.source);
+
+    if (error) active.reject(error);
+    else active.resolve(result);
+  }
+
+  function stopMotivationalTheme() {
+    finishMotivationalTheme("muted");
+  }
+
   function playMotivationalTheme() {
+    stopMotivationalTheme();
     return fetch("academia-215-intro.b64?v=20260724-1")
       .then(function (response) {
         if (!response.ok) throw new Error("No se pudo cargar la introducción");
         return response.text();
       })
       .then(function (encoded) {
+        if (safeGet(SOUND_KEY, "on") === "off") {
+          throw new Error("Introducción silenciada");
+        }
+
         const binary = window.atob(encoded.trim());
         const bytes = new Uint8Array(binary.length);
         for (let index = 0; index < binary.length; index += 1) {
@@ -99,28 +123,29 @@
         audio.volume = 0.78;
 
         return new Promise(function (resolve, reject) {
-          function release() {
-            URL.revokeObjectURL(source);
-          }
+          activeIntroAudio = { audio: audio, source: source, resolve: resolve, reject: reject };
           audio.addEventListener(
             "ended",
             function () {
-              release();
-              resolve();
+              if (activeIntroAudio && activeIntroAudio.audio === audio) {
+                finishMotivationalTheme("ended");
+              }
             },
             { once: true },
           );
           audio.addEventListener(
             "error",
             function () {
-              release();
-              reject(new Error("No se pudo reproducir la introducción"));
+              if (activeIntroAudio && activeIntroAudio.audio === audio) {
+                finishMotivationalTheme(null, new Error("No se pudo reproducir la introducción"));
+              }
             },
             { once: true },
           );
           audio.play().catch(function (error) {
-            release();
-            reject(error);
+            if (activeIntroAudio && activeIntroAudio.audio === audio) {
+              finishMotivationalTheme(null, error);
+            }
           });
         });
       });
@@ -186,6 +211,7 @@
     actions.querySelector(".ui-splash-sound").addEventListener("click", function () {
       const isMuted = safeGet(SOUND_KEY, "on") === "off";
       safeSet(SOUND_KEY, isMuted ? "on" : "off");
+      if (!isMuted) stopMotivationalTheme();
       this.setAttribute("aria-pressed", String(!isMuted));
       this.querySelector("span").textContent = isMuted ? "Silenciar" : "Activar sonido";
       actions.querySelector(".ui-splash-start span").textContent =
@@ -202,7 +228,6 @@
 
       card.classList.add("ui-intro-running");
       this.querySelector("span").textContent = "Preparando tu reto…";
-      actions.querySelector(".ui-splash-sound").hidden = true;
       if (loader) loader.classList.remove("ui-waiting");
       window.setTimeout(function () {
         phrase.classList.add("ui-visible");
