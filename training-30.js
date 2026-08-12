@@ -102,6 +102,12 @@
     return uniqueQuestions(academia.concat(pearson));
   }
 
+  function examReadyQuestions(items) {
+    return window.PK_OPTION_QUALITY
+      ? window.PK_OPTION_QUALITY.filter(items, { tier: "exam" })
+      : items;
+  }
+
   function isRegulation(question) {
     if (question.sourceArea === "florida") return true;
     if (question.lessonIndex === 18 || question.lessonIndex === 19) return true;
@@ -234,13 +240,15 @@
   }
 
   function buildBank(mode) {
-    const questions = allQuestions();
+    const questions = examReadyQuestions(allQuestions());
     const regulation = questions.filter(isRegulation);
     const nonRegulation = questions.filter(function (question) {
       return !isRegulation(question);
     });
 
-    if (mode === "vocabulary") return takeThirty(mode, vocabularyQuestions(), []);
+    if (mode === "vocabulary") {
+      return takeThirty(mode, examReadyQuestions(vocabularyQuestions()), []);
+    }
     if (mode === "regulation") return takeThirty(mode, regulation, []);
     if (mode === "statutes") {
       return takeThirty(mode, questions.filter(isFloridaStatute), regulation);

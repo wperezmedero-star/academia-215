@@ -401,6 +401,7 @@ h2 .ic{width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.18em}
 <script src="pk-data-killer-pilot.js"></script>
 <script src="pk-loader.js"></script>
 <script src="question-rotation.js?v=20260811-1"></script>
+<script src="pk-option-quality.js?v=20260812-1"></script>
 
 <script>
 // ============================================================
@@ -698,8 +699,11 @@ function buildVocabularyChallenge(kind,max){
 }
 
 function buildPool(mode, max){
-  if(mode==='reto_terminos') return rotatingQuestions(buildVocabularyChallenge('terminos',max),max,mode);
-  if(mode==='reto_vocabulario') return rotatingQuestions(buildVocabularyChallenge('vocabulario',max),max,mode);
+  const qualityFilter=questions=>window.PK_OPTION_QUALITY
+    ? window.PK_OPTION_QUALITY.filter(questions,{tier:'exam'})
+    : questions;
+  if(mode==='reto_terminos') return rotatingQuestions(qualityFilter(buildVocabularyChallenge('terminos',max)),max,mode);
+  if(mode==='reto_vocabulario') return rotatingQuestions(qualityFilter(buildVocabularyChallenge('vocabulario',max)),max,mode);
   let concepts=[];
   if(mode==='killer_pilot'){
     // FASE 2 — Fuente SEPARADA a propósito: nunca se mezcla con CONCEPTS
@@ -729,6 +733,12 @@ function buildPool(mode, max){
       questions.push({...v, concept:c.concepto || c.concept, area:c.area, areaLabel:AREAS[c.area]||c.area});
     });
   });
+  // Los bloques que simulan examen usan únicamente distractores competitivos.
+  // Los módulos por área conservan el banco completo porque son modos de
+  // aprendizaje y algunos temas pequeños todavía no reúnen 20 ítems estrictos.
+  if(['all','weak','refuerzo','killer_pilot','reto_conceptos','reto_regulacion','reto_estatutos'].includes(mode)){
+    questions=qualityFilter(questions);
+  }
   shuffle(questions);
   return rotatingQuestions(questions,max,mode);
 }
