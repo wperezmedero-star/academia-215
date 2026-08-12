@@ -5,7 +5,7 @@
   'use strict';
 
   const PK_BASE_SCRIPTS = [
-    'pk-synonyms.js','pk-traps.js','pk-blueprint.js','pk-schema.js','pk-storage.js',
+    'pk-synonyms.js','pk-traps.js','pk-blueprint.js','pk-schema.js','pk-storage.js','pk-option-quality.js?v=20260812-1',
     'pk-data-underwriting.js','pk-data-life.js','pk-data-annuities.js','pk-data-health.js',
     'pk-data-retirement.js','pk-data-florida.js','pk-data-medicare.js','pk-data-ltc.js',
     'pk-data-general.js','pk-data-material-filtrado.js','pk-data-nivel1.js','pk-data-nivel2.js','pk-data-nivel3.js',
@@ -274,7 +274,10 @@
 
     await ensurePearsonBank();
     const combined=uniqueQuestions([...academiaQuestions(),...pearsonQuestions()]);
-    const selected=selectRotating(combined,150);
+    const examReady=window.PK_OPTION_QUALITY
+      ? window.PK_OPTION_QUALITY.filter(combined,{tier:'exam'})
+      : combined;
+    const selected=selectRotating(examReady,150);
 
     if(selected.length===0){
       if(startButton){startButton.disabled=false;startButton.innerHTML=originalText;}
@@ -296,7 +299,8 @@
     updateLiveScore();
     startSimTimer();
 
-    console.info('Simulacro variable:',simQs.length,'seleccionadas de',combined.length,'preguntas únicas.');
+    console.info('Simulacro variable:',simQs.length,'seleccionadas de',examReady.length,
+      'preguntas con distractores de nivel examen; banco total:',combined.length+'.');
   }
 
   launchSimulacro=upgradedLaunchSimulacro;
@@ -342,6 +346,9 @@
     const total=window.QUESTION_ROTATION
       ? window.QUESTION_ROTATION.dedupePrompts(combined).length
       : combined.length;
+    const examReady=window.PK_OPTION_QUALITY
+      ? window.PK_OPTION_QUALITY.filter(combined,{tier:'exam'}).length
+      : total;
     try{ localStorage.setItem('sim215_last_pool_size',String(total)); }catch(e){}
     const menu=document.getElementById('simulacro-menu');
     if(!menu) return total;
@@ -355,7 +362,8 @@
       if(row) row.insertAdjacentElement('beforebegin',badge);
       else menu.appendChild(badge);
     }
-    badge.textContent='✅ Banco verificado: '+total.toLocaleString('es-US')+' preguntas únicas disponibles';
+    badge.textContent='✅ Banco verificado: '+total.toLocaleString('es-US')+
+      ' preguntas únicas · '+examReady.toLocaleString('es-US')+' con distractores de nivel examen';
     return total;
   }
 
