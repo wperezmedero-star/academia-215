@@ -1,5 +1,5 @@
 // Mejora del Simulacro Oficial 2-15
-// Fusiona Academia + Pearson Killer, elimina duplicados, reduce la repetición
+// Fusiona Academia + Modo Trampa, elimina duplicados, reduce la repetición
 // inmediata y muestra el rendimiento en vivo durante el simulacro.
 (function(){
   'use strict';
@@ -60,7 +60,7 @@
       await loadScript('pk-loader-runtime.js?v=20260810-2');
 
       if(!Array.isArray(window.PK_CONCEPTOS_FULL) || window.PK_CONCEPTOS_FULL.length===0){
-        console.error('No se pudo construir el banco completo de Pearson Killer.');
+        console.error('No se pudo construir el banco completo de Modo Trampa.');
       }
     })();
     return pkLoadPromise;
@@ -123,7 +123,7 @@
       const areaLabel=areas[area]||area;
       (c.variantes||c.variants||[]).forEach(v=>{
         if(v&&v.q&&Array.isArray(v.o)&&Number.isInteger(v.a)){
-          out.push({...v,lessonId:'pk-'+area,lessonTitle:'Pearson Killer: '+areaLabel,source:'pearson'});
+          out.push({...v,lessonId:'pk-'+area,lessonTitle:'Modo Trampa: '+areaLabel,source:'pearson'});
         }
       });
     });
@@ -131,7 +131,7 @@
     pilot.forEach(v=>{
       if(v&&v.q&&Array.isArray(v.o)&&Number.isInteger(v.a)){
         const area=v.area||'salud';
-        out.push({...v,lessonId:'pk-'+area,lessonTitle:'Pearson Killer: '+(v.areaLabel||areas[area]||area),source:'pilot'});
+        out.push({...v,lessonId:'pk-'+area,lessonTitle:'Modo Trampa: '+(v.areaLabel||areas[area]||area),source:'pilot'});
       }
     });
     return out;
