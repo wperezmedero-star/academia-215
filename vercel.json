@@ -6,6 +6,13 @@
       "memory": 1024
     }
   },
+  "redirects": [
+    {
+      "source": "/pearson-killer.html",
+      "destination": "/modo-trampa.html",
+      "statusCode": 301
+    }
+  ],
   "rewrites": [
     {
       "source": "/migration-runner",

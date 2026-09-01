@@ -3,7 +3,7 @@
 // FASE 1: Infraestructura — Motor de Almacenamiento de Intentos
 //
 // Reemplaza y AMPLÍA la lógica de estadísticas que vivía suelta
-// dentro de pearson-killer.html (PK_STATS_KEY = 'pk_stats_v1').
+// dentro de modo-trampa.html (PK_STATS_KEY = 'pk_stats_v1').
 //
 // BUG CORREGIDO:
 //   Antes, 'stats.conceptos[key].total' SOLO se incrementaba

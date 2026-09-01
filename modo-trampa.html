@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" sizes="167x167" href="apple-touch-icon-167.png"/>
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-180.png"/>
 <link rel="icon" type="image/png" href="apple-touch-icon-180.png"/>
-<title>Pearson Killer — Academia 2-15</title>
+<title>Modo Trampa — Academia 2-15</title>
 <style>
 :root{
   --bg:#040a17;--bg2:#071324;--card:#0c1c38;--card2:#0f2445;
@@ -243,9 +243,9 @@ h2 .ic{width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.18em}
 
 <div class="wrap">
 
-<aside class="pk-sidebar" aria-label="Navegación de Pearson Killer">
+<aside class="pk-sidebar" aria-label="Navegación de Modo Trampa">
   <div class="pk-sidebar-mark">2·15</div>
-  <h2>Pearson Killer</h2>
+  <h2>Modo Trampa</h2>
   <p class="pk-sidebar-sub">Entrenamiento avanzado · 1,106 preguntas verificadas</p>
   <span class="pk-nav-label">Navegación</span>
   <nav class="pk-nav">
@@ -262,7 +262,7 @@ h2 .ic{width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.18em}
 <div id="home">
   <div class="brand" style="padding:14px 0 6px">
     <img src="escudo-215.png" alt="Academia 2-15 Florida"/>
-    <h1 class="title-gold" style="margin-top:10px">Pearson Killer</h1>
+    <h1 class="title-gold" style="margin-top:10px">Modo Trampa</h1>
     <p class="muted" style="margin-bottom:4px">Entrenador por conceptos — no memorización</p>
     <p class="muted" style="font-size:.78rem">Cada concepto aparece con redacciones distintas,<br>sinónimos y distractores que parecen correctos</p>
   </div>
@@ -289,7 +289,7 @@ h2 .ic{width:1.1em;height:1.1em;margin-right:.35em;vertical-align:-.18em}
 
   <div class="card" id="pk-retos" style="border-color:#2563eb;background:linear-gradient(180deg,rgba(37,99,235,.12),transparent)">
     <h2 style="color:#93c5fd"><svg class="ic"><use href="#ic-target"/></svg>Retos temáticos — 30 preguntas</h2>
-    <p class="muted" style="margin-bottom:12px">Cada reto utiliza el banco verificado de Pearson Killer, muestra aciertos y errores, e incluye un reloj de 36 minutos.</p>
+    <p class="muted" style="margin-bottom:12px">Cada reto utiliza el banco verificado de Modo Trampa, muestra aciertos y errores, e incluye un reloj de 36 minutos.</p>
     <div class="retos-grid">
       <button class="btn btn-blue reto-btn" onclick="startMode('reto_terminos',30)"><strong><svg class="ic"><use href="#ic-clipboard"/></svg>Términos</strong><small>Definiciones y significado</small></button>
       <button class="btn btn-purple reto-btn" onclick="startMode('reto_conceptos',30)"><strong><svg class="ic"><use href="#ic-target"/></svg>Conceptos</strong><small>Comprensión y aplicación</small></button>
@@ -424,7 +424,7 @@ const CONCEPTS = (window.PK_CONCEPTOS_FULL && window.PK_CONCEPTOS_FULL.length > 
 
 // Aviso visible si el banco no cargó — ayuda a diagnosticar en producción
 if (CONCEPTS.length === 0) {
-  console.error('PEARSON KILLER: CONCEPTS está vacío. Revisa que los 9 módulos pk-data-*.js y pk-loader.js hayan cargado correctamente.');
+  console.error('MODO TRAMPA: CONCEPTS está vacío. Revisa que los 9 módulos pk-data-*.js y pk-loader.js hayan cargado correctamente.');
 }
 
 // Banco anterior conservado como respaldo — ya no se usa activamente

@@ -10,9 +10,9 @@
   try{translationCache=JSON.parse(localStorage.getItem(CACHE_KEY)||"{}")}catch(_){translationCache={}}
   const EN={
     "Preparación especializada · Florida Life, Health & Annuities":"Specialized preparation · Florida Life, Health & Annuities",
-    "Características principales":"Main features","Comenzar examen mixto":"Start mixed exam","Abrir las 20 lecciones":"Open the 20 lessons","Abrir Pearson Killer completo":"Open the complete Pearson Killer",
+    "Características principales":"Main features","Comenzar examen mixto":"Start mixed exam","Abrir las 20 lecciones":"Open the 20 lessons","Abrir Modo Trampa completo":"Open the complete Trap Mode",
     "Abrir simulacro oficial de 150 preguntas":"Open the official-style 150-question mock exam","Ver mi progreso guardado":"View my saved progress",
-    "🏠 Inicio":"🏠 Home","⚡ Examen mixto":"⚡ Mixed exam","📊 Progreso":"📊 Progress","🎯 Simulacro":"🎯 Mock exam","🧩 Pearson Killer":"🧩 Pearson Killer",
+    "🏠 Inicio":"🏠 Home","⚡ Examen mixto":"⚡ Mixed exam","📊 Progreso":"📊 Progress","🎯 Simulacro":"🎯 Mock exam","🧩 Modo Trampa":"🧩 Trap Mode",
     "Entrena con intención. Llega al examen con confianza.":"Train with purpose. Take the exam with confidence.",
     "Tu preparación completa para la licencia 2-15: 20 lecciones, práctica inteligente, refuerzo de errores y simulacro oficial en una sola ruta.":"Your complete preparation for the 2-15 license: 20 lessons, smart practice, mistake review, and an official-style mock exam in one path.",
     "⚡ Continuar repasando":"⚡ Continue studying","📋 Ver mi plan":"📋 View my plan","✓ Progreso conservado":"✓ Progress preserved","✓ Enfoque Florida":"✓ Florida focus","✓ Acceso fundador":"✓ Founder access",

@@ -76,7 +76,7 @@
   function activate(action) {
     if (action === "mixed" && typeof window.startMixed === "function") window.startMixed();
     if (action === "lessons") scrollHomeTarget("grid");
-    if (action === "killer") window.location.href = "pearson-killer.html";
+    if (action === "killer") window.location.href = "modo-trampa.html";
     if (action === "simulacro" && typeof window.startSimulacro === "function") window.startSimulacro();
     if (action === "progress" && typeof window.showStats === "function") window.showStats();
   }

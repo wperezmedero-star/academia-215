@@ -1,6 +1,6 @@
 /*
  * Academia 2-15 — Entrenamientos temáticos de 30 preguntas.
- * Combina el contenido de Academia (L) con el banco completo de Pearson Killer.
+ * Combina el contenido de Academia (L) con el banco completo de Modo Trampa.
  */
 (function () {
   "use strict";
@@ -95,7 +95,7 @@
             lessonIndex: null,
             source: "pearson",
             sourceArea: concept.area || "generales",
-            concept: concept.concepto || concept.concept || concept.id || "Pearson Killer",
+            concept: concept.concepto || concept.concept || concept.id || "Modo Trampa",
           });
         });
       });
@@ -514,7 +514,7 @@
     launcher.id = "training-launcher";
     launcher.className = "card training-launcher";
     launcher.innerHTML =
-      '<div class="training-launcher-head"><div><span class="training-kicker">PEARSON KILLER INTEGRADO</span><h2>5 retos de 30 preguntas</h2><p>Banco completo de la Academia + Pearson Killer · sin repetir hasta recorrer cada categoría</p></div><span class="training-120">150</span></div><div class="training-mode-grid"></div>';
+      '<div class="training-launcher-head"><div><span class="training-kicker">MODO TRAMPA INTEGRADO</span><h2>5 retos de 30 preguntas</h2><p>Banco completo de la Academia + Modo Trampa · sin repetir hasta recorrer cada categoría</p></div><span class="training-120">150</span></div><div class="training-mode-grid"></div>';
     const grid = launcher.querySelector(".training-mode-grid");
     Object.keys(MODES).forEach(function (key) {
       const mode = MODES[key];
